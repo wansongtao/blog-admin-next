@@ -1,6 +1,51 @@
-import axios, { AxiosError, type AxiosResponse } from 'axios'
+import axios, { type AxiosError, type AxiosResponse, type AxiosRequestConfig } from 'axios'
+import type { IBaseResponse } from '@/types/index'
 import { message } from 'ant-design-vue'
 import { useUserStore } from '@/stores/user'
+import { getDataType, throttle } from '@/utils/index'
+
+const historyRequestMap: Record<string, number> = {}
+/**
+ * Async clear expired request information every 5 seconds.
+ */
+const clearHistoryReqMap = throttle((expiredTime: number) => {
+  setTimeout(() => {
+    const keys = Object.keys(historyRequestMap)
+    if (!keys.length) {
+      return
+    }
+
+    for (const key in keys) {
+      if (historyRequestMap[key] < expiredTime) {
+        delete historyRequestMap[key]
+      }
+    }
+  }, 0)
+}, 5000)
+const isDuplicateRequest = (config: AxiosRequestConfig, interval = 400) => {
+  const { method, url, data, params } = config
+  let key = `${method}-${url}`
+
+  try {
+    if (data && getDataType(data) === 'object') {
+      key += `-${JSON.stringify(data)}`
+    }
+    if (params && getDataType(params) === 'object') {
+      key += `-${JSON.stringify(params)}`
+    }
+
+    const timestamp = Date.now()
+    if (historyRequestMap[key] && timestamp - historyRequestMap[key] < interval) {
+      return true
+    }
+
+    historyRequestMap[key] = timestamp
+    clearHistoryReqMap(timestamp - interval)
+    return false
+  } catch (e) {
+    return false
+  }
+}
 
 const instance = axios.create({
   baseURL: import.meta.env.VITE_BASE_API,
@@ -13,53 +58,42 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   (config) => {
-    // 如果这里的代码出现错误，会触发响应拦截器（不是请求拦截器）的错误事件
-    const store = useUserStore()
-    const token = store.token || store.getToken()
+    if (config.headers?.isToken !== false) {
+      const store = useUserStore()
+      const token = store.getToken()
 
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+      }
+    }
+
+    if (!config.headers?.allowDuplication && isDuplicateRequest(config)) {
+      return Promise.reject(new Error('Duplicate requests!'))
     }
 
     return config
   },
   (error: AxiosError) => {
+    console.error(error, 'req')
+
     return Promise.reject(error)
   }
 )
 
-/**
- * 重新登录
- * @returns
- */
-const afreshLogin = (msg: string = 'Error') => {
-  message.error(msg)
-  const store = useUserStore()
-  store.removeToken()
-
-  // 跳转到登录页
-  setTimeout(() => {
-    const loginUrl = `${location.origin}/admin/login`
-    location.href = `${loginUrl}?redirect=${encodeURIComponent(location.href)}`
-  }, 3000)
-
-  return Promise.reject(new Error(msg))
-}
-
 instance.interceptors.response.use(
-  (res: AxiosResponse<{ code: number; msg: string; data: unknown } | Blob, any>) => {
+  (res: AxiosResponse<IBaseResponse | Blob, any>): any => {
     const data = res.data
 
     if (data instanceof Blob) {
-      return res
+      return data
     }
 
     if (data.code !== 200) {
       message.error(data.msg)
-      return Promise.reject(new Error(data.msg || 'Error'))
+      return Promise.reject(data)
     }
 
-    return res
+    return data
   },
   (error: AxiosError) => {
     // 处理取消请求错误
@@ -68,7 +102,7 @@ instance.interceptors.response.use(
     }
 
     if (error.response?.status === 401 || error.response?.status === 403) {
-      return afreshLogin((error.response?.data as { msg: string }).msg)
+      return Promise.reject(error)
     }
 
     // 超出 2xx 范围的http状态码都会触发该函数。包括网络错误和超时
