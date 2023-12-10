@@ -11,9 +11,9 @@ import ScrollBar from './components/ScrollBar.vue'
       <HeaderView />
       <ScrollBar />
       <div class="layout-main st-transition-bg">
-        <router-view v-slot="{ Component }">
+        <router-view v-slot="{ Component, route }">
           <transition name="slide-fade">
-            <KeepAlive>
+            <KeepAlive :include="route.meta?.isCache ? route.name as string : ''">
               <component :is="Component" />
             </KeepAlive>
           </transition>
