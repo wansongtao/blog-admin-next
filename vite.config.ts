@@ -1,13 +1,13 @@
+import version from './build/version'
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
-
-const version = require('./build/version')
+import svgLoader from 'vite-svg-loader'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), vueJsx()],
+  plugins: [vue(), vueJsx(), svgLoader()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
@@ -20,10 +20,17 @@ export default defineConfig({
   },
   server: {
     open: true,
-    host: '0.0.0.0'
+    host: '0.0.0.0',
+    proxy: {
+      '/dev': {
+        target: 'https://mock.apifox.com/m1/2791800-0-default',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/dev/, '')
+      }
+    }
   },
   base: '/admin/',
   define: {
-    __APP_VERSION__: JSON.stringify(version.default)
+    __APP_VERSION__: JSON.stringify(version)
   }
 })
