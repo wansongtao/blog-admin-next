@@ -78,7 +78,7 @@ instance.interceptors.request.use(
     }
 
     if (!config.headers?.allowDuplication && isDuplicateRequest(config)) {
-      return Promise.reject(new Error('Duplicate requests!'))
+      return Promise.reject({code: 'ERR_CANCELED', message: 'Duplicate request'})
     }
 
     return config
@@ -112,6 +112,7 @@ instance.interceptors.response.use(
   (error: AxiosError) => {
     // Cancel request
     if (error.code === 'ERR_CANCELED') {
+      console.warn(error.message)
       return Promise.reject(error)
     }
 
