@@ -22,7 +22,7 @@ const logout = () => {
 
 const handlePersonalPage = () => {
   router.push({
-    path: '/userinfo'
+    path: '/profile'
   })
 }
 </script>
@@ -33,7 +33,7 @@ const handlePersonalPage = () => {
       <div>
         <img :src="userInfo.avatar" alt="" class="avatar" />
       </div>
-      <div class="name">{{ userInfo.name }}</div>
+      <div class="name">{{ userInfo.nickName }}</div>
       <DownOutlined :style="{ fontSize: '14px', color: 'var(--st-c-icon)' }" />
     </div>
     <template #overlay>
