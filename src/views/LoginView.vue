@@ -1,5 +1,9 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { validateUsername, validatePassword } from '@/utils/validate'
+import { useUserStore } from '@/stores/user'
+import { useRouter } from 'vue-router'
+import type { ILoginParams } from "@/types/common/index";
 import type { FormInstance } from 'ant-design-vue'
 import type { Rule } from 'ant-design-vue/es/form'
 import {
@@ -12,11 +16,9 @@ import {
   InputPassword as AInputPassword
 } from 'ant-design-vue'
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
-import { validateUsername, validatePassword } from '@/utils/validate'
-import { useUserStore } from '@/stores/user'
-import { useRouter } from 'vue-router'
+import ImgCaptcha from '@/components/ImgCaptcha/index.vue'
 
-const loginRules: Record<'username' | 'password' | 'code', Rule[]> = {
+const loginRules: Record<keyof ILoginParams, Rule[]> = {
   username: [
     {
       required: true,
@@ -31,7 +33,7 @@ const loginRules: Record<'username' | 'password' | 'code', Rule[]> = {
       trigger: 'change'
     }
   ],
-  code: [
+  captcha: [
     {
       required: true,
       message: '请输入验证码',
@@ -45,20 +47,27 @@ const resetForm = () => {
   loginFormRef.value?.resetFields()
 }
 
-const loginForm = ref({
-  username: 'test1',
-  password: 'a12138',
-  code: '1234'
+const loginForm = ref<ILoginParams>({
+  username: '',
+  password: '',
+  captcha: ''
 })
+
+const refreshCaptcha = ref<boolean>(true)
+const loading = ref<boolean>(false)
 
 const userStore = useUserStore()
 const router = useRouter()
 const login = () => {
   loginFormRef.value?.validate().then(() => {
+    loading.value = true
     userStore.login(loginForm.value).then(() => {
-      router.push((router.currentRoute.value.query.redirect as string) || '/')
-
       resetForm()
+      router.replace(router.currentRoute.value.query.redirect as string || '/')
+    }).catch(() => {
+      refreshCaptcha.value = true
+    }).finally(() => {
+      loading.value = false
     })
   })
 }
@@ -95,19 +104,19 @@ const login = () => {
             </a-input-password>
           </a-form-item>
           <a-form-item>
-            <a-row>
+            <a-row :gutter="20">
               <a-col :span="16">
-                <a-form-item name="code">
-                  <a-input v-model:value="loginForm.code" placeholder="请输入验证码"></a-input>
+                <a-form-item name="captcha">
+                  <a-input v-model:value="loginForm.captcha" placeholder="请输入验证码"></a-input>
                 </a-form-item>
               </a-col>
               <a-col :span="8">
-                <img src="" alt="" class="code" />
+                <ImgCaptcha v-model:is-refresh="refreshCaptcha" />
               </a-col>
             </a-row>
           </a-form-item>
           <a-form-item>
-            <a-button type="primary" block @click="login">登录</a-button>
+            <a-button type="primary" :loading="loading" block @click="login">登录</a-button>
           </a-form-item>
         </a-form>
       </div>
@@ -182,10 +191,6 @@ const login = () => {
   font-size: 24px;
   font-weight: 600;
   color: #213547;
-}
-
-.code {
-  height: 32px;
 }
 
 :deep(.ant-btn-primary) {
