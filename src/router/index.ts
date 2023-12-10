@@ -20,42 +20,13 @@ export const adminRoute = {
       }
     },
     {
-      path: 'userinfo',
-      name: 'UserInfo',
-      component: () => import('@/views/userinfo/UserInfo.vue'),
+      path: 'profile',
+      name: 'profileView',
+      component: () => import('@/views/profile/index.vue'),
       meta: {
         title: '个人中心',
         hidden: true
       }
-    },
-    {
-      path: 'article',
-      name: 'Article',
-      component: () => import('@/components/ParentView/ParentView.vue'),
-      meta: {
-        title: '文章管理',
-        icon: 'MailOutlined'
-      },
-      children: [
-        {
-          path: '',
-          name: 'ArticleList',
-          component: () => import('@/views/article/list/ArticleList.vue'),
-          meta: {
-            title: '文章列表',
-            icon: 'DesktopOutlined'
-          }
-        },
-        {
-          path: 'add',
-          name: 'ArticleAdd',
-          component: () => import('@/views/article/add/ArticleAdd.vue'),
-          meta: {
-            title: '添加文章',
-            icon: 'InboxOutlined'
-          }
-        }
-      ]
     }
   ]
 }
