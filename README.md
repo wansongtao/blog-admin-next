@@ -4,8 +4,8 @@
 技术栈：Vue3 + Vite4 + TypeScript + ant-design-vue4 + Vue Router4 + Pinia2 + Axios + Sass + ESLint + Prettier + Vitest。
 
 ## Example
-![index](./public/index.png)
-![login](./public/login.png)
+![index](./doc/images/index.png)
+![login](./doc/images/login.png)
 
 ## Project Setup
 
