@@ -17,6 +17,7 @@ import {
 } from 'ant-design-vue'
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
 import ImgCaptcha from '@/components/ImgCaptcha/index.vue'
+import IconWater from '@/assets/svg/water.svg'
 
 const loginRules: Record<keyof ILoginParams, Rule[]> = {
   username: [
@@ -83,7 +84,7 @@ const login = () => {
         </div>
       </div>
       <img src="@/assets/imgs/login-logo.png" alt="" class="login_left_logo" />
-      <img src="@/assets/shuibo.svg" alt="" class="login_left_wave" />
+      <IconWater class="login_left_wave" />
     </div>
     <div class="login_right">
       <div class="login_right_wrap">
