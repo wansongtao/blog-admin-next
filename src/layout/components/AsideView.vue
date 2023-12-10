@@ -1,19 +1,13 @@
 <script lang="ts" setup>
 import { Menu as AMenu } from 'ant-design-vue'
 import { reactive, watch, h, type VNode } from 'vue'
-import {
-  PieChartOutlined,
-  MailOutlined,
-  DesktopOutlined,
-  InboxOutlined,
-  AppstoreOutlined
-} from '@ant-design/icons-vue'
 import { useSettingStore } from '@/stores/setting'
 import { storeToRefs } from 'pinia'
 import { adminRoute } from '@/router/index'
 import type { RouteRecordRaw } from 'vue-router'
 import type { MenuInfo } from 'ant-design-vue/es/menu/src/interface'
 import { useRouter } from 'vue-router'
+import MENU_ICON_MAP from '@/config/menuIcon'
 
 interface MenuItem {
   key: string
@@ -23,13 +17,6 @@ interface MenuItem {
   children?: MenuItem[]
 }
 
-const iconComponents: Record<string, any> = {
-  PieChartOutlined,
-  MailOutlined,
-  DesktopOutlined,
-  InboxOutlined,
-  AppstoreOutlined
-}
 const getMenus = (routers: RouteRecordRaw[], parentPath = '/'): MenuItem[] => {
   const menus: MenuItem[] = []
 
@@ -48,9 +35,12 @@ const getMenus = (routers: RouteRecordRaw[], parentPath = '/'): MenuItem[] => {
 
     const menuItem: MenuItem = {
       key: name as string,
-      icon: meta?.icon ? () => h(iconComponents[meta.icon!]) : undefined,
       label: meta?.title,
       path
+    }
+
+    if (meta?.icon && MENU_ICON_MAP[meta.icon]) {
+      menuItem.icon = () => h(MENU_ICON_MAP[meta.icon!])
     }
 
     if (item.children && item.children.length > 0) {
