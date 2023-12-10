@@ -46,7 +46,6 @@ export const useUserStore = defineStore('user', () => {
       setLogin(data)
         .then((res) => {
           setToken(res.data)
-          getUserInfoAction()
           resolve()
         })
         .catch((err) => {

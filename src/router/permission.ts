@@ -15,9 +15,15 @@ router.beforeEach((to) => {
     return `/login?redirect=${to.path}`
   }
 
-  if (to.name === 'Login' && token) {
-    NProgress.done()
-    return to.query?.redirect as string || '/'
+  if (token) {
+    if (!useStore.userInfo.roles.length) {
+      useStore.getUserInfoAction()
+    }
+
+    if (to.name === 'Login') {
+      NProgress.done()
+      return (to.query?.redirect as string) || '/'
+    }
   }
 })
 
