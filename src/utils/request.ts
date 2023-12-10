@@ -4,6 +4,16 @@ import { message } from 'ant-design-vue'
 import { useUserStore } from '@/stores/user'
 import { getDataType, throttle } from '@/utils/index'
 
+const goToLogin = (seconds = 2) => {
+  setTimeout(() => {
+    const store = useUserStore()
+    store.removeToken()
+
+    const loginPath = `/login?redirect=${encodeURIComponent(location.pathname + location.search)}`
+    location.href = location.origin + loginPath
+  }, seconds * 1000)
+}
+
 const historyRequestMap: Record<string, number> = {}
 /**
  * Async clear expired request information every 5 seconds.
@@ -74,8 +84,6 @@ instance.interceptors.request.use(
     return config
   },
   (error: AxiosError) => {
-    console.error(error, 'req')
-
     return Promise.reject(error)
   }
 )
@@ -88,24 +96,31 @@ instance.interceptors.response.use(
       return data
     }
 
+    if (data.code === 300 || data.code === 401) {
+      message.error(data.msg, 2)
+      goToLogin()
+      return Promise.reject(data.msg)
+    }
+
     if (data.code !== 200) {
       message.error(data.msg)
-      return Promise.reject(data)
+      return Promise.reject(data.msg)
     }
 
     return data
   },
   (error: AxiosError) => {
-    // 处理取消请求错误
+    // Cancel request
     if (error.code === 'ERR_CANCELED') {
       return Promise.reject(error)
     }
 
-    if (error.response?.status === 401 || error.response?.status === 403) {
+    if (error.response?.status === 401) {
+      goToLogin()
+      message.error(error.response?.statusText || error.message, 2)
       return Promise.reject(error)
     }
 
-    // 超出 2xx 范围的http状态码都会触发该函数。包括网络错误和超时
     message.error(error.response?.statusText || error.message)
     return Promise.reject(error)
   }
