@@ -1,12 +1,18 @@
 <script lang="ts" setup>
 import { Dropdown as ADropdown, Menu as AMenu, MenuItem as AMenuItem } from 'ant-design-vue'
 import { DownOutlined } from '@ant-design/icons-vue'
-import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
+import { computed } from 'vue'
 
 const userStore = useUserStore()
-const { userInfo } = storeToRefs(userStore)
+const userInfo = computed(() => {
+  if (!userStore.userInfo.roles.length) {
+    userStore.getUserInfoAction()
+  }
+
+  return userStore.userInfo
+})
 
 const router = useRouter()
 const logout = () => {
