@@ -1,15 +1,9 @@
-import IconIndex from '@/assets/svg/menus/index.svg'
-import IconMenu from '@/assets/svg/menus/menu.svg'
-import IconRole from '@/assets/svg/menus/role.svg'
-import IconUser from '@/assets/svg/menus/user.svg'
-import IconSystem from '@/assets/svg/menus/system.svg'
+const MENU_ICON_MAP: Record<string, any> = {}
 
-const MENU_ICON_MAP: Record<string, any> = {
-  'icon-index': IconIndex,
-  'icon-menu': IconMenu,
-  'icon-role': IconRole,
-  'icon-user': IconUser,
-  'icon-system': IconSystem
+const modules = import.meta.glob('/src/assets/svg/menus/*.svg', { eager: true })
+for (const path in modules) {
+  const name = path.replace(/(.*\/)*([^.]+).*/gi, '$2')
+  MENU_ICON_MAP[name] = (modules[path] as any).default
 }
 
 export default MENU_ICON_MAP
