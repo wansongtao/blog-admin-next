@@ -1,6 +1,6 @@
 import instance from "@/utils/request";
 import type { IBaseResponse } from "@/types/index";
-import type { ILoginParams, IUserinfoData } from '@/types/common/index'
+import type { ILoginParams, IUserinfoData, IMenuData } from '@/types/common/index'
 
 export const getCaptcha = () => {
   return instance.request<any, IBaseResponse<string>>({
@@ -33,6 +33,13 @@ export const setLogout = () => {
 export const getUserInfo = () => {
   return instance.request<any, IBaseResponse<IUserinfoData>>({
     url: '/admin/userinfo',
+    method: 'GET'
+  })
+}
+
+export const getMenus = () => {
+  return instance.request<any, IBaseResponse<IMenuData[]>>({
+    url: '/admin/menus',
     method: 'GET'
   })
 }
