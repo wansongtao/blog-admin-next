@@ -6,19 +6,11 @@ import LayoutView from '@/layout/LayoutView.vue'
 export const adminRoute = {
   path: '/',
   component: LayoutView,
+  name: 'LayoutView',
   meta: {
     title: '首页'
   },
   children: [
-    {
-      path: '',
-      name: 'home',
-      component: () => import('@/views/home/HomeView.vue'),
-      meta: {
-        title: '首页',
-        icon: 'PieChartOutlined'
-      }
-    },
     {
       path: 'profile',
       name: 'profileView',
@@ -37,13 +29,21 @@ const router = createRouter({
     {
       path: '/login',
       name: 'Login',
-      component: LoginView
+      component: LoginView,
+      meta: {
+        title: '登录',
+        hidden: true
+      }
     },
     adminRoute,
     {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
-      component: NotFound
+      component: NotFound,
+      meta: {
+        title: '404',
+        hidden: true
+      }
     }
   ],
   scrollBehavior(to, _from, savedPosition) {
