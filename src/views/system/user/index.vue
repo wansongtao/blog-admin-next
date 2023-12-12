@@ -1,9 +1,11 @@
 <script lang="ts" setup>
-
+defineOptions({
+  name: 'systemUser'
+})
 </script>
 
 <template>
-  <div>login log</div>
+  <div>user</div>
 </template>
 
 <style lang="scss" scoped>
