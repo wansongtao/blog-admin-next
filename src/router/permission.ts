@@ -2,10 +2,11 @@ import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import router from './index'
 import { useUserStore } from '@/stores/user'
+import { useSettingStore } from '@/stores/setting'
 
 NProgress.configure({ showSpinner: false })
 
-router.beforeEach((to) => {
+router.beforeEach(async (to) => {
   NProgress.start()
 
   const useStore = useUserStore()
@@ -17,7 +18,21 @@ router.beforeEach((to) => {
 
   if (token) {
     if (!useStore.userInfo.roles.length) {
-      useStore.getUserInfoAction()
+      await useStore.getUserInfoAction()
+    }
+
+    const settingStore = useSettingStore()
+    if (!settingStore.menus?.length) {
+      const routes = await settingStore.getRoutesAction()
+
+      if (routes?.length) {
+        for (const route of routes) {
+          router.addRoute('LayoutView', route)
+        }
+
+        NProgress.done()
+        return to.fullPath
+      }
     }
 
     if (to.name === 'Login') {
