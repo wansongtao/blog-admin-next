@@ -1,60 +1,13 @@
 <script lang="ts" setup>
 import { Menu as AMenu } from 'ant-design-vue'
-import { reactive, watch, h, type VNode } from 'vue'
+import { reactive, watch } from 'vue'
 import { useSettingStore } from '@/stores/setting'
 import { storeToRefs } from 'pinia'
-import { adminRoute } from '@/router/index'
-import type { RouteRecordRaw } from 'vue-router'
 import type { MenuInfo } from 'ant-design-vue/es/menu/src/interface'
 import { useRouter } from 'vue-router'
-import MENU_ICON_MAP from '@/config/menuIcon'
-
-interface MenuItem {
-  key: string
-  icon?: () => VNode
-  label?: string
-  path: string
-  children?: MenuItem[]
-}
-
-const getMenus = (routers: RouteRecordRaw[], parentPath = '/'): MenuItem[] => {
-  const menus: MenuItem[] = []
-
-  routers.forEach((item) => {
-    if (item.meta?.hidden) {
-      return
-    }
-
-    const { meta, name } = item
-    let path = parentPath
-    if (item.redirect) {
-      path = item.redirect as string
-    } else if (item.path) {
-      path = path[path.length - 1] !== '/' ? path + '/' + item.path : path + item.path
-    }
-
-    const menuItem: MenuItem = {
-      key: name as string,
-      label: meta?.title,
-      path
-    }
-
-    if (meta?.icon && MENU_ICON_MAP[meta.icon]) {
-      menuItem.icon = () => h(MENU_ICON_MAP[meta.icon!])
-    }
-
-    if (item.children && item.children.length > 0) {
-      menuItem.children = getMenus(item.children, path)
-    }
-
-    menus.push(menuItem)
-  })
-
-  return menus
-}
 
 const setStore = useSettingStore()
-const { collapsed } = storeToRefs(setStore)
+const { collapsed, menus } = storeToRefs(setStore)
 const state = reactive<{ selectedKeys: string[]; openKeys: string[]; preOpenKeys: string[] }>({
   selectedKeys: [],
   openKeys: [],
@@ -73,8 +26,6 @@ watch(
     state.openKeys = val ? [] : state.preOpenKeys
   }
 )
-
-const items = reactive<MenuItem[]>(getMenus(adminRoute.children!, adminRoute.path))
 
 const router = useRouter()
 const onChangeRoute = ({ item }: MenuInfo) => {
@@ -109,7 +60,7 @@ const version = __APP_VERSION__;
       v-model:selectedKeys="state.selectedKeys"
       mode="inline"
       :inline-collapsed="collapsed"
-      :items="items"
+      :items="menus"
       @click="onChangeRoute"
     ></a-menu>
     <div class="version">{{version}}</div>
