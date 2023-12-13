@@ -27,7 +27,9 @@ export const generateAsideMenu = (routes: RouteRecordRaw[], parentPath = ''): IM
     const { meta, name } = item
     let path = parentPath
     if (item.path) {
-      if (path[path.length - 1] !== '/' && item.path.indexOf('/') !== 0) {
+      if (item.path.indexOf(parentPath) === 0) {
+        path = item.path
+      } else if (path[path.length - 1] !== '/' && item.path.indexOf('/') !== 0) {
         path += '/' + item.path
       } else {
         path += item.path
@@ -35,7 +37,7 @@ export const generateAsideMenu = (routes: RouteRecordRaw[], parentPath = ''): IM
     }
 
     const menuItem: IMenuItem = {
-      key: name as string,
+      key: path,
       label: meta?.title || (name as string),
       path
     }
@@ -60,18 +62,12 @@ export const generateRoutes = (
   routes: RouteRecordRaw[]
   cacheRouteNames: string[]
 } => {
-  const menuList = menuTree.map((item) => {
-    return {
-      ...item,
-      path: item.path.indexOf('/') !== 0 ? `/${item.path}` : item.path
-    }
-  })
-
   const cacheRouteNames: string[] = []
-  const recursionGenerateRoutes = (tree: IMenuData[]): RouteRecordRaw[] => {
+
+  const recursionGenerateRoutes = (tree: IMenuData[], parentPath = ''): RouteRecordRaw[] => {
     return tree.map((item) => {
       const route: RouteRecordRaw = {
-        path: item.path,
+        path: parentPath + '/' + item.path,
         component: ParentView,
         meta: {}
       }
@@ -99,15 +95,43 @@ export const generateRoutes = (
       }
 
       if (item.children?.length) {
+        // 实现路由跳转父级菜单时，重定向到相应子菜单
+        if (item.redirect) {
+          // @ts-ignore
+          route.children = [
+            {
+              path: route.path,
+              title: item.title,
+              redirect: item.redirect,
+              meta: {
+                hidden: true
+              }
+            }
+          ]
+        } else {
+          // @ts-ignore
+          route.children = [
+            {
+              path: route.path,
+              title: item.title,
+              redirect: route.path + '/' + item.children[0].path,
+              meta: {
+                hidden: true
+              }
+            }
+          ]
+        }
+
         // @ts-ignore
-        route.children = recursionGenerateRoutes(item.children)
+        route.children.push(...recursionGenerateRoutes(item.children, route.path))
       }
 
       return route
     })
   }
 
-  const routes = recursionGenerateRoutes(menuList)
+  const routes = recursionGenerateRoutes(menuTree)
+
   return {
     routes,
     cacheRouteNames: cacheRouteNames.filter((item) => !!item)

@@ -33,19 +33,19 @@ const onChangeRoute = ({ item }: MenuInfo) => {
 }
 
 watch(
-  () => router.currentRoute.value.name,
+  () => router.currentRoute.value.path,
   (val) => {
-    if (state.selectedKeys.includes(val as string)) {
+    if (state.selectedKeys.includes(val)) {
       return
     }
 
     router.currentRoute.value.matched.forEach((item) => {
-      if (item.name && !item.meta?.hidden) {
-        state.openKeys.push(item.name as string)
+      if (!item.meta?.hidden) {
+        state.openKeys.push(item.path)
       }
     })
 
-    state.selectedKeys = [val as string]
+    state.selectedKeys = [val]
   },
   { immediate: true }
 )
