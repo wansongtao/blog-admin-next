@@ -67,7 +67,7 @@ export const generateRoutes = (
   const recursionGenerateRoutes = (tree: IMenuData[], parentPath = ''): RouteRecordRaw[] => {
     return tree.map((item) => {
       const route: RouteRecordRaw = {
-        path: parentPath + '/' + item.path,
+        path: item.path.indexOf('/') !== 0 ? parentPath + '/' + item.path : parentPath + item.path,
         component: ParentView,
         meta: {}
       }
