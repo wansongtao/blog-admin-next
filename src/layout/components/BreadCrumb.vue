@@ -14,7 +14,7 @@ watch(
 
     routes.value = []
     data.forEach((item, index) => {
-      if (index === 1 && item.path === data[0].path) {
+      if (index === 0) {
         return
       }
 
