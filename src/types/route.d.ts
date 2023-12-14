@@ -5,6 +5,6 @@ declare module 'vue-router' {
     title?: string
     hidden?: boolean
     icon?: string
-    isCache?: boolean
+    cache?: boolean
   }
 }

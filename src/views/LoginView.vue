@@ -20,7 +20,7 @@ import ImgCaptcha from '@/components/ImgCaptcha/index.vue'
 import IconWater from '@/assets/svg/water.svg'
 
 const loginRules: Record<keyof ILoginParams, Rule[]> = {
-  username: [
+  userName: [
     {
       required: true,
       validator: validateUsername,
@@ -49,7 +49,7 @@ const resetForm = () => {
 }
 
 const loginForm = ref<ILoginParams>({
-  username: '',
+  userName: '',
   password: '',
   captcha: ''
 })
@@ -90,8 +90,8 @@ const login = () => {
       <div class="login_right_wrap">
         <div class="login_right_title">账号登录</div>
         <a-form ref="loginFormRef" :model="loginForm" :rules="loginRules" label-width="0px">
-          <a-form-item name="username">
-            <a-input v-model:value="loginForm.username" placeholder="请输入用户名">
+          <a-form-item name="userName">
+            <a-input v-model:value="loginForm.userName" placeholder="请输入用户名">
               <template #prefix>
                 <UserOutlined class="site-form-item-icon" />
               </template>

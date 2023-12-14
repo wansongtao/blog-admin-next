@@ -1,5 +1,5 @@
 export interface ILoginParams {
-  username: string
+  userName: string
   password: string
   captcha: string
 }
