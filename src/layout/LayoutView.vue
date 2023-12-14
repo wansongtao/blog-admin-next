@@ -2,6 +2,13 @@
 import AsideView from './components/AsideView.vue'
 import HeaderView from './components/HeaderView.vue'
 import ScrollBar from './components/ScrollBar.vue'
+import { useSettingStore } from '@/stores/setting';
+import { computed } from 'vue';
+
+const settingStore = useSettingStore()
+const include = computed(() => {
+  return settingStore.cacheRoutes
+})
 </script>
 
 <template>
@@ -11,9 +18,9 @@ import ScrollBar from './components/ScrollBar.vue'
       <HeaderView />
       <ScrollBar />
       <div class="layout-main st-transition-bg">
-        <router-view v-slot="{ Component, route }">
+        <router-view v-slot="{ Component }">
           <transition name="slide-fade">
-            <KeepAlive :include="route.meta?.isCache ? route.name as string : ''">
+            <KeepAlive :include="include">
               <component :is="Component" />
             </KeepAlive>
           </transition>
