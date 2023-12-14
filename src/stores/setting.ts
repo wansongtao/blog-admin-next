@@ -31,11 +31,11 @@ export const useSettingStore = defineStore('setting', () => {
   async function getRoutesAction() {
     const result = await getMenus().catch(() => ({ data: [] }))
 
-    const { routes, cacheRouteNames } = generateRoutes(result.data)
+    const { route, cacheRouteNames } = generateRoutes(result.data)
     cacheRoutes.value = cacheRouteNames
-    menus.value = generateAsideMenu(routes)
+    menus.value = generateAsideMenu(route.children || [])
 
-    return routes
+    return route
   }
 
   return {

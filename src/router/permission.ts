@@ -23,16 +23,10 @@ router.beforeEach(async (to) => {
 
     const settingStore = useSettingStore()
     if (!settingStore.menus?.length) {
-      const routes = await settingStore.getRoutesAction()
-
-      if (routes?.length) {
-        for (const route of routes) {
-          router.addRoute('LayoutView', route)
-        }
-
-        NProgress.done()
-        return to.fullPath
-      }
+      const route = await settingStore.getRoutesAction()
+      router.addRoute(route)
+      NProgress.done()
+      return to.fullPath
     }
 
     if (to.name === 'Login') {

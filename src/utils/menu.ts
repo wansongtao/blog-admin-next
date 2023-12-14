@@ -1,3 +1,4 @@
+import LayoutView from '@/layout/LayoutView.vue'
 import ParentView from '@/components/ParentView/ParentView.vue'
 import { h } from 'vue'
 import MENU_ICON_MAP from '@/config/menuIcon'
@@ -59,7 +60,7 @@ export const generateAsideMenu = (routes: RouteRecordRaw[], parentPath = ''): IM
 export const generateRoutes = (
   menuTree: IMenuData[]
 ): {
-  routes: RouteRecordRaw[]
+  route: RouteRecordRaw
   cacheRouteNames: string[]
 } => {
   const cacheRouteNames: string[] = []
@@ -86,9 +87,9 @@ export const generateRoutes = (
       if (item.icon) {
         route.meta!.icon = item.icon
       }
-      if (item.isCache) {
-        route.meta!.isCache = item.isCache
-        cacheRouteNames.push(item.name!)
+      if (item.cache && item.name) {
+        route.meta!.cache = item.cache
+        cacheRouteNames.push(item.name)
       }
       if (item.hidden) {
         route.meta!.hidden = item.hidden
@@ -133,7 +134,14 @@ export const generateRoutes = (
   const routes = recursionGenerateRoutes(menuTree)
 
   return {
-    routes,
-    cacheRouteNames: cacheRouteNames.filter((item) => !!item)
+    route: {
+      path: '/',
+      component: LayoutView,
+      meta: {
+        title: '首页'
+      },
+      children: routes
+    },
+    cacheRouteNames: cacheRouteNames
   }
 }
