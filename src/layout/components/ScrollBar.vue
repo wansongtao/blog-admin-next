@@ -1,34 +1,76 @@
 <script lang="ts" setup>
 import TagLink from '@/components/TagLink/TagLink.vue'
+
 import { CloseOutlined } from '@ant-design/icons-vue'
 import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { throttle } from '@/utils/index'
+import { useSettingStore } from '@/stores/setting'
+
+import type { ITagLinkItem } from '@/types/index'
 
 const scrollElement = ref<HTMLElement | null>(null)
 const onWheel = throttle((e: WheelEvent) => {
   scrollElement.value!.scrollLeft += e.deltaY * 0.5
 }, 100)
 
+type Item = {
+  path: string
+  title: string
+}
+const isEqual = (a: Item, b: Item) => {
+  // 判断title是为了解决动态路由(/example/:id)的问题，也不想存在多个一样title的tagLink
+  if (a.path === b.path || a.title === b.title) {
+    return true
+  }
+
+  return false
+}
+
+const settingStore = useSettingStore()
+const tags = ref<ITagLinkItem[]>([])
+
+watch(
+  () => settingStore.defaultTagLinks,
+  (defaultTagLinks) => {
+    if (!tags.value.length) {
+      tags.value = defaultTagLinks
+      return
+    }
+
+    tags.value = tags.value.filter((item) => {
+      return !defaultTagLinks.some((defaultItem) => isEqual(item, defaultItem))
+    })
+
+    tags.value.unshift(...defaultTagLinks)
+  },
+  {
+    immediate: true
+  }
+)
+
 const route = useRoute()
-const tags = ref<{ title: string; path: string; checked?: boolean; hiddenIcon?: boolean }[]>([
-  { title: '首页', path: '/', hiddenIcon: true }
-])
 watch(
   () => route.path,
   (path) => {
+    const title = (route.meta.title as string) || (route.name as string)
+    if (!title) {
+      return
+    }
+
     tags.value.forEach((item) => {
-      item.checked = false
+      if (item.checked) {
+        item.checked = false
+      }
     })
 
-    const tag = tags.value.find((item) => item.path === path || item.title === route.meta.title)
+    const tag = tags.value.find((item) => isEqual(item, { path, title }))
     if (tag) {
       tag.path = route.fullPath
       tag.checked = true
       return
     }
 
-    const title = (route.meta.title as string) || (route.name as string)
     tags.value.push({
       title,
       path: route.fullPath,
@@ -65,7 +107,7 @@ const onClose = (index: number) => {
           :checked="item.checked"
           :path="item.path"
         >
-          <div v-if="!item.hiddenIcon" class="icon--close" @click.stop="onClose(idx)">
+          <div v-if="!item.hiddenCloseIcon" class="icon--close" @click.stop="onClose(idx)">
             <CloseOutlined />
           </div>
         </TagLink>
@@ -104,7 +146,6 @@ const onClose = (index: number) => {
     }
   }
 }
-
 
 .tags-move, /* 对移动中的元素应用的过渡 */
 .tags-enter-active,
