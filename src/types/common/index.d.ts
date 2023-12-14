@@ -56,7 +56,7 @@ export interface IMenuData {
   /**
    * 是否缓存
    */
-  isCache?: boolean
+  cache?: boolean
   /**
    * 子菜单
    */
