@@ -32,14 +32,14 @@ export const setLogout = () => {
 
 export const getUserInfo = () => {
   return instance.request<any, IBaseResponse<IUserinfoData>>({
-    url: '/admin/userinfo',
+    url: '/admin/auth/userinfo',
     method: 'GET'
   })
 }
 
 export const getMenus = () => {
   return instance.request<any, IBaseResponse<IMenuData[]>>({
-    url: '/admin/menus',
+    url: '/admin/auth/menu',
     method: 'GET'
   })
 }
