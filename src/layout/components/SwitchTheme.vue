@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import BaseSwitch from '@/components/BaseSwitch/index.vue'
-import { useSettingStore } from '@/stores/setting'
+
 import { computed } from 'vue'
+import { useSettingStore } from '@/stores/setting'
 
 const setStore = useSettingStore()
 const { toggleTheme, followSystemTheme } = setStore

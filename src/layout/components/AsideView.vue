@@ -1,10 +1,12 @@
 <script lang="ts" setup>
 import { Menu as AMenu } from 'ant-design-vue'
-import { reactive, watch } from 'vue'
-import { useSettingStore } from '@/stores/setting'
-import { storeToRefs } from 'pinia'
+
 import type { MenuInfo } from 'ant-design-vue/es/menu/src/interface'
+
+import { reactive, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import { useSettingStore } from '@/stores/setting'
 
 const setStore = useSettingStore()
 const { collapsed, menus } = storeToRefs(setStore)
@@ -63,7 +65,7 @@ const version = __APP_VERSION__;
       :items="menus"
       @click="onChangeRoute"
     ></a-menu>
-    <div class="version">{{version}}</div>
+    <div class="version">{{ version }}</div>
   </aside>
 </template>
 

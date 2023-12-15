@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import TagLink from '@/components/TagLink/TagLink.vue'
-
 import { CloseOutlined } from '@ant-design/icons-vue'
+
+import type { ITagLinkItem } from '@/types/index'
+
 import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { throttle } from '@/utils/index'
 import { useSettingStore } from '@/stores/setting'
-
-import type { ITagLinkItem } from '@/types/index'
 
 const scrollElement = ref<HTMLElement | null>(null)
 const onWheel = throttle((e: WheelEvent) => {

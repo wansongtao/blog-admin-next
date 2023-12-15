@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import IconSun from '../icons/IconSun.vue'
 import IconMoon from '../icons/IconMoon.vue'
+
 import { ref, watch } from 'vue'
 import { throttle } from '@/utils/index'
 

@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { Dropdown as ADropdown, Menu as AMenu, MenuItem as AMenuItem } from 'ant-design-vue'
 import { DownOutlined } from '@ant-design/icons-vue'
-import { useUserStore } from '@/stores/user'
+
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
+import { useUserStore } from '@/stores/user'
 
 const userStore = useUserStore()
 const { userInfo } = storeToRefs(userStore)

@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { Breadcrumb as ABreadcrumb, BreadcrumbItem as ABreadcrumbItem } from 'ant-design-vue'
-import { useRoute } from 'vue-router'
+
 import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 
 const routes = ref<{ path: string; title: string }[]>([])
 const route = useRoute()
