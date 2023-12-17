@@ -4,6 +4,7 @@ import { h } from 'vue'
 import MENU_ICON_MAP from '@/config/menuIcon'
 import COMPONENT_MAP from '@/config/routeComponent'
 import { adminRoute } from '@/router/index'
+import { parse } from 'web-storage-plus'
 
 import type { IMenuData } from '@/types/common/index'
 import type { RouteRecordRaw } from 'vue-router'
@@ -19,6 +20,19 @@ const getFullPath = (path: string, parentPath = '/') => {
   }
 
   return parentPath + path
+}
+
+const getProps = (props: IMenuData['props']) => {
+  if (typeof props === 'boolean') {
+    return props
+  }
+
+  try {
+    return parse(JSON.stringify(props))
+  } catch (e) {
+    console.error(e)
+    return false
+  }
 }
 
 export const generateAsideMenu = (routes: RouteRecordRaw[], parentPath = ''): IMenuItem[] => {
@@ -83,6 +97,10 @@ export const generateRoutes = (menuTree: IMenuData[]): RouteRecordRaw => {
         route.meta!.hidden = item.hidden
       }
 
+      if (item.props) {
+        route.props = getProps(item.props)
+      }
+
       if (item.children?.length) {
         // 实现路由跳转父级菜单时，重定向到相应子菜单
         const redirectRoute = {
@@ -106,7 +124,7 @@ export const generateRoutes = (menuTree: IMenuData[]): RouteRecordRaw => {
   }
 
   const routes = recursionGenerateRoutes(menuTree)
-  adminRoute.children.push(...routes as any)
+  adminRoute.children.push(...(routes as any))
 
   return adminRoute
 }

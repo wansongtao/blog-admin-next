@@ -52,7 +52,7 @@ export interface IMenuData {
   /**
    * 路由传参模式
    */
-  props?: boolean | object | string
+  props?: boolean | string
   /**
    * 是否缓存
    */
