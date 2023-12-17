@@ -1,21 +1,13 @@
 import LayoutView from '@/layout/LayoutView.vue'
 import ParentView from '@/components/ParentView/ParentView.vue'
+
 import { h } from 'vue'
 import MENU_ICON_MAP from '@/config/menuIcon'
+import COMPONENT_MAP from '@/config/routeComponent'
+
 import type { IMenuData } from '@/types/common/index'
 import type { RouteRecordRaw } from 'vue-router'
 import type { IMenuItem } from '@/types/index'
-
-const componentMap = import.meta.glob('@/views/**/*.vue')
-for (const path in componentMap) {
-  const name = path.replace('/src/views', '')
-  componentMap[name] = componentMap[path]
-  delete componentMap[path]
-
-  if (path.indexOf('/components/') !== -1) {
-    delete componentMap[path]
-  }
-}
 
 export const generateAsideMenu = (routes: RouteRecordRaw[], parentPath = ''): IMenuItem[] => {
   const menus: IMenuItem[] = []
@@ -73,9 +65,9 @@ export const generateRoutes = (
         meta: {}
       }
 
-      if (item.component && componentMap[item.component]) {
-        route.component = componentMap[item.component]
-        delete componentMap[item.component]
+      if (item.component && COMPONENT_MAP[item.component]) {
+        route.component = COMPONENT_MAP[item.component]
+        delete COMPONENT_MAP[item.component]
       }
 
       if (item.name) {
