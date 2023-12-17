@@ -1,23 +1,16 @@
 <script lang="ts" setup>
+import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
+import IconWater from '@/assets/svg/water.svg'
+
 import { ref } from 'vue'
-import { validateUsername, validatePassword } from '@/utils/validate'
-import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/user'
+import { validateUsername, validatePassword } from '@/utils/validate'
+
 import type { ILoginParams } from "@/types/common/index";
 import type { FormInstance } from 'ant-design-vue'
 import type { Rule } from 'ant-design-vue/es/form'
-import {
-  Input as AInput,
-  Form as AForm,
-  FormItem as AFormItem,
-  Button as AButton,
-  Row as ARow,
-  Col as ACol,
-  InputPassword as AInputPassword
-} from 'ant-design-vue'
-import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
-import ImgCaptcha from '@/components/ImgCaptcha/index.vue'
-import IconWater from '@/assets/svg/water.svg'
+
 
 const loginRules: Record<keyof ILoginParams, Rule[]> = {
   userName: [
