@@ -22,7 +22,7 @@
     "pinia": "^2.0.36",
     "vue": "^3.3.2",
     "vue-router": "^4.2.0",
-    "web-storage-plus": "^1.4.2"
+    "web-storage-plus": "^1.5.1"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",

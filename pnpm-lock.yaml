@@ -33,8 +33,8 @@ dependencies:
     specifier: ^4.2.0
     version: 4.2.1(vue@3.3.4)
   web-storage-plus:
-    specifier: ^1.4.2
-    version: 1.5.0
+    specifier: ^1.5.1
+    version: 1.5.1
 
 devDependencies:
   '@rushstack/eslint-patch':
@@ -4144,8 +4144,8 @@ packages:
       loose-envify: 1.4.0
     dev: false
 
-  /web-storage-plus@1.5.0:
-    resolution: {integrity: sha512-/r75MI67uBB5Whp7f4Dj0puOtaJCYT+vpkm49cMLXKq//w2IpYni2L4ZHerAtO2HAa8HyFC+J091lvVEK5gVdw==}
+  /web-storage-plus@1.5.1:
+    resolution: {integrity: sha512-66iqvebPrqXoA4rZ/38Xh57un5Mp0DGRp/nsTs3LBX2SJwrNDwbGRPCTHnBnsMWZymAgXSHfOy5A2BzMjw0o5Q==}
     dev: false
 
   /webidl-conversions@7.0.0:
