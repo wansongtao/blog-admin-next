@@ -1,13 +1,25 @@
-import LayoutView from '@/layout/LayoutView.vue'
 import ParentView from '@/components/ParentView/ParentView.vue'
 
 import { h } from 'vue'
 import MENU_ICON_MAP from '@/config/menuIcon'
 import COMPONENT_MAP from '@/config/routeComponent'
+import { adminRoute } from '@/router/index'
 
 import type { IMenuData } from '@/types/common/index'
 import type { RouteRecordRaw } from 'vue-router'
 import type { IMenuItem } from '@/types/index'
+
+const getFullPath = (path: string, parentPath = '/') => {
+  if (parentPath[parentPath.length - 1] !== '/' && path.indexOf('/') !== 0) {
+    return parentPath + '/' + path
+  }
+
+  if (path.indexOf(parentPath) === 0) {
+    return path
+  }
+
+  return parentPath + path
+}
 
 export const generateAsideMenu = (routes: RouteRecordRaw[], parentPath = ''): IMenuItem[] => {
   const menus: IMenuItem[] = []
@@ -18,16 +30,7 @@ export const generateAsideMenu = (routes: RouteRecordRaw[], parentPath = ''): IM
     }
 
     const { meta, name } = item
-    let path = parentPath
-    if (item.path) {
-      if (item.path.indexOf(parentPath) === 0) {
-        path = item.path
-      } else if (path[path.length - 1] !== '/' && item.path.indexOf('/') !== 0) {
-        path += '/' + item.path
-      } else {
-        path += item.path
-      }
-    }
+    const path = getFullPath(item.path, parentPath)
 
     const menuItem: IMenuItem = {
       key: path,
@@ -49,25 +52,19 @@ export const generateAsideMenu = (routes: RouteRecordRaw[], parentPath = ''): IM
   return menus
 }
 
-export const generateRoutes = (
-  menuTree: IMenuData[]
-): {
-  route: RouteRecordRaw
-  cacheRouteNames: string[]
-} => {
-  const cacheRouteNames: string[] = []
-
+export const generateRoutes = (menuTree: IMenuData[]): RouteRecordRaw => {
   const recursionGenerateRoutes = (tree: IMenuData[], parentPath = ''): RouteRecordRaw[] => {
     return tree.map((item) => {
+      const path = getFullPath(item.path, parentPath)
+
       const route: RouteRecordRaw = {
-        path: item.path.indexOf('/') !== 0 ? parentPath + '/' + item.path : parentPath + item.path,
+        path,
         component: ParentView,
         meta: {}
       }
 
       if (item.component && COMPONENT_MAP[item.component]) {
         route.component = COMPONENT_MAP[item.component]
-        delete COMPONENT_MAP[item.component]
       }
 
       if (item.name) {
@@ -81,7 +78,6 @@ export const generateRoutes = (
       }
       if (item.cache && item.name) {
         route.meta!.cache = item.cache
-        cacheRouteNames.push(item.name)
       }
       if (item.hidden) {
         route.meta!.hidden = item.hidden
@@ -89,34 +85,20 @@ export const generateRoutes = (
 
       if (item.children?.length) {
         // 实现路由跳转父级菜单时，重定向到相应子菜单
-        if (item.redirect) {
-          // @ts-ignore
-          route.children = [
-            {
-              path: route.path,
-              title: item.title,
-              redirect: item.redirect,
-              meta: {
-                hidden: true
-              }
-            }
-          ]
-        } else {
-          // @ts-ignore
-          route.children = [
-            {
-              path: route.path,
-              title: item.title,
-              redirect: route.path + '/' + item.children[0].path,
-              meta: {
-                hidden: true
-              }
-            }
-          ]
+        const redirectRoute = {
+          path: route.path,
+          title: item.title,
+          redirect: item.redirect,
+          meta: {
+            hidden: true
+          }
+        }
+        if (!item.redirect) {
+          redirectRoute.redirect = getFullPath(item.children[0].path, route.path)
         }
 
         // @ts-ignore
-        route.children.push(...recursionGenerateRoutes(item.children, route.path))
+        route.children = [redirectRoute, ...recursionGenerateRoutes(item.children, route.path)]
       }
 
       return route
@@ -124,16 +106,23 @@ export const generateRoutes = (
   }
 
   const routes = recursionGenerateRoutes(menuTree)
+  adminRoute.children.push(...routes as any)
 
-  return {
-    route: {
-      path: '/',
-      component: LayoutView,
-      meta: {
-        title: '首页'
-      },
-      children: routes
-    },
-    cacheRouteNames: cacheRouteNames
-  }
+  return adminRoute
+}
+
+export const generateCacheRouteNames = (routes: RouteRecordRaw[]): string[] => {
+  const cacheRouteNames: string[] = []
+
+  routes.forEach((route) => {
+    if (route.meta?.cache && route.name) {
+      cacheRouteNames.push(route.name as string)
+    }
+
+    if (route.children?.length) {
+      cacheRouteNames.push(...generateCacheRouteNames(route.children))
+    }
+  })
+
+  return cacheRouteNames
 }

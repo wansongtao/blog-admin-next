@@ -3,12 +3,11 @@ import { defineStore } from 'pinia'
 import { getTheme, setTheme } from '@/utils/theme'
 import { getSystemTheme } from '@/utils/index'
 import { getMenus } from '@/api/common/index'
-import { generateRoutes, generateAsideMenu } from '@/utils/menu'
+import { generateRoutes, generateAsideMenu, generateCacheRouteNames } from '@/utils/menu'
 import type { IMenuItem, ITagLinkItem } from '@/types/index'
 
 export const useSettingStore = defineStore('setting', () => {
   const theme = ref(getTheme())
-
   function followSystemTheme() {
     theme.value = getSystemTheme((mode) => {
       theme.value = mode
@@ -26,8 +25,14 @@ export const useSettingStore = defineStore('setting', () => {
     collapsed.value = !collapsed.value
   }
 
-  const defaultTagLinks = ref<ITagLinkItem[]>([])
-  function addTagLink(...tagLinks: ITagLinkItem[]) {
+  const defaultTagLinks = ref<ITagLinkItem[]>([
+    {
+      title: '首页',
+      path: '/',
+      hiddenCloseIcon: true
+    }
+  ])
+  function setDefaultTagLink(...tagLinks: ITagLinkItem[]) {
     defaultTagLinks.value = tagLinks
   }
 
@@ -36,18 +41,9 @@ export const useSettingStore = defineStore('setting', () => {
   async function getRoutesAction() {
     const result = await getMenus().catch(() => ({ data: [] }))
 
-    const { route, cacheRouteNames } = generateRoutes(result.data)
-    cacheRoutes.value = cacheRouteNames
+    const route = generateRoutes(result.data)
+    cacheRoutes.value = generateCacheRouteNames(route.children || [])
     menus.value = generateAsideMenu(route.children || [])
-    if (menus.value.length) {
-      defaultTagLinks.value = [
-        {
-          title: menus.value[0].label || '',
-          path: menus.value[0].path,
-          hiddenCloseIcon: true
-        }
-      ]
-    }
 
     return route
   }
@@ -59,7 +55,7 @@ export const useSettingStore = defineStore('setting', () => {
     collapsed,
     toggleCollapsed,
     defaultTagLinks,
-    addTagLink,
+    setDefaultTagLink,
     cacheRoutes,
     menus,
     getRoutesAction

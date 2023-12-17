@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { useSettingStore } from '@/stores/setting'
-import { computed } from 'vue'
 
 /**
  * @todo: 缓存组件后，不同层级的 router-view 之间切换，还是会触发 onMounted
@@ -10,15 +9,12 @@ import { computed } from 'vue'
  */
 
 const settingStore = useSettingStore()
-const include = computed(() => {
-  return settingStore.cacheRoutes
-})
 </script>
 
 <template>
   <router-view v-slot="{ Component }">
     <transition name="slide-fade">
-      <KeepAlive :include="include">
+      <KeepAlive :include="settingStore.cacheRoutes">
         <component :is="Component" />
       </KeepAlive>
     </transition>

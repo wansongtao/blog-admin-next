@@ -12,6 +12,15 @@ export const adminRoute = {
   },
   children: [
     {
+      path: '',
+      name: 'Home',
+      component: () => import('@/views/home/HomeView.vue'),
+      meta: {
+        title: '首页',
+        icon: 'index'
+      }
+    },
+    {
       path: 'profile',
       name: 'profileView',
       component: () => import('@/views/profile/index.vue'),
@@ -35,7 +44,6 @@ const router = createRouter({
         hidden: true
       }
     },
-    adminRoute,
     {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
