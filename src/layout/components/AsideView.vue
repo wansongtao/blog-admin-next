@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { Menu as AMenu } from 'ant-design-vue'
-
 import type { MenuInfo } from 'ant-design-vue/es/menu/src/interface'
 
 import { reactive, watch } from 'vue'
@@ -102,45 +100,10 @@ const version = __APP_VERSION__;
   transition: var(--st-t-bg), width 0.5s cubic-bezier(0.2, 0, 0, 1) 0s;
 }
 
+// 修复收缩/展开 antd menu 的动画异样问题
 :deep(.ant-menu-light.ant-menu-root.ant-menu-inline) {
   border-inline-end: none;
 }
-
-:deep(.ant-menu-light .ant-menu-item-selected) {
-  background-color: var(--st-c-menu-checked);
-}
-
-:deep(.ant-menu-light:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected):hover) {
-  background-color: var(--st-c-menu-active);
-}
-
-:deep(.ant-menu-light:not(.ant-menu-horizontal) .ant-menu-submenu-title:hover) {
-  background-color: var(--st-c-menu-active);
-  color: var(--st-c-text-1);
-}
-
-:deep(
-    .ant-menu-light
-      .ant-menu-item:hover:not(.ant-menu-item-selected):not(.ant-menu-submenu-selected),
-    .ant-menu-light
-      .ant-menu-submenu-title:hover:not(.ant-menu-item-selected):not(.ant-menu-submenu-selected)
-  ) {
-  color: none;
-}
-
-:deep(
-    .ant-menu-light
-      .ant-menu-item:hover:not(.ant-menu-item-selected):not(.ant-menu-submenu-selected),
-    .ant-menu-light
-      .ant-menu-submenu-title:hover:not(.ant-menu-item-selected):not(.ant-menu-submenu-selected)
-  ) {
-  color: var(--st-c-text-1);
-}
-
-:deep(.ant-menu-light.ant-menu-inline .ant-menu-sub.ant-menu-inline) {
-  background: var(--st-c-menu-bg);
-}
-
 :deep(.ant-menu-light.ant-menu-root.ant-menu-vertical) {
   border-inline-end: none;
 }

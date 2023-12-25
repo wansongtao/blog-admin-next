@@ -37,7 +37,7 @@ img {
 
 :root {
   --st-c-white: #fff;
-  --st-c-black: #1a1a1a;
+  --st-c-black: #141414;
   --st-c-gray: #8e8e8e;
   --st-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
   --st-c-text-checked: #409eff;
@@ -68,7 +68,7 @@ img {
   --st-c-text-1: rgba(255, 255, 255, 0.87);
   --st-c-text-2: rgba(235, 235, 235, 0.6);
   --st-c-text-3: rgba(60, 60, 60, 0.7);
-  --st-c-bg: #1a1a1a;
+  --st-c-bg: #141414;
   --st-c-bg-2: #2f2f2f;
   --st-c-menu-checked: #111a2c;
   --st-c-menu-active: #313131;
@@ -91,7 +91,9 @@ img {
 
 .st-container {
   overflow-y: auto;
-  margin: 20px;
+  box-sizing: border-box;
+  margin: 20px 10px 10px 20px;
+  padding: 20px;
   height: 100%;
   border-radius: 12px;
   background-color: var(--st-c-bg);

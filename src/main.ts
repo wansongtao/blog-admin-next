@@ -1,5 +1,4 @@
 import '@/assets/styles/base.css'
-import '@/assets/styles/reset-menu.css'
 import 'tailwindcss/tailwind.css'
 import { initTheme } from './utils/theme'
 import { createApp } from 'vue'
