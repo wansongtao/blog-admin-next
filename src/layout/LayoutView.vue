@@ -32,7 +32,7 @@ import ParentView from '@/components/ParentView/ParentView.vue';
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: calc(100vh - 80px);
+    height: calc(100vh - 86px);
     background-color: var(--st-c-bg-2);
   }
 }
