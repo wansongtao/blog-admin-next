@@ -26,6 +26,7 @@ h6 {
 }
 
 body {
+  min-width: 1200px;
   background-color: var(--st-c-bg);
   color: var(--st-c-text-1);
   transition: var(--st-t-c), var(--st-t-bg);
