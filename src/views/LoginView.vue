@@ -7,7 +7,7 @@ import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { validateUsername, validatePassword } from '@/utils/validate'
 
-import type { ILoginParams } from "@/types/common/index";
+import type { ILoginParams } from "@/types/common/index"
 import type { FormInstance } from 'ant-design-vue'
 import type { Rule } from 'ant-design-vue/es/form'
 
