@@ -126,9 +126,10 @@ const onClose = (index: number) => {
 }
 
 .scrollbar {
+  box-sizing: border-box;
   padding-top: 4px;
   width: 100%;
-  height: 30px;
+  height: var(--st-scrollbar-h);
   border-bottom: 1px solid var(--st-c-divider);
 
   .icon--close {

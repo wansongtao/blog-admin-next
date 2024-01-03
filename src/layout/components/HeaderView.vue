@@ -24,7 +24,8 @@ import SwitchTheme from './SwitchTheme.vue';
 .header {
   align-items: center;
   justify-content: space-between;
-  height: 50px;
+  box-sizing: border-box;
+  height: var(--st-header-h);
   border-bottom: 1px solid var(--st-c-divider);
 }
 </style>

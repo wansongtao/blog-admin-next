@@ -70,7 +70,9 @@ const version = __APP_VERSION__;
 <style lang="scss" scoped>
 .layout_aside {
   overflow-y: auto;
-  width: 220px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  width: var(--st-aside-w);
   height: 100vh;
   border-right: 1px solid var(--st-c-divider);
   transition: width 0.5s cubic-bezier(0.2, 0, 0, 1) 0s;
@@ -88,7 +90,7 @@ const version = __APP_VERSION__;
 }
 
 .w-80 {
-  width: 80px;
+  --st-aside-w: 80px;
 
   .version {
     display: none;

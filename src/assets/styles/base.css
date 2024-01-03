@@ -44,6 +44,10 @@ img {
   --st-c-text-checked: #409eff;
   --st-t-bg: background .5s;
   --st-t-c: color .5s;
+  --st-aside-w: 221px;
+  --st-aside-w-s: 80px;
+  --st-header-h: 51px;
+  --st-scrollbar-h: 35px;
 }
 
 .light {
