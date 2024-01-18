@@ -7,10 +7,9 @@ import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { validateUsername, validatePassword } from '@/utils/validate'
 
-import type { ILoginParams } from "@/types/common/index"
+import type { ILoginParams } from '@/types/common/index'
 import type { FormInstance } from 'ant-design-vue'
 import type { Rule } from 'ant-design-vue/es/form'
-
 
 const loginRules: Record<keyof ILoginParams, Rule[]> = {
   userName: [
@@ -52,17 +51,21 @@ const loading = ref<boolean>(false)
 
 const userStore = useUserStore()
 const router = useRouter()
-const login = () => {
+const handleLogin = () => {
   loginFormRef.value?.validate().then(() => {
     loading.value = true
-    userStore.login(loginForm.value).then(() => {
-      resetForm()
-      router.replace(router.currentRoute.value.query.redirect as string || '/')
-    }).catch(() => {
-      refreshCaptcha.value = true
-    }).finally(() => {
-      loading.value = false
-    })
+    userStore
+      .login(loginForm.value)
+      .then(() => {
+        resetForm()
+        router.replace((router.currentRoute.value.query.redirect as string) || '/')
+      })
+      .catch(() => {
+        refreshCaptcha.value = true
+      })
+      .finally(() => {
+        loading.value = false
+      })
   })
 }
 </script>
@@ -101,7 +104,11 @@ const login = () => {
             <a-row :gutter="20">
               <a-col :span="16">
                 <a-form-item name="captcha">
-                  <a-input v-model:value="loginForm.captcha" placeholder="请输入验证码"></a-input>
+                  <a-input
+                    v-model:value="loginForm.captcha"
+                    placeholder="请输入验证码"
+                    @keyup.enter="handleLogin"
+                  ></a-input>
                 </a-form-item>
               </a-col>
               <a-col :span="8">
@@ -110,7 +117,7 @@ const login = () => {
             </a-row>
           </a-form-item>
           <a-form-item>
-            <a-button type="primary" :loading="loading" block @click="login">登录</a-button>
+            <a-button type="primary" :loading="loading" block @click="handleLogin">登录</a-button>
           </a-form-item>
         </a-form>
       </div>
