@@ -1,27 +1,51 @@
 <script lang="ts" setup>
+import { SearchOutlined, SyncOutlined } from '@ant-design/icons-vue'
+
 import { ref, computed } from 'vue'
 import dayjs, { type Dayjs } from 'dayjs'
 
-import { SearchOutlined, SyncOutlined } from '@ant-design/icons-vue'
+import type { IBaseQuery } from '@/types/index'
 
 defineOptions({
   name: 'baseFilter'
 })
 const $emits = defineEmits<{
-  handleSearch: [query: { keyword?: string; startTime?: string; endTime?: string }]
+  handleSearch: [query: IBaseQuery]
   handleReset: []
 }>()
 const $props = withDefaults(
   defineProps<{
+    /**
+     * 预设时间范围
+     */
     rangePresets?: { label: string; value: [Dayjs, Dayjs] }[]
+    /**
+     * 不可选择的时间，默认当前时间之后的时间
+     * @param current 
+     */
     disabledDate?: (current: Dayjs) => boolean
     dateFormat?: string
     showTime?: boolean
-    placeholder?: string
-    gutter?: number
-    span?: number
+    /**
+     * 开始/结束时间是否允许为空，默认都可以
+     */
     allowEmpty?: [boolean, boolean]
-    disabledSearch?: boolean
+    /**
+     * 每一项之间的间隔
+     */
+    gutter?: number
+    /**
+     * 每一项大小
+     */
+    span?: number
+    /**
+     * 自定义关键字输入框的提示语
+     */
+    placeholder?: string
+    /**
+     * 是否开启未输入值时禁用搜索按钮，默认 true
+     */
+    disabledEmptySearch?: boolean
     loading?: boolean
   }>(),
   {
@@ -46,11 +70,11 @@ const $props = withDefaults(
     },
     dateFormat: 'YYYY-MM-DD HH:mm:ss',
     showTime: true,
+    allowEmpty: () => [true, true],
     placeholder: '请输入关键字',
     gutter: 20,
     span: 12,
-    allowEmpty: () => [true, true],
-    disabledSearch: true,
+    disabledEmptySearch: true,
     loading: false
   }
 )
@@ -65,7 +89,7 @@ const query = ref<{
 
 const isDisabledSearch = computed(() => {
   const { keyword, dateRange } = query.value
-  return $props.disabledSearch && !keyword && !dateRange
+  return $props.disabledEmptySearch && !keyword && !dateRange
 })
 
 const type = ref<'search' | 'reset'>('search')
