@@ -1,4 +1,6 @@
-import { exec, which, echo } from 'shelljs'
+import shelljs from 'shelljs'
+
+const { exec, which, echo } = shelljs
 
 /**
  * whether it is the latest version
