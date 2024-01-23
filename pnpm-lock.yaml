@@ -6,14 +6,14 @@ settings:
 
 dependencies:
   '@ant-design/icons-vue':
-    specifier: ^6.1.0
-    version: 6.1.0(vue@3.4.15)
+    specifier: ^7.0.1
+    version: 7.0.1(vue@3.4.15)
   '@vueuse/core':
     specifier: ^10.1.2
     version: 10.7.2(vue@3.4.15)
   ant-design-vue:
-    specifier: 4.0.6
-    version: 4.0.6(vue@3.4.15)
+    specifier: 4.1.1
+    version: 4.1.1(vue@3.4.15)
   axios:
     specifier: ^1.4.0
     version: 1.6.5
@@ -150,16 +150,6 @@ packages:
 
   /@ant-design/icons-svg@4.3.1:
     resolution: {integrity: sha512-4QBZg8ccyC6LPIRii7A0bZUk3+lEDCLnhB+FVsflGdcWPPmV+j3fire4AwwoqHV/BibgvBmR9ZIo4s867smv+g==}
-    dev: false
-
-  /@ant-design/icons-vue@6.1.0(vue@3.4.15):
-    resolution: {integrity: sha512-EX6bYm56V+ZrKN7+3MT/ubDkvJ5rK/O2t380WFRflDcVFgsvl3NLH7Wxeau6R8DbrO5jWR6DSTC3B6gYFp77AA==}
-    peerDependencies:
-      vue: '>=3.0.3'
-    dependencies:
-      '@ant-design/colors': 6.0.0
-      '@ant-design/icons-svg': 4.3.1
-      vue: 3.4.15(typescript@5.0.4)
     dev: false
 
   /@ant-design/icons-vue@7.0.1(vue@3.4.15):
@@ -1417,8 +1407,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /ant-design-vue@4.0.6(vue@3.4.15):
-    resolution: {integrity: sha512-6kh3b8Ito9SAbOKTW0wyfcCnd859uhQQlttjo8RjMj6YjLK52yNO2TdgYRwed06scUm5RwEnQ2JKMxYYoeG1MA==}
+  /ant-design-vue@4.1.1(vue@3.4.15):
+    resolution: {integrity: sha512-YLhDHhGvegGEczxDqIiiZIJsTHh3dge5Rf94n17sp24gAcey0hDaLtYWM0Z/+N8EheAcM0w3fePvYGMxwGxSDg==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
       vue: '>=3.2.0'
