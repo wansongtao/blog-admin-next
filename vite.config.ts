@@ -1,5 +1,5 @@
 import { URL, fileURLToPath } from 'node:url'
-
+import version from './scripts/version'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
@@ -32,6 +32,9 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  define: {
+    __APP_VERSION__: version
   },
   base: '/admin/',
   server: {
