@@ -5,6 +5,7 @@ import pinia from './stores'
 
 import App from './App.vue'
 import router from './router'
+import './router/permission'
 
 const app = createApp(App)
 
