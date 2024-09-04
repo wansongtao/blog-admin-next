@@ -15,10 +15,12 @@ declare module 'vue' {
     NIcon: typeof import('naive-ui')['NIcon']
     NInput: typeof import('naive-ui')['NInput']
     NMessageProvider: typeof import('naive-ui')['NMessageProvider']
+    NModalProvider: typeof import('naive-ui')['NModalProvider']
+    NNotificationProvider: typeof import('naive-ui')['NNotificationProvider']
     NRow: typeof import('naive-ui')['NRow']
     ParentView: typeof import('./src/components/parent-view/ParentView.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    TheBaseView: typeof import('./src/components/the-base-view/TheBaseView.vue')['default']
+    TheAppProvider: typeof import('./src/components/the-app-provider/TheAppProvider.vue')['default']
   }
 }
