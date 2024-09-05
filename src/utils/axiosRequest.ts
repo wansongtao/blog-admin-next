@@ -5,6 +5,7 @@ import axios, {
   type InternalAxiosRequestConfig
 } from 'axios'
 import { useUserStore } from '@/stores/user'
+import createAxiosRetryRequestPlugin from '@/plugins/retryRequest'
 
 import type { IBaseResponse, IConfigHeader } from '@/types/api'
 
@@ -36,6 +37,19 @@ export const instance = axios.create({
   timeout: 5000,
   withCredentials: true
 })
+
+const retryRequest = createAxiosRetryRequestPlugin({
+  maxRetryCount: 2,
+  request: instance.request,
+  isRetry: (err) => {
+    if (err?.response?.status !== 401 && err?.response?.status !== 403) {
+      return true
+    }
+
+    return false
+  }
+})
+instance.interceptors.response.use(undefined, retryRequest.responseInterceptorRejected)
 
 instance.interceptors.request.use(addToken, (error: AxiosError) => Promise.reject(error))
 instance.interceptors.response.use(processResponse, (error: AxiosError) => {
