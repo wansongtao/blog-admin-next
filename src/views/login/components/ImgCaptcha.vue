@@ -1,7 +1,27 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { getCaptcha } from '@/api/common'
+
+const src = ref('')
+const refreshCaptchaImg = async () => {
+  const [, res] = await getCaptcha()
+  if (!res) return
+
+  src.value = res.data.captcha
+}
+
+onMounted(() => {
+  refreshCaptchaImg()
+})
+
+defineExpose({
+  refreshCaptchaImg
+})
+</script>
 
 <template>
-  <div class="img_captcha"></div>
+  <div class="img_captcha">
+    <img :src alt="captcha" @click="refreshCaptchaImg" />
+  </div>
 </template>
 
 <style lang="scss" scoped>
