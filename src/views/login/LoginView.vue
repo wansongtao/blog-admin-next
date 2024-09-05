@@ -2,6 +2,7 @@
 import IconWater from '@/assets/svgs/water.svg'
 import IconUser from '@/assets/svgs/user.svg'
 import IconPassword from '@/assets/svgs/password.svg'
+import IconCaptcha from '@/assets/svgs/captcha.svg'
 import ImgCaptcha from './components/ImgCaptcha.vue'
 
 import { validateUsername, validatePassword } from '@/utils/validate'
@@ -96,7 +97,11 @@ const onLogin = async () => {
                   v-model:value="formData.captcha"
                   placeholder="请输入验证码"
                   @keydown.enter.prevent
-                />
+                >
+                  <template #prefix>
+                    <icon-captcha />
+                  </template>
+                </n-input>
               </n-col>
               <n-col :span="8">
                 <img-captcha />
