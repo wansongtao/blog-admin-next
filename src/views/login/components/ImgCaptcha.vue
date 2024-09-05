@@ -24,13 +24,13 @@ defineExpose({
 </script>
 
 <template>
-  <div class="img_captcha">
+  <div class="captcha">
     <img :src alt="captcha" @click="onRefreshCaptcha" />
   </div>
 </template>
 
 <style lang="scss" scoped>
-.img_captcha {
+.captcha {
   width: 100%;
   height: 34px;
   cursor: pointer;

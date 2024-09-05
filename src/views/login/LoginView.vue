@@ -70,19 +70,19 @@ const onLogin = async () => {
 
 <template>
   <div class="login">
-    <div class="login_left">
-      <div class="login_left_head">
-        <div class="login_left_title">博客后台系统</div>
-        <div class="login_left_desc">
+    <div class="login-left">
+      <div class="login-left-head">
+        <div class="login-left-title">博客后台系统</div>
+        <div class="login-left-desc">
           时间吞噬一切，记忆将之重组还原。那些旧日的好时光，让一切往事都值得回忆，也让未来的一切都值得期待。
         </div>
       </div>
-      <img src="@/assets/images/login-logo.png" alt="" class="login_left_logo" />
-      <icon-water class="login_left_wave" />
+      <img src="@/assets/images/login-logo.png" alt="" class="login-left-logo" />
+      <icon-water class="login-left-wave" />
     </div>
-    <main class="login_right">
-      <div class="login_right_wrap">
-        <div class="right_wrap_title">账号登录</div>
+    <main class="login-right">
+      <div class="login-right-wrap">
+        <div class="right-wrap-title">账号登录</div>
         <n-form ref="formRef" :model="formData" :rules="rules" :show-label="false">
           <n-form-item path="userName">
             <n-input v-model:value="formData.userName" placeholder="请输入用户名">
@@ -139,7 +139,7 @@ const onLogin = async () => {
   height: 100vh;
 }
 
-.login_left {
+.login-left {
   position: relative;
   display: flex;
   align-items: center;
@@ -148,29 +148,29 @@ const onLogin = async () => {
   height: 100vh;
   background-color: #d3efff;
 
-  .login_left_head {
+  .login-left-head {
     position: absolute;
     top: 40px;
     left: 60px;
     color: #26a59a;
 
-    .login_left_title {
+    .login-left-title {
       font-size: 36px;
       font-weight: bold;
     }
 
-    .login_left_desc {
+    .login-left-desc {
       margin-top: 20px;
       font-size: 16px;
       line-height: 1.5em;
     }
   }
 
-  .login_left_logo {
+  .login-left-logo {
     width: 60%;
   }
 
-  .login_left_wave {
+  .login-left-wave {
     position: absolute;
     top: 0;
     right: -100px;
@@ -178,7 +178,7 @@ const onLogin = async () => {
   }
 }
 
-.login_right {
+.login-right {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -186,7 +186,7 @@ const onLogin = async () => {
   margin-left: 100px;
   background-color: #fff;
 
-  .login_right_wrap {
+  .login-right-wrap {
     position: relative;
     box-sizing: border-box;
     width: 400px;
@@ -195,7 +195,7 @@ const onLogin = async () => {
     border: 1px solid #79bbff;
     border-radius: 4px;
 
-    .right_wrap_title {
+    .right-wrap-title {
       margin: 20px 0 40px 0;
       text-align: center;
       font-size: 24px;
