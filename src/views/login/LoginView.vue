@@ -7,16 +7,12 @@ import ImgCaptcha from './components/ImgCaptcha.vue'
 
 import { validateUsername, validatePassword } from '@/utils/validate'
 import useFormValidate from '@/hooks/useFormValidate'
+import { useUserStore } from '@/stores/user'
 
 import type { FormItemRule } from 'naive-ui'
+import type { ILoginParams } from '@/types/api/common'
 
-interface IFormData {
-  userName: string
-  password: string
-  captcha: string
-}
-
-const rules: Record<keyof IFormData, FormItemRule[]> = {
+const rules: Record<keyof ILoginParams, FormItemRule[]> = {
   userName: [
     {
       required: true,
@@ -40,18 +36,35 @@ const rules: Record<keyof IFormData, FormItemRule[]> = {
 }
 
 const { formRef, validateForm } = useFormValidate()
-
-const formData = ref<IFormData>({
+const formData = ref<ILoginParams>({
   userName: '',
   password: '',
   captcha: ''
 })
 
+const disabled = computed(() => {
+  return !formData.value.userName || !formData.value.password || !formData.value.captcha
+})
+
+const captchaRef = ref<InstanceType<typeof ImgCaptcha>>()
+const loading = ref(false)
+const router = useRouter()
+
 const onLogin = async () => {
   const isValid = await validateForm()
   if (!isValid) return
 
-  window.$message.success('登录成功')
+  loading.value = true
+  const userStore = useUserStore()
+  const isSuccess = await userStore.login(formData.value)
+  loading.value = false
+
+  if (!isSuccess) {
+    captchaRef.value?.onRefreshCaptcha()
+    return
+  }
+
+  router.push('/')
 }
 </script>
 
@@ -96,7 +109,7 @@ const onLogin = async () => {
                 <n-input
                   v-model:value="formData.captcha"
                   placeholder="请输入验证码"
-                  @keydown.enter.prevent
+                  @keydown.enter.prevent="onLogin"
                 >
                   <template #prefix>
                     <icon-captcha />
@@ -104,11 +117,13 @@ const onLogin = async () => {
                 </n-input>
               </n-col>
               <n-col :span="8">
-                <img-captcha />
+                <img-captcha ref="captchaRef" />
               </n-col>
             </n-row>
           </n-form-item>
-          <n-button style="margin-top: 20px" type="info" block @click="onLogin">登录</n-button>
+          <n-button style="margin-top: 20px" type="info" block :loading :disabled @click="onLogin"
+            >登录</n-button
+          >
         </n-form>
       </div>
     </main>
@@ -196,7 +211,7 @@ const onLogin = async () => {
       right: -2px;
       bottom: -2px;
       border: 5px solid;
-      animation: clippath 4s infinite linear;
+      animation: clippath 8s infinite linear;
     }
   }
 }
