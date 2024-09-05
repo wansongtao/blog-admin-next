@@ -3,7 +3,7 @@ import { getCaptcha } from '@/api/common'
 import { debounce } from '@/utils'
 
 const src = ref('')
-const refreshCaptchaImg = debounce<MouseEvent>(
+const onRefreshCaptcha = debounce<MouseEvent>(
   async () => {
     const [, res] = await getCaptcha()
     if (!res) return
@@ -15,17 +15,17 @@ const refreshCaptchaImg = debounce<MouseEvent>(
 )
 
 onMounted(() => {
-  refreshCaptchaImg()
+  onRefreshCaptcha()
 })
 
 defineExpose({
-  refreshCaptchaImg
+  onRefreshCaptcha
 })
 </script>
 
 <template>
   <div class="img_captcha">
-    <img :src alt="captcha" @click="refreshCaptchaImg" />
+    <img :src alt="captcha" @click="onRefreshCaptcha" />
   </div>
 </template>
 
