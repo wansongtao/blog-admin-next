@@ -1,13 +1,18 @@
 <script lang="ts" setup>
 import { getCaptcha } from '@/api/common'
+import { debounce } from '@/utils'
 
 const src = ref('')
-const refreshCaptchaImg = async () => {
-  const [, res] = await getCaptcha()
-  if (!res) return
+const refreshCaptchaImg = debounce<MouseEvent>(
+  async () => {
+    const [, res] = await getCaptcha()
+    if (!res) return
 
-  src.value = res.data.captcha
-}
+    src.value = res.data.captcha
+  },
+  400,
+  true
+)
 
 onMounted(() => {
   refreshCaptchaImg()
