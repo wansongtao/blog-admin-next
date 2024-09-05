@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '@/views/login/LoginView.vue'
 import NotFound from '@/views/404/NotFound.vue'
+import getStaticAdminRoute from './adminRoute'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,7 +23,8 @@ const router = createRouter({
         title: '404',
         hidden: true
       }
-    }
+    },
+    getStaticAdminRoute()
   ],
   scrollBehavior(to, _from, savedPosition) {
     if (savedPosition) {
