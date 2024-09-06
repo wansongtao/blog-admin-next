@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     BaseBreadcrumb: typeof import('./src/components/base-breadcrumb/BaseBreadcrumb.vue')['default']
     ButtonCollapsed: typeof import('./src/components/button/collapsed/ButtonCollapsed.vue')['default']
+    ButtonFullscreen: typeof import('./src/components/button/fullscreen/ButtonFullscreen.vue')['default']
     NBreadcrumb: typeof import('naive-ui')['NBreadcrumb']
     NBreadcrumbItem: typeof import('naive-ui')['NBreadcrumbItem']
     NButton: typeof import('naive-ui')['NButton']
