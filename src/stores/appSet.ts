@@ -6,9 +6,16 @@ export const useAppSetStore = defineStore(
       collapsed.value = !collapsed.value
     }
 
+    const theme = ref<'light' | 'dark'>('light')
+    function toggleTheme() {
+      theme.value = theme.value === 'light' ? 'dark' : 'light'
+    }
+
     return {
       collapsed,
-      toggleCollapsed
+      toggleCollapsed,
+      theme,
+      toggleTheme
     }
   },
   { persist: true }
