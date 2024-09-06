@@ -10,6 +10,19 @@ const router = useRouter()
 const onJumpPage = (path: string) => {
   router.push(path)
 }
+
+const activeKey = ref<string>('')
+watch(
+  () => router.currentRoute.value.path,
+  (path) => {
+    if (activeKey.value === path) {
+      return
+    }
+
+    activeKey.value = path
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
@@ -22,6 +35,7 @@ const onJumpPage = (path: string) => {
     :collapsed="collapsed"
   >
     <n-menu
+      v-model:value="activeKey"
       :collapsed="collapsed"
       :collapsed-width="64"
       :collapsed-icon-size="22"
