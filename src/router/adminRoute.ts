@@ -1,5 +1,5 @@
 import LayoutView from '@/layout/LayoutView.vue'
-import ParentView from '@/components/parent-view/ParentView.vue'
+import TheParentView from '@/components/the-parent-view/TheParentView.vue'
 
 import type { RouteRecordRaw } from 'vue-router'
 
@@ -33,7 +33,7 @@ export default function getStaticAdminRoute(): RouteRecordRaw {
       },
       {
         path: 'system',
-        component: ParentView,
+        component: TheParentView,
         meta: {
           title: '系统管理',
           icon: 'system'

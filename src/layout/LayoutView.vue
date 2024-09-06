@@ -8,7 +8,7 @@ import AsideView from './components/AsideView.vue'
     <n-layout>
       <header>header</header>
       <main>
-        <parent-view />
+        <the-parent-view />
       </main>
     </n-layout>
   </n-layout>
