@@ -10,13 +10,12 @@ const { collapsed } = storeToRefs(appSetStore)
 
 <template>
   <div class="btn-collapsed">
-    <n-icon :component="collapsed ? IconUnfold : IconFold" @click="toggleCollapsed" />
+    <n-icon size="16" :component="collapsed ? IconUnfold : IconFold" @click="toggleCollapsed" />
   </div>
 </template>
 
 <style lang="scss" scoped>
 .btn-collapsed {
   cursor: pointer;
-  font-size: 16px;
 }
 </style>
