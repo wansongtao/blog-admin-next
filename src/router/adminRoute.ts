@@ -27,13 +27,14 @@ export default function getStaticAdminRoute(): RouteRecordRaw {
         component: () => import('@/views/profile/ProfileView.vue'),
         meta: {
           title: '个人中心',
-          hidden: false,
+          hidden: true,
           cache: true
         }
       },
       {
         path: 'system',
         component: TheParentView,
+        redirect: '/system/user',
         meta: {
           title: '系统管理',
           icon: 'system'
