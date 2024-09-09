@@ -18,10 +18,22 @@ export const useUserStore = defineStore(
       return true
     }
 
+    const userInfo = ref({
+      name: 'admin',
+      avatar: ''
+    })
+
+    function logout() {
+      accessToken.value = ''
+      refreshToken.value = ''
+    }
+
     return {
       accessToken,
       refreshToken,
-      login
+      login,
+      userInfo,
+      logout
     }
   },
   { persist: true }
