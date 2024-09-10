@@ -1,3 +1,5 @@
+import type { IMenubarItem } from '@/types'
+
 export const useAppSetStore = defineStore(
   'appSet',
   () => {
@@ -11,11 +13,21 @@ export const useAppSetStore = defineStore(
       theme.value = theme.value === 'light' ? 'dark' : 'light'
     }
 
+    const menubarItems = ref<IMenubarItem[]>([
+      {
+        label: '首页',
+        key: '/',
+        hiddenCloseIcon: true,
+        checked: true
+      }
+    ])
+
     return {
       collapsed,
       toggleCollapsed,
       theme,
-      toggleTheme
+      toggleTheme,
+      menubarItems
     }
   },
   { persist: true }

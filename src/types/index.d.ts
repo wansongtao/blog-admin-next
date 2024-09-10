@@ -5,3 +5,10 @@ declare global {
     $message: MessageApiInjection
   }
 }
+
+export interface IMenubarItem {
+  label: string
+  key: string
+  hiddenCloseIcon?: boolean
+  checked?: boolean
+}
