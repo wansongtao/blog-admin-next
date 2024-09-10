@@ -2,7 +2,7 @@
 import { useThemeVars } from 'naive-ui'
 import { useAppSetStore } from '@/stores/appSet'
 
-defineProps<{
+const $props = defineProps<{
   title: string
   path: string
   checked?: boolean
@@ -14,11 +14,33 @@ const activeColor = computed(() => {
   return theme.value === 'light' ? 'rgba(24, 160, 88, 0.1)' : 'rgba(99, 226, 183, 0.15)'
 })
 
+const elementRef = ref<HTMLElement | null>(null)
+const scrollElement = () => {
+  elementRef.value?.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' })
+}
+
+watch(
+  () => $props.checked,
+  (checked) => {
+    if (!checked) {
+      return
+    }
+    scrollElement()
+  }
+)
+
+onMounted(() => {
+  if (!$props.checked) {
+    return
+  }
+  scrollElement()
+})
+
 const themeVars = useThemeVars()
 </script>
 
 <template>
-  <div class="menubar-item" :class="{ 'menubar-item--checked': checked }">
+  <div ref="elementRef" class="menubar-item" :class="{ 'menubar-item--checked': checked }">
     <div class="menubar-item-icon">
       <div class="left full base-transition"></div>
     </div>
