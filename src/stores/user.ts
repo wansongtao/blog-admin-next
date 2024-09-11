@@ -1,6 +1,6 @@
-import { setLogin, setLogout, getNewToken } from '@/api/common'
+import { setLogin, setLogout, getNewToken, getUserInfo } from '@/api/common'
 
-import type { ILoginParams } from '@/types/api/common'
+import type { ILoginParams, IUserInfo } from '@/types/api/common'
 
 export const useUserStore = defineStore(
   'user',
@@ -32,15 +32,30 @@ export const useUserStore = defineStore(
       return true
     }
 
-    const userInfo = ref({
-      name: 'admin',
-      avatar: ''
-    })
+    const userInfo = ref(initUserInfo())
+    function initUserInfo(): IUserInfo {
+      return {
+        name: '',
+        avatar: '',
+        permissions: [],
+        roles: [],
+        menus: []
+      }
+    }
+    async function fetchUserInfo() {
+      const [, res] = await getUserInfo()
+      if (!res) {
+        return
+      }
+
+      userInfo.value = res.data
+    }
 
     function logout() {
       setLogout()
       accessToken.value = ''
       refreshToken.value = ''
+      userInfo.value = initUserInfo()
     }
 
     return {
@@ -49,6 +64,7 @@ export const useUserStore = defineStore(
       login,
       refresh,
       userInfo,
+      fetchUserInfo,
       logout
     }
   },
