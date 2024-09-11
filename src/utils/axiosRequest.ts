@@ -6,6 +6,7 @@ import axios, {
 } from 'axios'
 import { useUserStore } from '@/stores/user'
 import createAxiosRetryRequestPlugin from '@/plugins/retryRequest'
+import createRefreshTokenPlugin from '@/plugins/refreshToken'
 
 import type { IBaseResponse, IConfigHeader } from '@/types/api'
 
@@ -50,6 +51,16 @@ const retryRequest = createAxiosRetryRequestPlugin({
   }
 })
 instance.interceptors.response.use(undefined, retryRequest.responseInterceptorRejected)
+
+const refreshTokenPlugin = createRefreshTokenPlugin(() => {
+  const store = useUserStore()
+  return store.refresh()
+}, instance.request)
+instance.interceptors.request.use(refreshTokenPlugin.requestInterceptor)
+instance.interceptors.response.use(
+  refreshTokenPlugin.responseInterceptorFulfilled,
+  refreshTokenPlugin.responseInterceptorRejected
+)
 
 instance.interceptors.request.use(addToken, (error: AxiosError) => Promise.reject(error))
 instance.interceptors.response.use(processResponse, (error: AxiosError) => {
