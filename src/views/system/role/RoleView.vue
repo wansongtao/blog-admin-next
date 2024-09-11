@@ -1,7 +1,7 @@
 <script lang="ts" setup></script>
 
 <template>
-  <div>role</div>
+  <base-box>role</base-box>
 </template>
 
 <style lang="scss" scoped></style>
