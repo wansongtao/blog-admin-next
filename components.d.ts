@@ -7,6 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    BaseBox: typeof import('./src/components/base-box/BaseBox.vue')['default']
     BaseBreadcrumb: typeof import('./src/components/base-breadcrumb/BaseBreadcrumb.vue')['default']
     ButtonCollapsed: typeof import('./src/components/button/collapsed/ButtonCollapsed.vue')['default']
     ButtonFullscreen: typeof import('./src/components/button/fullscreen/ButtonFullscreen.vue')['default']
