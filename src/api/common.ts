@@ -24,7 +24,7 @@ export const setLogin = (data: ILoginParams) => {
 }
 
 export const setLogout = () => {
-  return request<null>({
+  return request({
     url: '/auth/logout',
     method: 'get'
   })
