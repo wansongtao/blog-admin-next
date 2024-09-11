@@ -1,9 +1,14 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { useAppSetStore } from '@/stores/appSet'
+
+const appSetStore = useAppSetStore()
+const { cacheRoutes } = storeToRefs(appSetStore)
+</script>
 
 <template>
   <router-view v-slot="{ Component }">
     <transition name="slide-fade">
-      <keep-alive>
+      <keep-alive :include="cacheRoutes">
         <component :is="Component" />
       </keep-alive>
     </transition>
