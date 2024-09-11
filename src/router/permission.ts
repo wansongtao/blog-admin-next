@@ -3,8 +3,20 @@ import 'nprogress/nprogress.css'
 import router from './index'
 import { useUserStore } from '@/stores/user'
 import { useAppSetStore } from '@/stores/appSet'
-import { generateCacheRoutes } from '@/utils/menu'
+import { generateCacheRoutes, generateRoutes, generateMenus } from '@/utils/menu'
 import getStaticAdminRoute from './adminRoute'
+
+import type { IMenuItem } from '@/types/api/common'
+
+const getRoutes = (menus: IMenuItem[]) => {
+  const adminRoute = getStaticAdminRoute()
+  const routes = generateRoutes(menus)
+  adminRoute.children!.push(...routes)
+
+  return adminRoute
+}
+
+const whiteList = ['Login', 'NotFound']
 
 NProgress.configure({ showSpinner: false })
 
@@ -16,25 +28,51 @@ router.beforeEach(async (to) => {
 
   const token = userStore.accessToken
   if (!token) {
-    appSetStore.menubarItems = []
-    appSetStore.cacheRoutes = []
-
-    if (to.name !== 'Login') {
+    if (!whiteList.includes(to.name as string)) {
       NProgress.done()
       return `/login?redirect=${to.path}`
     }
+
+    appSetStore.menubarItems = []
+    appSetStore.cacheRoutes = []
+    appSetStore.asideMenus = []
+
+    router.getRoutes().forEach((route) => {
+      if (!whiteList.includes(route.name as string)) {
+        router.removeRoute(route.name as string)
+      }
+    })
+
+    return true
   }
 
-  if (token) {
-    if (to.name === 'Login') {
-      NProgress.done()
-      return (to.query?.redirect as string) || '/'
-    }
+  if (to.name === 'Login') {
+    NProgress.done()
+    return (to.query?.redirect as string) || '/'
+  }
 
-    if (appSetStore.cacheRoutes.length === 0) {
-      const routes = getStaticAdminRoute()
-      appSetStore.cacheRoutes = generateCacheRoutes(routes.children ?? [])
-    }
+  if (!userStore.userInfo.name) {
+    await userStore.fetchUserInfo()
+  }
+
+  if (appSetStore.asideMenus.length === 0) {
+    const adminRoute = getRoutes(userStore.userInfo.menus ?? [])
+
+    // @ts-ignore
+    appSetStore.asideMenus = generateMenus(adminRoute.children!)
+  }
+
+  if (appSetStore.cacheRoutes.length === 0) {
+    const adminRoute = getRoutes(userStore.userInfo.menus ?? [])
+    appSetStore.cacheRoutes = generateCacheRoutes(adminRoute.children!)
+  }
+
+  if (!router.hasRoute(getStaticAdminRoute().name as string)) {
+    const adminRoute = getRoutes(userStore.userInfo.menus ?? [])
+    router.addRoute(adminRoute)
+
+    NProgress.done()
+    return to.fullPath
   }
 })
 

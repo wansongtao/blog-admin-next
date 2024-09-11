@@ -1,5 +1,4 @@
 import LayoutView from '@/layout/LayoutView.vue'
-import TheParentView from '@/components/the-parent-view/TheParentView.vue'
 
 import type { RouteRecordRaw } from 'vue-router'
 
@@ -18,7 +17,8 @@ export default function getStaticAdminRoute(): RouteRecordRaw {
         component: () => import('@/views/home/HomeView.vue'),
         meta: {
           title: '首页',
-          icon: 'home'
+          icon: 'home',
+          cache: true
         }
       },
       {
@@ -30,44 +30,6 @@ export default function getStaticAdminRoute(): RouteRecordRaw {
           hidden: true,
           cache: true
         }
-      },
-      {
-        path: 'system',
-        component: TheParentView,
-        redirect: '/system/user',
-        meta: {
-          title: '系统管理',
-          icon: 'system'
-        },
-        children: [
-          {
-            path: 'user',
-            name: 'UserView',
-            component: () => import('@/views/system/user/UserView.vue'),
-            meta: {
-              title: '用户管理',
-              icon: 'user'
-            }
-          },
-          {
-            path: 'role',
-            name: 'RoleView',
-            component: () => import('@/views/system/role/RoleView.vue'),
-            meta: {
-              title: '角色管理',
-              icon: 'role'
-            }
-          },
-          {
-            path: 'menu',
-            name: 'MenuView',
-            component: () => import('@/views/system/menu/MenuView.vue'),
-            meta: {
-              title: '菜单管理',
-              icon: 'menu'
-            }
-          }
-        ]
       }
     ]
   }
