@@ -13,14 +13,7 @@ export const useAppSetStore = defineStore(
       theme.value = theme.value === 'light' ? 'dark' : 'light'
     }
 
-    const menubarItems = ref<IMenubarItem[]>([
-      {
-        label: '首页',
-        key: '/',
-        hiddenCloseIcon: true,
-        checked: true
-      }
-    ])
+    const menubarItems = ref<IMenubarItem[]>([])
 
     return {
       collapsed,
