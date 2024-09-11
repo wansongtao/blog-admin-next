@@ -15,12 +15,15 @@ export const useAppSetStore = defineStore(
 
     const menubarItems = ref<IMenubarItem[]>([])
 
+    const cacheRoutes = ref<string[]>([])
+
     return {
       collapsed,
       toggleCollapsed,
       theme,
       toggleTheme,
-      menubarItems
+      menubarItems,
+      cacheRoutes
     }
   },
   { persist: true }
