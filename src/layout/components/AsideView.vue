@@ -1,10 +1,7 @@
 <script lang="ts" setup>
-import getStaticAdminRoute from '@/router/adminRoute'
-import { generateMenus } from '@/utils/menu'
 import { useAppSetStore } from '@/stores/appSet'
 
-const menus = generateMenus(getStaticAdminRoute().children ?? [])
-const { collapsed } = storeToRefs(useAppSetStore())
+const { collapsed, asideMenus } = storeToRefs(useAppSetStore())
 
 const router = useRouter()
 const onJumpPage = (path: string) => {
@@ -39,7 +36,7 @@ watch(
       :collapsed="collapsed"
       :collapsed-width="64"
       :collapsed-icon-size="22"
-      :options="menus"
+      :options="asideMenus"
       @update:value="onJumpPage"
     />
   </n-layout-sider>
