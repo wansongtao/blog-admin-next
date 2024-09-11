@@ -15,11 +15,15 @@ const getFullPath = (path: string, parentPath = '/') => {
   return parentPath + path
 }
 
-export const generateMenus = (routes: RouteRecordRaw[], parentPath = ''): MenuOption[] => {
+export const generateMenus = (
+  routes: RouteRecordRaw[],
+  parentPath = '',
+  isSkip = (route: RouteRecordRaw) => route.meta?.hidden
+) => {
   const menus: MenuOption[] = []
 
   routes.forEach((item) => {
-    if (item.meta?.hidden) {
+    if (isSkip(item)) {
       return
     }
 
@@ -34,7 +38,7 @@ export const generateMenus = (routes: RouteRecordRaw[], parentPath = ''): MenuOp
       menuItem.icon = () => h(MENU_ICON_MAP[meta.icon!])
     }
     if (item.children?.length) {
-      menuItem.children = generateMenus(item.children, path)
+      menuItem.children = generateMenus(item.children, path, isSkip)
     }
 
     menus.push(menuItem)
@@ -55,7 +59,7 @@ export const generateCacheRoutes = (
     }
 
     if (route.children?.length) {
-      cacheRouteNames.push(...generateCacheRoutes(route.children))
+      cacheRouteNames.push(...generateCacheRoutes(route.children, isSkip))
     }
   })
 
