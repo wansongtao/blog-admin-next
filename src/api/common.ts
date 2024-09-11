@@ -29,3 +29,13 @@ export const setLogout = () => {
     method: 'get'
   })
 }
+
+export const getNewToken = (refreshToken: string) => {
+  return request<{ token: string; refreshToken: string }>({
+    url: '/auth/refresh-token',
+    method: 'get',
+    params: {
+      refreshToken
+    }
+  })
+}
