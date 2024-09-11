@@ -1,4 +1,4 @@
-import { setLogin } from '@/api/common'
+import { setLogin, setLogout } from '@/api/common'
 
 import type { ILoginParams } from '@/types/api/common'
 
@@ -24,6 +24,7 @@ export const useUserStore = defineStore(
     })
 
     function logout() {
+      setLogout()
       accessToken.value = ''
       refreshToken.value = ''
     }
