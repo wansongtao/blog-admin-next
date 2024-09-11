@@ -1,4 +1,5 @@
 import type { IMenubarItem } from '@/types'
+import type { MenuOption } from 'naive-ui'
 
 export const useAppSetStore = defineStore(
   'appSet',
@@ -16,6 +17,7 @@ export const useAppSetStore = defineStore(
     const menubarItems = ref<IMenubarItem[]>([])
 
     const cacheRoutes = ref<string[]>([])
+    const asideMenus = ref<MenuOption[]>([])
 
     return {
       collapsed,
@@ -23,8 +25,13 @@ export const useAppSetStore = defineStore(
       theme,
       toggleTheme,
       menubarItems,
-      cacheRoutes
+      cacheRoutes,
+      asideMenus
     }
   },
-  { persist: true }
+  {
+    persist: {
+      omit: ['asideMenus']
+    }
+  }
 )
