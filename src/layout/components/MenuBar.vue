@@ -16,6 +16,19 @@ const { elementRef, scrollDirection, updateScrollDirection } = useScrollObserver
 const appSetStore = useAppSetStore()
 const { menubarItems } = storeToRefs(appSetStore)
 
+const initMenubarItems = () => {
+  const items = menubarItems.value
+  if (items.length === 0 || items[0].key !== '/') {
+    items.push({
+      label: '首页',
+      key: '/',
+      hiddenCloseIcon: true,
+      checked: true
+    })
+  }
+}
+initMenubarItems()
+
 const route = useRoute()
 watch(
   () => route.fullPath,
