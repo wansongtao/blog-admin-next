@@ -42,3 +42,22 @@ export const generateMenus = (routes: RouteRecordRaw[], parentPath = ''): MenuOp
 
   return menus
 }
+
+export const generateCacheRoutes = (
+  routes: RouteRecordRaw[],
+  isSkip = (route: RouteRecordRaw) => route.meta?.cache !== true || !route.name
+) => {
+  const cacheRouteNames: string[] = []
+
+  routes.forEach((route) => {
+    if (!isSkip(route)) {
+      cacheRouteNames.push(route.name as string)
+    }
+
+    if (route.children?.length) {
+      cacheRouteNames.push(...generateCacheRoutes(route.children))
+    }
+  })
+
+  return cacheRouteNames
+}
