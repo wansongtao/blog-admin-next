@@ -2,28 +2,17 @@
 import IconSun from '@/assets/svgs/sun.svg?component'
 import IconMoon from '@/assets/svgs/moon.svg?component'
 import { useAppSetStore } from '@/stores/appSet'
-import { useOsTheme } from 'naive-ui'
+import useThemeAnimation from '@/hooks/useThemeAnimation'
+
+const { toggleThemeAnimation } = useThemeAnimation()
 
 const appSetStore = useAppSetStore()
 const { toggleTheme } = appSetStore
 const { theme } = storeToRefs(appSetStore)
-
-const systemTheme = useOsTheme()
-watch(
-  systemTheme,
-  (value) => {
-    if (theme.value === value || !value) {
-      return
-    }
-
-    toggleTheme()
-  },
-  { immediate: true }
-)
 </script>
 
 <template>
-  <div class="button-theme">
+  <div class="button-theme" @click="toggleThemeAnimation">
     <n-switch
       :value="theme"
       unchecked-value="light"
@@ -42,5 +31,28 @@ watch(
   display: flex;
   align-items: center;
   margin-left: 20px;
+}
+</style>
+
+<style>
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 99999;
+}
+
+[data-theme='dark']::view-transition-old(root) {
+  z-index: 99999;
+}
+[data-theme='dark']::view-transition-new(root) {
+  z-index: 1;
 }
 </style>
