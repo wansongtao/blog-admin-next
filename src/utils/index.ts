@@ -53,3 +53,25 @@ export const debounce = <T = unknown>(
     }, delay)
   }
 }
+
+/**
+ * @description 将对象转换为数组。默认 key 作为 value，value 作为 label
+ * @param data
+ * @param transform 自定义转换函数，接收一个参数，为对象的 key
+ * @returns
+ */
+export const objectToArray = <T extends Record<any, unknown>>(
+  data: T,
+  transform = (key: keyof T) => {
+    return {
+      label: data[key],
+      value: key
+    }
+  }
+) => {
+  const keys: (keyof T)[] = Object.keys(data)
+
+  return keys.map((k) => {
+    return transform(k)
+  })
+}
