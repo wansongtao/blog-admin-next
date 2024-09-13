@@ -14,8 +14,8 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@vueuse/core": "^10.11.1",
-    "@vueuse/router": "^10.11.1",
+    "@vueuse/core": "^11.0.3",
+    "@vueuse/router": "^11.0.3",
     "axios": "^1.7.3",
     "dayjs": "^1.11.12",
     "nprogress": "^0.2.0",
