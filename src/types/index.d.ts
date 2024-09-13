@@ -12,3 +12,5 @@ export interface IMenubarItem {
   hiddenCloseIcon?: boolean
   checked?: boolean
 }
+
+export type IMenuType = 'DIRECTORY' | 'MENU' | 'BUTTON'
