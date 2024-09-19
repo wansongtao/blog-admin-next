@@ -6,6 +6,8 @@ import { useThemeVars } from 'naive-ui'
 import useScrollObserver from '@/hooks/useScrollObserver'
 import { useAppSetStore } from '@/stores/appSet'
 
+import type { IMenubarItem } from '@/types'
+
 interface Item {
   path: string
   title: string
@@ -125,7 +127,7 @@ const themeVars = useThemeVars()
     <div class="menubar-more base-transition" v-if="scrollDirection === 'horizontal'">
       <n-dropdown
         style="height: 50vh; overflow: auto"
-        :options="menubarItems"
+        :options="menubarItems.map((item: IMenubarItem) => ({ label: item.label, key: item.key }))"
         show-arrow
         @select="onSelect"
         ><icon-more

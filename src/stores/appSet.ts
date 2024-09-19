@@ -37,7 +37,7 @@ export const useAppSetStore = defineStore(
   },
   {
     persist: {
-      // @ts-expect-error
+      // @ts-ignore
       omit: ['asideMenus']
     }
   }
