@@ -5,7 +5,7 @@ const { placeholder = '状态', clearable = true } = defineProps<{
   placeholder?: string
   clearable?: boolean
 }>()
-const disabled = defineModel<(typeof STATUS)[0]['value']>()
+const disabled = defineModel<(typeof STATUS)[0]['value'] | null>()
 </script>
 
 <template>
