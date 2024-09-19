@@ -51,11 +51,15 @@ export const useUserStore = defineStore(
       userInfo.value = res.data
     }
 
-    function logout() {
-      setLogout()
+    function reset() {
       accessToken.value = ''
       refreshToken.value = ''
       userInfo.value = initUserInfo()
+    }
+
+    function logout() {
+      setLogout()
+      reset()
     }
 
     return {
@@ -65,6 +69,7 @@ export const useUserStore = defineStore(
       refresh,
       userInfo,
       fetchUserInfo,
+      reset,
       logout
     }
   },
