@@ -13,7 +13,6 @@ declare module 'vue' {
     ButtonFullscreen: typeof import('./src/components/button/fullscreen/ButtonFullscreen.vue')['default']
     ButtonReset: typeof import('./src/components/button/reset/ButtonReset.vue')['default']
     ButtonSearch: typeof import('./src/components/button/search/ButtonSearch.vue')['default']
-    ButtonSearchAndReset: typeof import('./src/components/button/group/search-and-reset/ButtonSearchAndReset.vue')['default']
     ButtonTheme: typeof import('./src/components/button/theme/ButtonTheme.vue')['default']
     NAvatar: typeof import('naive-ui')['NAvatar']
     NBreadcrumb: typeof import('naive-ui')['NBreadcrumb']
