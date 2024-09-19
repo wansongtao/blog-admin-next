@@ -15,9 +15,14 @@ export const useAppSetStore = defineStore(
     }
 
     const menubarItems = ref<IMenubarItem[]>([])
-
     const cacheRoutes = ref<string[]>([])
     const asideMenus = ref<MenuOption[]>([])
+
+    function reset() {
+      menubarItems.value = []
+      cacheRoutes.value = []
+      asideMenus.value = []
+    }
 
     return {
       collapsed,
@@ -26,11 +31,13 @@ export const useAppSetStore = defineStore(
       toggleTheme,
       menubarItems,
       cacheRoutes,
-      asideMenus
+      asideMenus,
+      reset
     }
   },
   {
     persist: {
+      // @ts-expect-error
       omit: ['asideMenus']
     }
   }

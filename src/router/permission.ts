@@ -33,10 +33,7 @@ router.beforeEach(async (to) => {
       return `/login?redirect=${to.path}`
     }
 
-    appSetStore.menubarItems = []
-    appSetStore.cacheRoutes = []
-    appSetStore.asideMenus = []
-
+    appSetStore.reset()
     router.getRoutes().forEach((route) => {
       if (!whiteList.includes(route.name as string)) {
         router.removeRoute(route.name as string)
