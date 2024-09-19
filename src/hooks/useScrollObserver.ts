@@ -1,7 +1,7 @@
 import { useResizeObserver } from '@vueuse/core'
 
 export default function useScrollObserver<T extends HTMLElement | SVGElement = HTMLElement>() {
-  const elementRef = ref<T | null>(null)
+  const elementRef = ref<T>()
   const scrollDirection = ref<'vertical' | 'horizontal' | 'all' | null>(null)
 
   const updateScrollDirection = () => {
