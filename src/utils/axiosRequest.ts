@@ -7,6 +7,7 @@ import axios, {
 import { useUserStore } from '@/stores/user'
 import createAxiosRetryRequestPlugin from '@/plugins/retryRequest'
 import createRefreshTokenPlugin from '@/plugins/refreshToken'
+import router from '@/router'
 
 import type { IBaseResponse, IConfigHeader } from '@/types/api'
 
@@ -62,10 +63,28 @@ instance.interceptors.response.use(
   refreshTokenPlugin.responseInterceptorRejected
 )
 
+const goToLogin = (seconds = 2) => {
+  setTimeout(() => {
+    const store = useUserStore()
+    store.reset()
+
+    router.push({
+      name: 'Login',
+      query: {
+        redirect: router.currentRoute.value.fullPath
+      }
+    })
+  }, seconds * 1000)
+}
+
 instance.interceptors.request.use(addToken, (error: AxiosError) => Promise.reject(error))
 instance.interceptors.response.use(processResponse, (error: AxiosError) => {
   if (error.code === 'ERR_CANCELED') {
     return Promise.reject(error)
+  }
+
+  if (error.response?.status === 401) {
+    goToLogin()
   }
 
   window.$message.error(error.response?.statusText || error.message)
