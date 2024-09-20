@@ -20,16 +20,6 @@ export class AxiosRefreshTokenPlugin {
   pendingQueue: Function[]
   request: IRequest
   refreshTokenFn: IRefreshTokenFn
-  isRefresh: IsRefresh = (error?: AxiosError, res?: AxiosResponse) => {
-    if (error) {
-      return error.response?.status === 401
-    }
-    if (res) {
-      return res.data?.code === 401
-    }
-
-    return false
-  }
 
   constructor(refreshTokenFn: IRefreshTokenFn, request: IRequest, isRefresh?: IsRefresh) {
     this.pendingQueue = []
@@ -49,6 +39,19 @@ export class AxiosRefreshTokenPlugin {
     error.toJSON = () => ({})
     error.name = 'RefreshTokenPluginError'
     return error
+  }
+
+  isRefresh(error: AxiosError): boolean
+  isRefresh(error: undefined, res: AxiosResponse): boolean
+  isRefresh(error?: AxiosError, res?: AxiosResponse) {
+    if (error) {
+      return error.response?.status === 401
+    }
+    if (res) {
+      return res.data?.code === 401
+    }
+
+    return false
   }
 
   addPending(config: InternalAxiosRequestConfig): Promise<AxiosResponse> {
@@ -118,7 +121,7 @@ export class AxiosRefreshTokenPlugin {
   }
 
   responseInterceptorFulfilled(response: AxiosResponse) {
-    if (this.isRefresh(undefined, response)) {
+    if (this.isRefresh(undefined, response) && !this.isRefreshing) {
       const error = AxiosRefreshTokenPlugin.createError(
         'Unauthorized',
         'ERR_UNAUTHORIZED',
@@ -135,7 +138,7 @@ export class AxiosRefreshTokenPlugin {
       return this.addPending(error.config!)
     }
 
-    if (this.isRefresh(error)) {
+    if (this.isRefresh(error) && !this.isRefreshing) {
       return this.refresh(error)
     }
 
