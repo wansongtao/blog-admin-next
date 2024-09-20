@@ -4,7 +4,7 @@
   <n-card
     style="height: 100%; border-radius: 12px"
     :bordered="false"
-    content-style="padding: 20px;"
+    content-style="display: flex;flex-direction: column;padding: 20px;"
   >
     <slot />
   </n-card>
