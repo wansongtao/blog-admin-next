@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     BaseBox: typeof import('./src/components/base-box/BaseBox.vue')['default']
     BaseBreadcrumb: typeof import('./src/components/base-breadcrumb/BaseBreadcrumb.vue')['default']
+    BasePagination: typeof import('./src/components/base-pagination/BasePagination.vue')['default']
     ButtonCollapsed: typeof import('./src/components/button/collapsed/ButtonCollapsed.vue')['default']
     ButtonFullscreen: typeof import('./src/components/button/fullscreen/ButtonFullscreen.vue')['default']
     ButtonReset: typeof import('./src/components/button/reset/ButtonReset.vue')['default']
@@ -21,6 +22,7 @@ declare module 'vue' {
     NCard: typeof import('naive-ui')['NCard']
     NCol: typeof import('naive-ui')['NCol']
     NConfigProvider: typeof import('naive-ui')['NConfigProvider']
+    NDataTable: typeof import('naive-ui')['NDataTable']
     NDatePicker: typeof import('naive-ui')['NDatePicker']
     NDropdown: typeof import('naive-ui')['NDropdown']
     NForm: typeof import('naive-ui')['NForm']
@@ -35,6 +37,7 @@ declare module 'vue' {
     NMessageProvider: typeof import('naive-ui')['NMessageProvider']
     NModalProvider: typeof import('naive-ui')['NModalProvider']
     NNotificationProvider: typeof import('naive-ui')['NNotificationProvider']
+    NPagination: typeof import('naive-ui')['NPagination']
     NRow: typeof import('naive-ui')['NRow']
     NSelect: typeof import('naive-ui')['NSelect']
     NSwitch: typeof import('naive-ui')['NSwitch']
