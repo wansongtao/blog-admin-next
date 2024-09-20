@@ -3,7 +3,7 @@ import { objectToArray } from '@/utils'
 import { MENU_TYPES } from '@/constants'
 
 const options = objectToArray(MENU_TYPES)
-const menuType = defineModel<keyof typeof MENU_TYPES>()
+const menuType = defineModel<keyof typeof MENU_TYPES | null>()
 </script>
 
 <template>
