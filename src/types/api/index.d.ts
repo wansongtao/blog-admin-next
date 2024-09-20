@@ -15,3 +15,18 @@ export interface IConfigHeader {
     isRepeat?: boolean
   }
 }
+
+export interface IQuery {
+  keyword?: string
+  beginTime?: string | number
+  endTime?: string | number
+  disabled?: 0 | 1
+  page?: number
+  pageSize?: number
+  sort?: 'asc' | 'desc'
+}
+
+export interface IBaseList<T = unknown> {
+  list: T[]
+  total: number
+}
