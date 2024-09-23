@@ -6,7 +6,14 @@ import { getMenuList } from '@/api/menu'
 import MENU_ICON_MAP from '@/plugins/menuIcons'
 
 import type { IMenuListItem, IMenuQuery } from '@/types/api/menu'
-import type { DataTableColumn } from 'naive-ui'
+import type { DataTableColumn, DataTableSortState } from 'naive-ui'
+import { useRouteQuery } from '@vueuse/router'
+
+const sort = useRouteQuery<IMenuQuery['sort']>('sort')
+const onSorterChange = (column: DataTableSortState) => {
+  const { order } = column
+  sort.value = order === 'ascend' ? 'asc' : 'desc'
+}
 
 const columns: (DataTableColumn<IMenuListItem> & { key: keyof IMenuListItem })[] = [
   {
@@ -68,6 +75,7 @@ const columns: (DataTableColumn<IMenuListItem> & { key: keyof IMenuListItem })[]
     align: 'center',
     key: 'createdAt',
     title: '创建时间',
+    defaultSortOrder: sort.value === 'asc' ? 'ascend' : 'descend',
     sorter: true,
     width: 200
   }
@@ -97,9 +105,9 @@ const onReset = () => {
 }
 
 watch(
-  [page, pageSize, search],
+  [page, pageSize, search, sort],
   () => {
-    fetchList(search.value)
+    fetchList({ ...search.value, sort: sort.value })
   },
   { immediate: true }
 )
@@ -124,12 +132,12 @@ watch(
         :data="list"
         :loading
         v-model:expanded-row-keys="expandedRowKeys"
-        :pagination="false"
-        :cascade="false"
         :row-key="(rowData: IMenuListItem) => rowData.id"
+        :cascade="false"
         style="height: 100%"
         flex-height
         striped
+        @update:sorter="onSorterChange"
       />
     </div>
     <base-pagination v-model:page="page" v-model:page-size="pageSize" :total :disabled="loading" />
