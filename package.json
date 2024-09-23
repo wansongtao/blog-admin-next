@@ -45,7 +45,7 @@
     "sass": "^1.77.8",
     "shelljs": "^0.8.5",
     "typescript": "~5.4.0",
-    "unplugin-auto-import": "^0.18.2",
+    "unplugin-auto-import": "^0.18.3",
     "unplugin-vue-components": "^0.27.4",
     "vfonts": "^0.0.3",
     "vite": "^5.3.1",

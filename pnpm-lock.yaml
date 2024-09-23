@@ -97,11 +97,11 @@ importers:
         specifier: ~5.4.0
         version: 5.4.5
       unplugin-auto-import:
-        specifier: ^0.18.2
-        version: 0.18.2(@nuxt/kit@3.13.1(rollup@4.20.0)(webpack-sources@3.2.3))(@vueuse/core@11.0.3(vue@3.5.4(typescript@5.4.5)))(rollup@4.20.0)
+        specifier: ^0.18.3
+        version: 0.18.3(@nuxt/kit@3.13.1(rollup@4.20.0)(webpack-sources@3.2.3))(@vueuse/core@11.0.3(vue@3.5.4(typescript@5.4.5)))(rollup@4.20.0)(webpack-sources@3.2.3)
       unplugin-vue-components:
         specifier: ^0.27.4
-        version: 0.27.4(@babel/parser@7.25.3)(@nuxt/kit@3.13.1(rollup@4.20.0)(webpack-sources@3.2.3))(rollup@4.20.0)(vue@3.5.4(typescript@5.4.5))
+        version: 0.27.4(@babel/parser@7.25.3)(@nuxt/kit@3.13.1(rollup@4.20.0)(webpack-sources@3.2.3))(rollup@4.20.0)(vue@3.5.4(typescript@5.4.5))(webpack-sources@3.2.3)
       vfonts:
         specifier: ^0.0.3
         version: 0.0.3
@@ -2301,11 +2301,11 @@ packages:
     resolution: {integrity: sha512-lRfVq8fE8gz6QMBuDM6a+LO3IAzTi05H6gCVaUpir2E1Rwpo4ZUog45KpNXKC/Mn3Yb9UDuHumeFTo9iV/D9FQ==}
     engines: {node: '>=18'}
 
-  unimport@3.10.0:
-    resolution: {integrity: sha512-/UvKRfWx3mNDWwWQhR62HsoM3wxHwYdTq8ellZzMOHnnw4Dp8tovgthyW7DjTrbjDL+i4idOp06voz2VKlvrLw==}
-
   unimport@3.11.1:
     resolution: {integrity: sha512-DuB1Uoq01LrrXTScxnwOoMSlTXxyKcULguFxbLrMDFcE/CO0ZWHpEiyhovN0mycPt7K6luAHe8laqvwvuoeUPg==}
+
+  unimport@3.12.0:
+    resolution: {integrity: sha512-5y8dSvNvyevsnw4TBQkIQR1Rjdbb+XjVSwQwxltpnVZrStBvvPkMPcZrh1kg5kY77kpx6+D4Ztd3W6FOBH/y2Q==}
 
   universalify@0.2.0:
     resolution: {integrity: sha512-CJ1QgKmNg3CwvAv/kOFmtnEN05f0D/cn9QntgNOQlQF9dgvVTHj3t+8JPdjqawCHk7V/KA+fbUqzZ9XWhcqPUg==}
@@ -2315,8 +2315,8 @@ packages:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
     engines: {node: '>= 10.0.0'}
 
-  unplugin-auto-import@0.18.2:
-    resolution: {integrity: sha512-Dwb3rAic75harVBrVjwiq6H24PT+nBq2dpxV5BH8NNI6sDFaTytvP+iyo4xy7prQbR3r5K6nMs4f5Wp9PE4g8A==}
+  unplugin-auto-import@0.18.3:
+    resolution: {integrity: sha512-q3FUtGQjYA2e+kb1WumyiQMjHM27MrTQ05QfVwtLRVhyYe+KF6TblBYaEX9L6Z0EibsqaXAiW+RFfkcQpfaXzg==}
     engines: {node: '>=14'}
     peerDependencies:
       '@nuxt/kit': ^3.2.2
@@ -4882,7 +4882,7 @@ snapshots:
 
   unicorn-magic@0.1.0: {}
 
-  unimport@3.10.0(rollup@4.20.0):
+  unimport@3.11.1(rollup@4.20.0)(webpack-sources@3.2.3):
     dependencies:
       '@rollup/pluginutils': 5.1.0(rollup@4.20.0)
       acorn: 8.12.1
@@ -4893,14 +4893,15 @@ snapshots:
       magic-string: 0.30.11
       mlly: 1.7.1
       pathe: 1.1.2
-      pkg-types: 1.1.3
+      pkg-types: 1.2.0
       scule: 1.3.0
       strip-literal: 2.1.0
-      unplugin: 1.12.1
+      unplugin: 1.14.1(webpack-sources@3.2.3)
     transitivePeerDependencies:
       - rollup
+      - webpack-sources
 
-  unimport@3.11.1(rollup@4.20.0)(webpack-sources@3.2.3):
+  unimport@3.12.0(rollup@4.20.0)(webpack-sources@3.2.3):
     dependencies:
       '@rollup/pluginutils': 5.1.0(rollup@4.20.0)
       acorn: 8.12.1
@@ -4923,7 +4924,7 @@ snapshots:
 
   universalify@2.0.1: {}
 
-  unplugin-auto-import@0.18.2(@nuxt/kit@3.13.1(rollup@4.20.0)(webpack-sources@3.2.3))(@vueuse/core@11.0.3(vue@3.5.4(typescript@5.4.5)))(rollup@4.20.0):
+  unplugin-auto-import@0.18.3(@nuxt/kit@3.13.1(rollup@4.20.0)(webpack-sources@3.2.3))(@vueuse/core@11.0.3(vue@3.5.4(typescript@5.4.5)))(rollup@4.20.0)(webpack-sources@3.2.3):
     dependencies:
       '@antfu/utils': 0.7.10
       '@rollup/pluginutils': 5.1.0(rollup@4.20.0)
@@ -4931,15 +4932,16 @@ snapshots:
       local-pkg: 0.5.0
       magic-string: 0.30.11
       minimatch: 9.0.5
-      unimport: 3.10.0(rollup@4.20.0)
-      unplugin: 1.12.1
+      unimport: 3.12.0(rollup@4.20.0)(webpack-sources@3.2.3)
+      unplugin: 1.14.1(webpack-sources@3.2.3)
     optionalDependencies:
       '@nuxt/kit': 3.13.1(rollup@4.20.0)(webpack-sources@3.2.3)
       '@vueuse/core': 11.0.3(vue@3.5.4(typescript@5.4.5))
     transitivePeerDependencies:
       - rollup
+      - webpack-sources
 
-  unplugin-vue-components@0.27.4(@babel/parser@7.25.3)(@nuxt/kit@3.13.1(rollup@4.20.0)(webpack-sources@3.2.3))(rollup@4.20.0)(vue@3.5.4(typescript@5.4.5)):
+  unplugin-vue-components@0.27.4(@babel/parser@7.25.3)(@nuxt/kit@3.13.1(rollup@4.20.0)(webpack-sources@3.2.3))(rollup@4.20.0)(vue@3.5.4(typescript@5.4.5))(webpack-sources@3.2.3):
     dependencies:
       '@antfu/utils': 0.7.10
       '@rollup/pluginutils': 5.1.0(rollup@4.20.0)
@@ -4950,7 +4952,7 @@ snapshots:
       magic-string: 0.30.11
       minimatch: 9.0.5
       mlly: 1.7.1
-      unplugin: 1.12.1
+      unplugin: 1.14.1(webpack-sources@3.2.3)
       vue: 3.5.4(typescript@5.4.5)
     optionalDependencies:
       '@babel/parser': 7.25.3
@@ -4958,6 +4960,7 @@ snapshots:
     transitivePeerDependencies:
       - rollup
       - supports-color
+      - webpack-sources
 
   unplugin@1.12.1:
     dependencies:
