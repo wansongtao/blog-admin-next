@@ -57,8 +57,8 @@ export const useUserStore = defineStore(
       userInfo.value = initUserInfo()
     }
 
-    function logout() {
-      setLogout()
+    async function logout() {
+      await setLogout()
       reset()
     }
 

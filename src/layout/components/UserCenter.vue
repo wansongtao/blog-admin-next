@@ -38,12 +38,12 @@ const userStore = useUserStore()
 const { userInfo } = storeToRefs(userStore)
 
 const router = useRouter()
-const onSelect = (key: string) => {
+const onSelect = async (key: string) => {
   if (key !== 'logout') {
     return
   }
 
-  userStore.logout()
+  await userStore.logout()
   router.push('/login')
 }
 </script>
