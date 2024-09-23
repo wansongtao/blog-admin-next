@@ -12,6 +12,11 @@ import { useRouteQuery } from '@vueuse/router'
 const sort = useRouteQuery<IMenuQuery['sort']>('sort')
 const onSorterChange = (column: DataTableSortState) => {
   const { order } = column
+  if (!order) {
+    sort.value = undefined
+    return
+  }
+
   sort.value = order === 'ascend' ? 'asc' : 'desc'
 }
 
