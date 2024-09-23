@@ -1,6 +1,6 @@
 import type { IMenuType } from '@/types'
 
-export const MENU_TYPES: { [key in IMenuType]: string } = {
+export const MENU_TYPES: { readonly [key in IMenuType]: string } = {
   DIRECTORY: '目录',
   MENU: '菜单',
   BUTTON: '按钮'
