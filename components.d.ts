@@ -15,6 +15,8 @@ declare module 'vue' {
     ButtonReset: typeof import('./src/components/button/reset/ButtonReset.vue')['default']
     ButtonSearch: typeof import('./src/components/button/search/ButtonSearch.vue')['default']
     ButtonTheme: typeof import('./src/components/button/theme/ButtonTheme.vue')['default']
+    CheckPermission: typeof import('./src/components/check-permission/CheckPermission.vue')['default']
+    CheckRole: typeof import('./src/components/check-role/CheckRole.vue')['default']
     NAvatar: typeof import('naive-ui')['NAvatar']
     NBreadcrumb: typeof import('naive-ui')['NBreadcrumb']
     NBreadcrumbItem: typeof import('naive-ui')['NBreadcrumbItem']
