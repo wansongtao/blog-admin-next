@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import IconExpand from '@/assets/svgs/expand.svg?component'
-import IconShrink from '@/assets/svgs/shrink.svg?component'
+import IconExpand from '@/assets/svgs/icons/expand.svg?component'
+import IconShrink from '@/assets/svgs/icons/shrink.svg?component'
 import { useFullscreen } from '@vueuse/core'
 
 const { isFullscreen, toggle } = useFullscreen()

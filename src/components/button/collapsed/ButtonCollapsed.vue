@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import IconFold from '@/assets/svgs/fold.svg?component'
-import IconUnfold from '@/assets/svgs/unfold.svg?component'
+import IconFold from '@/assets/svgs/icons/fold.svg?component'
+import IconUnfold from '@/assets/svgs/icons/unfold.svg?component'
 import { useAppSetStore } from '@/stores/appSet'
 
 const appSetStore = useAppSetStore()

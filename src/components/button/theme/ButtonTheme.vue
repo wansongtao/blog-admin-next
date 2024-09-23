@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import IconSun from '@/assets/svgs/sun.svg?component'
-import IconMoon from '@/assets/svgs/moon.svg?component'
+import IconSun from '@/assets/svgs/icons/sun.svg?component'
+import IconMoon from '@/assets/svgs/icons/moon.svg?component'
 import { useAppSetStore } from '@/stores/appSet'
 import useThemeAnimation from '@/hooks/useThemeAnimation'
 

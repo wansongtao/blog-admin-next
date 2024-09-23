@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import IconUser from '@/assets/svgs/user.svg?component'
-import IconGithub from '@/assets/svgs/github.svg?component'
-import IconLogout from '@/assets/svgs/logout.svg?component'
+import IconUser from '@/assets/svgs/icons/user.svg?component'
+import IconGithub from '@/assets/svgs/icons/github.svg?component'
+import IconLogout from '@/assets/svgs/icons/logout.svg?component'
 import { RouterLink, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'

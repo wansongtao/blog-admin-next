@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import IconClose from '@/assets/svgs/close.svg'
-import IconMore from '@/assets/svgs/more.svg'
+import IconClose from '@/assets/svgs/icons/close.svg'
+import IconMore from '@/assets/svgs/icons/more.svg'
 import MenuBarItem from './MenuBarItem.vue'
 import { useThemeVars } from 'naive-ui'
 import useScrollObserver from '@/hooks/useScrollObserver'

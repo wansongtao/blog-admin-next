@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import IconWater from '@/assets/svgs/water.svg'
-import IconUser from '@/assets/svgs/user.svg'
-import IconPassword from '@/assets/svgs/password.svg'
-import IconCaptcha from '@/assets/svgs/captcha.svg'
+import IconWater from '@/assets/svgs/icons/water.svg'
+import IconUser from '@/assets/svgs/icons/user.svg'
+import IconPassword from '@/assets/svgs/icons/password.svg'
+import IconCaptcha from '@/assets/svgs/icons/captcha.svg'
 import ImgCaptcha from './components/ImgCaptcha.vue'
 
 import { validateUsername, validatePassword } from '@/utils/validate'
