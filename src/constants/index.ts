@@ -19,3 +19,5 @@ export const STATUS: {
     value: 1
   }
 ]
+
+export const ALL_PERMISSION = '*:*:*'
