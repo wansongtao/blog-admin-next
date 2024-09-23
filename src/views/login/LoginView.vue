@@ -46,7 +46,7 @@ const disabled = computed(() => {
   return !formData.value.userName || !formData.value.password || !formData.value.captcha
 })
 
-const captchaRef = ref<InstanceType<typeof ImgCaptcha>>()
+const captchaRef = useTemplateRef('captchaRef')
 const loading = ref(false)
 const router = useRouter()
 

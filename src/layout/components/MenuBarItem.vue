@@ -14,7 +14,7 @@ const activeColor = computed(() => {
   return theme.value === 'light' ? 'rgba(24, 160, 88, 0.1)' : 'rgba(99, 226, 183, 0.15)'
 })
 
-const elementRef = ref<HTMLElement | null>(null)
+const elementRef = useTemplateRef('elementRef')
 const scrollElement = () => {
   elementRef.value?.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' })
 }
