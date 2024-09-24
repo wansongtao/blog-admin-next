@@ -10,3 +10,20 @@ export const getMenuList = (params: IMenuQuery) => {
     params
   })
 }
+
+export const deleteMenu = (id: number) => {
+  return request({
+    url: `/permissions/${id}`,
+    method: 'delete'
+  })
+}
+
+export const deleteMenuList = (ids: number[]) => {
+  return request({
+    url: '/permissions/batch-delete',
+    method: 'post',
+    data: {
+      ids
+    }
+  })
+}
