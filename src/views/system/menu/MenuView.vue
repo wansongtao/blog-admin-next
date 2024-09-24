@@ -4,21 +4,12 @@ import TagMenu from './components/TagMenu.vue'
 import useRequest from '@/hooks/useRequest'
 import { getMenuList } from '@/api/menu'
 import MENU_ICON_MAP from '@/plugins/menuIcons'
+import useTableSort from '@/hooks/useTableSort'
 
 import type { IMenuListItem, IMenuQuery } from '@/types/api/menu'
-import type { DataTableColumn, DataTableSortState } from 'naive-ui'
-import { useRouteQuery } from '@vueuse/router'
+import type { DataTableColumn } from 'naive-ui'
 
-const sort = useRouteQuery<IMenuQuery['sort']>('sort')
-const onSorterChange = (column: DataTableSortState) => {
-  const { order } = column
-  if (!order) {
-    sort.value = undefined
-    return
-  }
-
-  sort.value = order === 'ascend' ? 'asc' : 'desc'
-}
+const { sort, onSorterChange } = useTableSort()
 
 const columns: (DataTableColumn<IMenuListItem> & { key: keyof IMenuListItem })[] = [
   {
