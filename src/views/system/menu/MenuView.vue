@@ -118,14 +118,10 @@ watch(
 )
 
 const expandedRowKeys = ref<number[]>([])
-watch(
-  list,
-  (value) => {
-    if (value.length === 0) return
-    expandedRowKeys.value = [value[0].id]
-  },
-  { immediate: true }
-)
+watch(list, (value) => {
+  if (value.length === 0) return
+  expandedRowKeys.value = [value[0].id]
+})
 </script>
 
 <template>
