@@ -1,9 +1,8 @@
-import type { App } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { hasRoles } from '@/utils/authority'
 
-const vRole = (app: App) => {
-  app.directive<HTMLElement, string[] | string>('role', (el, binding) => {
+const vRole = {
+  mounted(el: HTMLElement, binding: { value: string | string[]; modifiers: { or: boolean } }) {
     const userStore = useUserStore()
     const roles = userStore.userInfo.roles
     const needRole = binding.value
@@ -13,7 +12,7 @@ const vRole = (app: App) => {
     if (!isHas) {
       el.parentNode?.removeChild(el)
     }
-  })
+  }
 }
 
 export default vRole

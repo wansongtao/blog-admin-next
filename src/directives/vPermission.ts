@@ -1,9 +1,8 @@
-import type { App } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { hasPermissions } from '@/utils/authority'
 
-const vPermission = (app: App) => {
-  app.directive<HTMLElement, string | string[]>('permission', (el, binding) => {
+const vPermission = {
+  mounted(el: HTMLElement, binding: { value: string | string[]; modifiers: { or: boolean } }) {
     const userStore = useUserStore()
     const permissions = userStore.userInfo.permissions
     const needPermissions = binding.value
@@ -13,7 +12,7 @@ const vPermission = (app: App) => {
     if (!isHas) {
       el.parentNode?.removeChild(el)
     }
-  })
+  }
 }
 
 export default vPermission
