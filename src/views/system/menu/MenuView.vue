@@ -1,81 +1,106 @@
 <script lang="ts" setup>
 import SearchForm from './components/SearchForm.vue'
 import TagMenu from './components/TagMenu.vue'
+import ButtonDelete from './components/ButtonDelete.vue'
+
 import useRequest from '@/hooks/useRequest'
 import { getMenuList } from '@/api/menu'
 import MENU_ICON_MAP from '@/plugins/menuIcons'
 import useTableSort from '@/hooks/useTableSort'
+import usePermission from '@/hooks/usePermission'
 
 import type { IMenuListItem, IMenuQuery } from '@/types/api/menu'
 import type { DataTableColumn } from 'naive-ui'
 
 const { sort, onSorterChange } = useTableSort()
+const { hasPermission } = usePermission()
 
-const columns: (DataTableColumn<IMenuListItem> & { key: keyof IMenuListItem })[] = [
-  {
-    align: 'center',
-    key: 'name',
-    title: '菜单名称'
-  },
-  {
-    align: 'center',
-    key: 'type',
-    title: '菜单类型',
-    width: 100,
-    render(row) {
-      return h(TagMenu, { type: row.type })
-    }
-  },
-  {
-    align: 'center',
-    key: 'path',
-    title: '路由地址',
-    render(row) {
-      return row.path || '--'
-    }
-  },
-  {
-    align: 'center',
-    key: 'permission',
-    title: '权限标识',
-    render(row) {
-      return row.permission || '--'
-    }
-  },
-  {
-    align: 'center',
-    key: 'icon',
-    title: '图标',
-    width: 60,
-    render(row) {
-      if (!row.icon || !MENU_ICON_MAP[row.icon]) return '--'
+type IColumns = (DataTableColumn<IMenuListItem> & { key?: keyof IMenuListItem | 'action' })[]
+const columns = computed(() => {
+  const list: IColumns = [
+    {
+      align: 'center',
+      key: 'name',
+      title: '菜单名称'
+    },
+    {
+      align: 'center',
+      key: 'type',
+      title: '菜单类型',
+      width: 100,
+      render(row) {
+        return h(TagMenu, { type: row.type })
+      }
+    },
+    {
+      align: 'center',
+      key: 'path',
+      title: '路由地址',
+      render(row) {
+        return row.path || '--'
+      }
+    },
+    {
+      align: 'center',
+      key: 'permission',
+      title: '权限标识',
+      render(row) {
+        return row.permission || '--'
+      }
+    },
+    {
+      align: 'center',
+      key: 'icon',
+      title: '图标',
+      width: 60,
+      render(row) {
+        if (!row.icon || !MENU_ICON_MAP[row.icon]) return '--'
 
-      return h(MENU_ICON_MAP[row.icon])
+        return h(MENU_ICON_MAP[row.icon])
+      }
+    },
+    {
+      align: 'center',
+      key: 'sort',
+      title: '排序',
+      width: 60
+    },
+    {
+      align: 'center',
+      key: 'disabled',
+      title: '状态',
+      render(row) {
+        return row.disabled ? '禁用' : '启用'
+      }
+    },
+    {
+      align: 'center',
+      key: 'createdAt',
+      title: '创建时间',
+      defaultSortOrder: sort.value === 'asc' ? 'ascend' : 'descend',
+      sorter: true,
+      width: 200
     }
-  },
-  {
-    align: 'center',
-    key: 'sort',
-    title: '排序',
-    width: 60
-  },
-  {
-    align: 'center',
-    key: 'disabled',
-    title: '状态',
-    render(row) {
-      return row.disabled ? '禁用' : '启用'
-    }
-  },
-  {
-    align: 'center',
-    key: 'createdAt',
-    title: '创建时间',
-    defaultSortOrder: sort.value === 'asc' ? 'ascend' : 'descend',
-    sorter: true,
-    width: 200
+  ]
+
+  const hasDeletePermission = hasPermission('system:menu:del')
+  if (hasDeletePermission) {
+    list.unshift({
+      type: 'selection'
+    })
+
+    list.push({
+      align: 'center',
+      key: 'action',
+      title: '操作',
+      render(row) {
+        return h(ButtonDelete, { id: row.id, 'on-success': onDeleteSuccess })
+      }
+    })
   }
-]
+
+  return list
+})
 
 const { page, pageSize, list, total, loading, fetchList } = useRequest(
   async (params: IMenuQuery) => {
@@ -108,6 +133,25 @@ watch(
   { immediate: true }
 )
 
+const checkedKeys = ref<number[]>([])
+function onDeleteSuccess(isBatch = false) {
+  let deleteCount = 1
+  if (isBatch) {
+    deleteCount = checkedKeys.value.length
+    checkedKeys.value = []
+  }
+
+  const lastPageSize = total.value % pageSize.value || pageSize.value
+  if (deleteCount < lastPageSize || page.value === 1) {
+    fetchList({ ...search.value, sort: sort.value })
+    return
+  }
+
+  const lastPage = Math.ceil(total.value / pageSize.value)
+  const currentLastPage = Math.ceil((total.value - deleteCount) / pageSize.value)
+  page.value = Math.max(1, page.value - (lastPage - currentLastPage))
+}
+
 const expandedRowKeys = ref<number[]>([])
 watch(list, (value) => {
   if (value.length === 0) return
@@ -118,12 +162,18 @@ watch(list, (value) => {
 <template>
   <base-box>
     <search-form :loading @search="onSearch" @reset="onReset" />
+    <check-permission :permission="['system:menu:del']">
+      <n-space style="margin-top: 20px">
+        <button-delete :id="checkedKeys" @on-success="onDeleteSuccess(true)" />
+      </n-space>
+    </check-permission>
     <div class="menu-table">
       <n-data-table
         :columns="columns"
         :data="list"
         :loading
         v-model:expanded-row-keys="expandedRowKeys"
+        v-model:checked-row-keys="checkedKeys"
         :row-key="(rowData: IMenuListItem) => rowData.id"
         :cascade="false"
         style="height: 100%"
