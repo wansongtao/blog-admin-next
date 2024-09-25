@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-import { STATUS } from '@/constants'
+import { ACTIVE_STATE } from '@/constants'
 
 const { placeholder = '状态', clearable = true } = defineProps<{
   placeholder?: string
   clearable?: boolean
 }>()
-const disabled = defineModel<(typeof STATUS)[0]['value'] | null>()
+const disabled = defineModel<(typeof ACTIVE_STATE)[0]['value'] | null>()
 </script>
 
 <template>
-  <n-select v-model:value="disabled" :options="STATUS" :placeholder :clearable />
+  <n-select v-model:value="disabled" :options="ACTIVE_STATE" :placeholder :clearable />
 </template>
 
 <style lang="scss" scoped></style>

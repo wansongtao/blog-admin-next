@@ -48,7 +48,7 @@ declare module 'vue' {
     NTag: typeof import('naive-ui')['NTag']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    SelectState: typeof import('./src/components/select/SelectState.vue')['default']
+    SelectState: typeof import('./src/components/select/state/SelectState.vue')['default']
     TheAppProvider: typeof import('./src/components/the-app-provider/TheAppProvider.vue')['default']
     TheParentView: typeof import('./src/components/the-parent-view/TheParentView.vue')['default']
   }

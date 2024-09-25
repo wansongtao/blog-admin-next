@@ -6,7 +6,7 @@ export const MENU_TYPES: { readonly [key in IMenuType]: string } = {
   BUTTON: '按钮'
 }
 
-export const STATUS: {
+export const ACTIVE_STATE: {
   readonly label: string
   readonly value: 0 | 1
 }[] = [
