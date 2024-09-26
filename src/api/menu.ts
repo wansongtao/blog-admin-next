@@ -1,6 +1,6 @@
 import request from '@/utils/axiosRequest'
 
-import type { IMenuListItem, IMenuQuery, IMenuTree } from '@/types/api/menu'
+import type { IMenuListItem, IMenuParam, IMenuQuery, IMenuTree } from '@/types/api/menu'
 import type { IBaseList } from '@/types/api'
 
 export const getMenuList = (params: IMenuQuery) => {
@@ -35,5 +35,13 @@ export const getMenuTree = (containButton: boolean = false) => {
     params: {
       containButton
     }
+  })
+}
+
+export const addMenu = (data: IMenuParam) => {
+  return request({
+    url: '/permissions',
+    method: 'post',
+    data
   })
 }
