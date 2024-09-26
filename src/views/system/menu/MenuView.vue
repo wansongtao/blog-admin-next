@@ -2,6 +2,7 @@
 import SearchForm from './components/SearchForm.vue'
 import TagMenu from './components/TagMenu.vue'
 import ButtonDelete from './components/ButtonDelete.vue'
+import ButtonAdd from './components/ButtonAdd.vue'
 
 import useRequest from '@/hooks/useRequest'
 import { getMenuList } from '@/api/menu'
@@ -44,6 +45,9 @@ const columns = computed(() => {
       align: 'center',
       key: 'permission',
       title: '权限标识',
+      ellipsis: {
+        tooltip: true
+      },
       render(row) {
         return row.permission || '--'
       }
@@ -125,10 +129,14 @@ const onReset = () => {
   page.value = 1
 }
 
+const updateTableData = () => {
+  fetchList({ ...search.value, sort: sort.value })
+}
+
 watch(
   [page, pageSize, search, sort],
   () => {
-    fetchList({ ...search.value, sort: sort.value })
+    updateTableData()
   },
   { immediate: true }
 )
@@ -162,9 +170,14 @@ watch(list, (value) => {
 <template>
   <base-box>
     <search-form :loading @search="onSearch" @reset="onReset" />
-    <check-permission :permission="['system:menu:del']">
+    <check-permission :permission="['system:menu:del', 'system:menu:add']">
       <n-space style="margin-top: 20px">
-        <button-delete :id="checkedKeys" @on-success="onDeleteSuccess(true)" />
+        <check-permission permission="system:menu:add">
+          <button-add @add-success="updateTableData" />
+        </check-permission>
+        <check-permission permission="system:menu:del">
+          <button-delete :id="checkedKeys" @on-success="onDeleteSuccess(true)" />
+        </check-permission>
       </n-space>
     </check-permission>
     <div class="menu-table">

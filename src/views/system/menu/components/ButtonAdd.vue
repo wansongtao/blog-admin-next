@@ -1,0 +1,47 @@
+<script lang="ts" setup>
+import MenuForm from './MenuForm.vue'
+import { addMenu } from '@/api/menu'
+import { getTrulyValue } from '@/utils'
+
+import type { IMenuParam } from '@/types/api/menu'
+
+const $emits = defineEmits<{
+  'add-success': []
+}>()
+
+const show = ref(false)
+const onSubmit = async (data: IMenuParam) => {
+  const [err] = await addMenu(getTrulyValue(data))
+  if (err) {
+    return
+  }
+
+  show.value = false
+  window.$message.success('添加成功')
+  $emits('add-success')
+}
+</script>
+
+<template>
+  <div class="button-add">
+    <n-button type="primary" @click="show = true">添加菜单</n-button>
+
+    <n-modal v-model:show="show">
+      <n-card
+        style="overflow-y: auto; width: 35%; max-height: 85vh"
+        :header-style="{ textAlign: 'center' }"
+        title="添加菜单"
+      >
+        <menu-form @on-cancel="show = false" @on-submit="onSubmit" />
+      </n-card>
+    </n-modal>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.button-add {
+  .center {
+    text-align: center;
+  }
+}
+</style>
