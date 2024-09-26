@@ -75,3 +75,27 @@ export const objectToArray = <T extends Record<any, unknown>>(
     return transform(k)
   })
 }
+
+export const getTrulyValue = <T extends Record<any, any>>(
+  data: T,
+  isTruly: (value: any) => boolean = (value) => {
+    if (value === '' || value === undefined) {
+      return false
+    }
+
+    return true
+  }
+) => {
+  const trulyObject = {} as T
+
+  const keys: (keyof T)[] = Object.keys(data)
+  keys.forEach((k) => {
+    const value = data[k] as any
+    if (!isTruly(value)) {
+      return
+    }
+
+    trulyObject[k] = value
+  })
+  return trulyObject
+}
