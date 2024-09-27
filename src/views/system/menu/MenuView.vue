@@ -3,6 +3,7 @@ import SearchForm from './components/SearchForm.vue'
 import TagMenu from './components/TagMenu.vue'
 import ButtonDelete from './components/ButtonDelete.vue'
 import ButtonAdd from './components/ButtonAdd.vue'
+import ButtonState from './components/ButtonState.vue'
 
 import useRequest from '@/hooks/useRequest'
 import { getMenuList } from '@/api/menu'
@@ -18,6 +19,8 @@ const { hasPermission } = usePermission()
 
 type IColumns = (DataTableColumn<IMenuListItem> & { key?: keyof IMenuListItem | 'action' })[]
 const columns = computed(() => {
+  const hasEditPermission = hasPermission('system:menu:edit')
+
   const list: IColumns = [
     {
       align: 'center',
@@ -74,7 +77,11 @@ const columns = computed(() => {
       key: 'disabled',
       title: '状态',
       render(row) {
-        return row.disabled ? '禁用' : '启用'
+        return h(ButtonState, {
+          id: row.id,
+          modelValue: row.disabled,
+          disabled: !hasEditPermission
+        })
       }
     },
     {
