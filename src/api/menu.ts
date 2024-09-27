@@ -45,3 +45,11 @@ export const addMenu = (data: IMenuParam) => {
     data
   })
 }
+
+export const updateMenu = (id: number, data: IMenuParam) => {
+  return request({
+    url: `/permissions/${id}`,
+    method: 'patch',
+    data
+  })
+}
