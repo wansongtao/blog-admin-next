@@ -32,7 +32,7 @@ const onSubmit = async (data: IMenuParam) => {
         :header-style="{ textAlign: 'center' }"
         title="添加菜单"
       >
-        <menu-form @on-cancel="show = false" @on-submit="onSubmit" />
+        <menu-form @cancel="show = false" @submit="onSubmit" />
       </n-card>
     </n-modal>
   </div>

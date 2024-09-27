@@ -13,8 +13,8 @@ import type { IMenuParam } from '@/types/api/menu'
 import type { FormItemRule } from 'naive-ui'
 
 const $emits = defineEmits<{
-  'on-submit': [data: IMenuParam]
-  'on-cancel': []
+  submit: [data: IMenuParam]
+  cancel: []
 }>()
 
 const initFormData = (): IMenuParam => {
@@ -83,13 +83,13 @@ const onSubmit = async () => {
       data = { ...formData.value }
   }
 
-  $emits('on-submit', data)
+  $emits('submit', data)
 }
 
 const onCancel = () => {
   formData.value = initFormData()
   formRef.value?.restoreValidation()
-  $emits('on-cancel')
+  $emits('cancel')
 }
 </script>
 
