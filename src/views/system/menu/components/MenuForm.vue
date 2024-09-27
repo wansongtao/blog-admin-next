@@ -8,10 +8,12 @@ import {
   validateMenuComponent,
   validateMenuRedirect
 } from '@/utils/validate'
+import { debounce } from '@/utils'
 
 import type { IMenuParam } from '@/types/api/menu'
 import type { FormItemRule } from 'naive-ui'
 
+const { detail } = defineProps<{ detail?: IMenuParam }>()
 const $emits = defineEmits<{
   submit: [data: IMenuParam]
   cancel: []
@@ -37,6 +39,18 @@ const initFormData = (): IMenuParam => {
 
 const formData = ref<IMenuParam>(initFormData())
 
+watch(
+  () => detail,
+  (data) => {
+    if (!data) {
+      return
+    }
+
+    formData.value = { ...data }
+  },
+  { immediate: true }
+)
+
 const rules = computed(() => {
   const rule: { [key in keyof IMenuParam]: FormItemRule | FormItemRule[] } = {
     name: { required: true, validator: validateMenuName },
@@ -56,47 +70,53 @@ const rules = computed(() => {
 })
 
 const { formRef, validateForm } = useFormValidate()
-const onSubmit = async () => {
-  if (!(await validateForm())) {
-    return
-  }
+const onSubmit = debounce<MouseEvent>(
+  async () => {
+    if (!(await validateForm())) {
+      return
+    }
 
-  let data: IMenuParam = {}
-  switch (formData.value.type) {
-    case 'BUTTON':
-      data = {
-        pid: formData.value.pid,
-        type: formData.value.type,
-        name: formData.value.name,
-        disabled: formData.value.disabled,
-        permission: formData.value.permission
-      }
-      break
-    case 'DIRECTORY':
-      data = {
-        ...formData.value
-      }
-      delete data.props
-      delete data.cache
-      break
-    default:
-      data = { ...formData.value }
-  }
+    let data: IMenuParam = {}
+    switch (formData.value.type) {
+      case 'BUTTON':
+        data = {
+          pid: formData.value.pid,
+          type: formData.value.type,
+          name: formData.value.name,
+          disabled: formData.value.disabled,
+          permission: formData.value.permission
+        }
+        break
+      case 'DIRECTORY':
+        data = {
+          ...formData.value
+        }
+        delete data.props
+        delete data.cache
+        break
+      default:
+        data = { ...formData.value }
+    }
 
-  $emits('submit', data)
-}
+    $emits('submit', data)
+  },
+  400,
+  true
+)
 
-const onCancel = () => {
-  formData.value = initFormData()
-  formRef.value?.restoreValidation()
+const onCancel = debounce<MouseEvent>(() => {
   $emits('cancel')
-}
+})
 </script>
 
 <template>
   <n-form ref="formRef" label-placement="left" label-width="100" :rules="rules" :model="formData">
     <n-form-item label="菜单类型" path="type">
-      <n-radio-group v-model:value="formData.type" name="menu-type">
+      <n-radio-group
+        v-model:value="formData.type"
+        name="menu-type"
+        :disabled="detail !== undefined"
+      >
         <n-radio-button v-for="(v, k) in MENU_TYPES" :key="k" :value="k" :label="v" />
       </n-radio-group>
     </n-form-item>

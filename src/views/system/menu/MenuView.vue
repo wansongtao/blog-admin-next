@@ -4,6 +4,7 @@ import TagMenu from './components/TagMenu.vue'
 import ButtonDelete from './components/ButtonDelete.vue'
 import ButtonAdd from './components/ButtonAdd.vue'
 import ButtonState from './components/ButtonState.vue'
+import ButtonEdit from './components/ButtonEdit.vue'
 
 import useRequest from '@/hooks/useRequest'
 import { getMenuList } from '@/api/menu'
@@ -12,16 +13,16 @@ import useTableSort from '@/hooks/useTableSort'
 import usePermission from '@/hooks/usePermission'
 
 import type { IMenuListItem, IMenuQuery } from '@/types/api/menu'
-import type { DataTableColumn } from 'naive-ui'
+import { NSpace, type DataTableColumn } from 'naive-ui'
 
 const { sort, onSorterChange } = useTableSort()
 const { hasPermission } = usePermission()
 
-type IColumns = (DataTableColumn<IMenuListItem> & { key?: keyof IMenuListItem | 'action' })[]
+type IColumn = DataTableColumn<IMenuListItem> & { key?: keyof IMenuListItem | 'action' }
 const columns = computed(() => {
   const hasEditPermission = hasPermission('system:menu:edit')
 
-  const list: IColumns = [
+  const list: IColumn[] = [
     {
       align: 'center',
       key: 'name',
@@ -99,15 +100,34 @@ const columns = computed(() => {
     list.unshift({
       type: 'selection'
     })
+  }
 
-    list.push({
-      align: 'center',
-      key: 'action',
-      title: '操作',
-      render(row) {
+  const action: IColumn = {
+    align: 'center',
+    key: 'action',
+    title: '操作',
+    render(row) {
+      if (hasDeletePermission && hasEditPermission) {
+        return h(NSpace, undefined, {
+          default: () => [
+            h(ButtonEdit, { id: row.id, onSuccess: updateTableData }),
+            h(ButtonDelete, { id: row.id, onSuccess: onDeleteSuccess })
+          ]
+        })
+      }
+
+      if (hasDeletePermission) {
         return h(ButtonDelete, { id: row.id, onSuccess: onDeleteSuccess })
       }
-    })
+
+      if (hasEditPermission) {
+        return h(ButtonEdit, { id: row.id, onSuccess: updateTableData })
+      }
+    }
+  }
+
+  if (hasDeletePermission || hasEditPermission) {
+    list.push(action)
   }
 
   return list
