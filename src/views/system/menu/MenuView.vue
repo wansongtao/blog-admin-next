@@ -190,7 +190,13 @@ function onDeleteSuccess(isBatch = false) {
 const expandedRowKeys = ref<number[]>([])
 watch(list, (value) => {
   if (value.length === 0) return
-  expandedRowKeys.value = [value[0].id]
+  const item = value.find((v) => {
+    if (v.children?.length) {
+      return true
+    }
+  })
+
+  expandedRowKeys.value = item !== undefined ? [item.id] : []
 })
 </script>
 
