@@ -99,3 +99,41 @@ export const getTrulyValue = <T extends Record<any, any>>(
   })
   return trulyObject
 }
+
+/**
+ *
+ * @param data 变更后的数据
+ * @param histories 历史(对比)数据
+ * @returns
+ */
+export const getChangedData = <T extends Record<any, any>, K extends Record<any, any>>(
+  data: T,
+  histories: K,
+  isSkip: (newValue: any, oldValue: any) => boolean = (newValue, oldValue) => {
+    if (
+      (newValue === '' || newValue === null || newValue === undefined) &&
+      (oldValue === undefined || oldValue === null)
+    ) {
+      return true
+    }
+
+    return false
+  }
+) => {
+  const changedData = {} as T
+
+  const keys: (keyof K)[] = Object.keys(data)
+  keys.forEach((k) => {
+    const newValue = data[k] as any
+    const oldValue = histories[k] as any
+    if (isSkip(newValue, oldValue)) {
+      return
+    }
+
+    if (newValue !== oldValue) {
+      changedData[k] = newValue
+    }
+  })
+
+  return changedData
+}
