@@ -6,7 +6,7 @@ import { getTrulyValue } from '@/utils'
 import type { IMenuParam } from '@/types/api/menu'
 
 const $emits = defineEmits<{
-  'add-success': []
+  success: []
 }>()
 
 const show = ref(false)
@@ -18,7 +18,7 @@ const onSubmit = async (data: IMenuParam) => {
 
   show.value = false
   window.$message.success('添加成功')
-  $emits('add-success')
+  $emits('success')
 }
 </script>
 

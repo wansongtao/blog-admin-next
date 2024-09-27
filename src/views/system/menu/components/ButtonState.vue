@@ -7,7 +7,7 @@ const { id } = defineProps<{
   id: number
 }>()
 const $emits = defineEmits<{
-  'on-success': []
+  success: []
 }>()
 
 const disabled = defineModel<boolean>()
@@ -19,7 +19,7 @@ const onChangeState = async (value: boolean) => {
     return
   }
 
-  $emits('on-success')
+  $emits('success')
   window.$message.success('操作成功')
   disabled.value = value
 }

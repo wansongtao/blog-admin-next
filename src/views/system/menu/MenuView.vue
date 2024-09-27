@@ -105,7 +105,7 @@ const columns = computed(() => {
       key: 'action',
       title: '操作',
       render(row) {
-        return h(ButtonDelete, { id: row.id, 'on-success': onDeleteSuccess })
+        return h(ButtonDelete, { id: row.id, onSuccess: onDeleteSuccess })
       }
     })
   }
@@ -158,7 +158,7 @@ function onDeleteSuccess(isBatch = false) {
 
   const lastPageSize = total.value % pageSize.value || pageSize.value
   if (deleteCount < lastPageSize || page.value === 1) {
-    fetchList({ ...search.value, sort: sort.value })
+    updateTableData()
     return
   }
 
@@ -180,10 +180,10 @@ watch(list, (value) => {
     <check-permission :permission="['system:menu:del', 'system:menu:add']">
       <n-space style="margin-top: 20px">
         <check-permission permission="system:menu:add">
-          <button-add @add-success="updateTableData" />
+          <button-add @success="updateTableData" />
         </check-permission>
         <check-permission permission="system:menu:del">
-          <button-delete :id="checkedKeys" @on-success="onDeleteSuccess(true)" />
+          <button-delete :id="checkedKeys" @success="onDeleteSuccess(true)" />
         </check-permission>
       </n-space>
     </check-permission>

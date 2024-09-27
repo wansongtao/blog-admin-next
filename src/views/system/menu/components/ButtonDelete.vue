@@ -5,7 +5,7 @@ const { id } = defineProps<{
   id: number | number[]
 }>()
 const $emits = defineEmits<{
-  'on-success': []
+  success: []
 }>()
 
 const isBatch = computed(() => Array.isArray(id))
@@ -21,14 +21,14 @@ const onConfirm = async () => {
     const [err] = await deleteMenuList(id)
     if (err) return
     window.$message.success('批量删除成功')
-    $emits('on-success')
+    $emits('success')
     return
   }
 
   const [err] = await deleteMenu(id)
   if (err) return
   window.$message.success('删除成功')
-  $emits('on-success')
+  $emits('success')
 }
 </script>
 
