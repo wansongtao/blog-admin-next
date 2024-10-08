@@ -102,31 +102,31 @@ const columns = computed(() => {
     })
   }
 
-  const action: IColumn = {
-    align: 'center',
-    key: 'action',
-    title: '操作',
-    render(row) {
-      if (hasDeletePermission && hasEditPermission) {
-        return h(NSpace, undefined, {
-          default: () => [
-            h(ButtonEdit, { id: row.id, onSuccess: updateTableData }),
-            h(ButtonDelete, { id: row.id, onSuccess: onDeleteSuccess })
-          ]
-        })
-      }
+  if (hasDeletePermission || hasEditPermission) {
+    const action: IColumn = {
+      align: 'center',
+      key: 'action',
+      title: '操作',
+      render(row) {
+        if (hasDeletePermission && hasEditPermission) {
+          return h(NSpace, undefined, {
+            default: () => [
+              h(ButtonEdit, { id: row.id, onSuccess: updateTableData }),
+              h(ButtonDelete, { id: row.id, onSuccess: onDeleteSuccess })
+            ]
+          })
+        }
 
-      if (hasDeletePermission) {
-        return h(ButtonDelete, { id: row.id, onSuccess: onDeleteSuccess })
-      }
+        if (hasDeletePermission) {
+          return h(ButtonDelete, { id: row.id, onSuccess: onDeleteSuccess })
+        }
 
-      if (hasEditPermission) {
-        return h(ButtonEdit, { id: row.id, onSuccess: updateTableData })
+        if (hasEditPermission) {
+          return h(ButtonEdit, { id: row.id, onSuccess: updateTableData })
+        }
       }
     }
-  }
 
-  if (hasDeletePermission || hasEditPermission) {
     list.push(action)
   }
 
