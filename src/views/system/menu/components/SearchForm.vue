@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { useRouteQuery } from '@vueuse/router'
+import useBaseQuery from '@/hooks/useBaseQuery'
 import SelectMenuType from './SelectMenuType.vue'
 
 import type { IMenuQuery } from '@/types/api/menu'
@@ -17,27 +18,8 @@ const disablePreviousDate = (ts: number) => {
   return ts > Date.now()
 }
 
-const keyword = useRouteQuery<IMenuQuery['keyword'] | null>('menu-keyword', null)
-const disabled = useRouteQuery('menu-disabled', null, {
-  transform: (val: string | null) => {
-    if (!val) {
-      return val as null
-    }
-
-    return Number(val) as IMenuQuery['disabled']
-  }
-})
+const { keyword, disabled, dateRange } = useBaseQuery('menu')
 const type = useRouteQuery<IMenuQuery['type']>('menu-type', null)
-const dateRange = useRouteQuery('menu-date-range', null, {
-  transform: (val: string[] | null) => {
-    if (!val) {
-      return val
-    }
-
-    const [beginTime, endTime] = val.map(Number)
-    return [beginTime, endTime] as [number, number]
-  }
-})
 
 const disableSearch = computed(() => {
   if (
