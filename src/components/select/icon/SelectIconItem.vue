@@ -14,7 +14,7 @@ const themeVars = useThemeVars()
     }"
   >
     <div class="text"><slot /></div>
-    <div class="text">{{ name }}</div>
+    <div class="text one-line-ellipsis">{{ name }}</div>
   </div>
 </template>
 
@@ -32,6 +32,13 @@ const themeVars = useThemeVars()
     font-size: 14px;
     text-align: center;
   }
+}
+
+.one-line-ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: break-all;
 }
 
 .select_item--checked.select_item--checked {

@@ -9,7 +9,13 @@ const handleCheck = (key: string) => {
 </script>
 
 <template>
-  <n-popover trigger="click">
+  <n-popover
+    style="max-height: 200px"
+    content-style="padding: 10px;"
+    trigger="click"
+    width="trigger"
+    scrollable
+  >
     <template #trigger>
       <n-input v-model:value="icon" placeholder="请选择图标" clearable>
         <template v-if="icon" #prefix>
