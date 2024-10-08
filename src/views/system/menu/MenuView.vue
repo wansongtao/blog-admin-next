@@ -16,6 +16,42 @@ import type { IMenuListItem, IMenuQuery } from '@/types/api/menu'
 import { NSpace, type DataTableColumn } from 'naive-ui'
 
 const { sort, onSorterChange } = useTableSort()
+
+const { page, pageSize, list, total, loading, fetchList } = useRequest(
+  async (params: IMenuQuery) => {
+    const [, result] = await getMenuList(params)
+    const data = result?.data.list ?? []
+    const total = result?.data.total ?? 0
+
+    return {
+      data,
+      total
+    }
+  }
+)
+
+const search = ref<IMenuQuery>({})
+const updateTableData = () => {
+  fetchList({ ...search.value, sort: sort.value })
+}
+
+const onSearch = (data: IMenuQuery) => {
+  search.value = data
+  page.value = 1
+}
+const onReset = () => {
+  search.value = {}
+  page.value = 1
+}
+
+watch(
+  [page, pageSize, search, sort],
+  () => {
+    updateTableData()
+  },
+  { immediate: true }
+)
+
 const { hasPermission } = usePermission()
 
 type IColumn = DataTableColumn<IMenuListItem> & { key?: keyof IMenuListItem | 'action' }
@@ -132,41 +168,6 @@ const columns = computed(() => {
 
   return list
 })
-
-const { page, pageSize, list, total, loading, fetchList } = useRequest(
-  async (params: IMenuQuery) => {
-    const [, result] = await getMenuList(params)
-    const data = result?.data.list ?? []
-    const total = result?.data.total ?? 0
-
-    return {
-      data,
-      total
-    }
-  }
-)
-
-const search = ref<IMenuQuery>({})
-const onSearch = (data: IMenuQuery) => {
-  search.value = data
-  page.value = 1
-}
-const onReset = () => {
-  search.value = {}
-  page.value = 1
-}
-
-const updateTableData = () => {
-  fetchList({ ...search.value, sort: sort.value })
-}
-
-watch(
-  [page, pageSize, search, sort],
-  () => {
-    updateTableData()
-  },
-  { immediate: true }
-)
 
 const checkedKeys = ref<number[]>([])
 function onDeleteSuccess(isBatch = false) {
