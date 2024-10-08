@@ -35,6 +35,10 @@ const disableSearch = computed(() => {
 })
 
 const onSearch = () => {
+  if (disableSearch.value) {
+    return
+  }
+
   const data: IMenuQuery = {
     keyword: keyword.value ?? undefined,
     disabled: disabled.value ?? undefined,
@@ -60,7 +64,12 @@ const onReset = () => {
     <n-row :gutter="20">
       <n-col :span="4">
         <n-form-item>
-          <n-input v-model:value="keyword" placeholder="菜单名称关键字" clearable />
+          <n-input
+            v-model:value="keyword"
+            placeholder="菜单名称关键字"
+            clearable
+            @keyup.enter="onSearch"
+          />
         </n-form-item>
       </n-col>
       <n-col :span="4">
