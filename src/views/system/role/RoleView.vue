@@ -2,9 +2,10 @@
 import SearchForm from './components/SearchForm.vue'
 import ButtonAdd from './components/ButtonAdd.vue'
 import ButtonDelete from '@/components/button/delete/ButtonDelete.vue'
+import ButtonState from '@/components/button/state/ButtonState.vue'
 import useRequest from '@/hooks/useRequest'
 import useTableSort from '@/hooks/useTableSort'
-import { getRoleList, deleteRole, deleteRoles } from '@/api/role'
+import { getRoleList, deleteRole, deleteRoles, updateRole } from '@/api/role'
 import usePermission from '@/hooks/usePermission'
 
 import type { IQuery } from '@/types/api'
@@ -50,6 +51,8 @@ type IColumn = DataTableColumn<IRoleListItem> & { key?: keyof IRoleListItem | 'a
 const { hasPermission } = usePermission()
 
 const columns = computed(() => {
+  const hasEditPermission = hasPermission('system:role:edit')
+
   const list: IColumn[] = [
     {
       align: 'center',
@@ -74,8 +77,13 @@ const columns = computed(() => {
       align: 'center',
       key: 'disabled',
       title: '状态',
-      render: ({ disabled }) => {
-        return disabled ? '禁用' : '启用'
+      render: (row) => {
+        return h(ButtonState, {
+          id: row.id,
+          updateFn: updateRole as any,
+          modelValue: row.disabled,
+          disabled: !hasEditPermission
+        })
       }
     },
     {
@@ -162,7 +170,6 @@ function onDeleteSuccess(isBatch = false) {
         :columns="columns"
         :data="list"
         :loading
-        :cascade="false"
         style="height: 100%"
         flex-height
         striped
