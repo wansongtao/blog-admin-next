@@ -38,10 +38,4 @@ const onSubmit = async (data: IMenuParam) => {
   </div>
 </template>
 
-<style lang="scss" scoped>
-.button-add {
-  .center {
-    text-align: center;
-  }
-}
-</style>
+<style lang="scss" scoped></style>
