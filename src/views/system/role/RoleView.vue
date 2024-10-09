@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import SearchForm from './components/SearchForm.vue'
 import ButtonAdd from './components/ButtonAdd.vue'
+import ButtonDelete from '@/components/button/delete/ButtonDelete.vue'
 import useRequest from '@/hooks/useRequest'
 import useTableSort from '@/hooks/useTableSort'
-import { getRoleList } from '@/api/role'
+import { getRoleList, deleteRole, deleteRoles } from '@/api/role'
+import usePermission from '@/hooks/usePermission'
 
 import type { IQuery } from '@/types/api'
 import type { DataTableColumn } from 'naive-ui'
@@ -45,8 +47,10 @@ watch(
 )
 
 type IColumn = DataTableColumn<IRoleListItem> & { key?: keyof IRoleListItem | 'action' }
+const { hasPermission } = usePermission()
+
 const columns = computed(() => {
-  const columnList: IColumn[] = [
+  const list: IColumn[] = [
     {
       align: 'center',
       key: 'id',
@@ -60,7 +64,11 @@ const columns = computed(() => {
     {
       align: 'center',
       key: 'description',
-      title: '角色描述'
+      title: '角色描述',
+      ellipsis: {
+        tooltip: true
+      },
+      render: ({ description }) => description || '--'
     },
     {
       align: 'center',
@@ -86,22 +94,71 @@ const columns = computed(() => {
     }
   ]
 
-  return columnList
+  const hasDeletePermission = hasPermission('system:role:del')
+  if (hasDeletePermission) {
+    list.unshift({
+      type: 'selection'
+    })
+
+    list.push({
+      align: 'center',
+      key: 'action',
+      title: '操作',
+      render: (row) => {
+        return h(ButtonDelete, {
+          id: row.id,
+          deleteItem: deleteRole as any,
+          deleteItems: deleteRoles as any,
+          onSuccess: onDeleteSuccess
+        })
+      }
+    })
+  }
+
+  return list
 })
+
+const checkedKeys = ref<number[]>([])
+function onDeleteSuccess(isBatch = false) {
+  let deleteCount = 1
+  if (isBatch) {
+    deleteCount = checkedKeys.value.length
+    checkedKeys.value = []
+  }
+
+  const lastPageSize = total.value % pageSize.value || pageSize.value
+  if (deleteCount < lastPageSize || page.value === 1) {
+    updateTableData()
+    return
+  }
+
+  const lastPage = Math.ceil(total.value / pageSize.value)
+  const currentLastPage = Math.ceil((total.value - deleteCount) / pageSize.value)
+  page.value = Math.max(1, page.value - (lastPage - currentLastPage))
+}
 </script>
 
 <template>
   <base-box>
     <search-form :loading @search="onSearch" @reset="onReset" />
-    <check-permission :permission="['system:role:add']">
+    <check-permission or :permission="['system:role:add', 'system:role:del']">
       <n-space style="margin-top: 20px">
         <check-permission permission="system:role:add">
           <button-add @success="updateTableData" />
+        </check-permission>
+        <check-permission permission="system:role:del">
+          <button-delete
+            :id="checkedKeys"
+            :delete-item="deleteRole"
+            :delete-items="deleteRoles"
+            @success="onDeleteSuccess(true)"
+          />
         </check-permission>
       </n-space>
     </check-permission>
     <div class="table">
       <n-data-table
+        v-model:checked-row-keys="checkedKeys"
         :columns="columns"
         :data="list"
         :loading
@@ -109,6 +166,7 @@ const columns = computed(() => {
         style="height: 100%"
         flex-height
         striped
+        :row-key="(rowData: IRoleListItem) => rowData.id"
         @update:sorter="onSorterChange"
       />
     </div>

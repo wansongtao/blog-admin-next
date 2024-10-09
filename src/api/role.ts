@@ -18,3 +18,20 @@ export const addRole = (data: IRoleParam) => {
     data
   })
 }
+
+export const deleteRole = (id: number) => {
+  return request({
+    url: `/roles/${id}`,
+    method: 'delete'
+  })
+}
+
+export const deleteRoles = (ids: number[]) => {
+  return request({
+    url: '/roles/batch-delete',
+    method: 'post',
+    data: {
+      ids
+    }
+  })
+}
