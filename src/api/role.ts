@@ -35,3 +35,11 @@ export const deleteRoles = (ids: number[]) => {
     }
   })
 }
+
+export const updateRole = (id: number, data: IRoleParam) => {
+  return request({
+    url: `/roles/${id}`,
+    method: 'patch',
+    data
+  })
+}
