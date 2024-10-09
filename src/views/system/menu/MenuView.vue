@@ -3,11 +3,11 @@ import SearchForm from './components/SearchForm.vue'
 import TagMenu from './components/TagMenu.vue'
 import ButtonDelete from '@/components/button/delete/ButtonDelete.vue'
 import ButtonAdd from './components/ButtonAdd.vue'
-import ButtonState from './components/ButtonState.vue'
+import ButtonState from '@/components/button/state/ButtonState.vue'
 import ButtonEdit from './components/ButtonEdit.vue'
 
 import useRequest from '@/hooks/useRequest'
-import { getMenuList, deleteMenu, deleteMenuList } from '@/api/menu'
+import { getMenuList, deleteMenu, deleteMenuList, updateMenu } from '@/api/menu'
 import MENU_ICON_MAP from '@/plugins/menuIcons'
 import useTableSort from '@/hooks/useTableSort'
 import usePermission from '@/hooks/usePermission'
@@ -116,6 +116,7 @@ const columns = computed(() => {
       render(row) {
         return h(ButtonState, {
           id: row.id,
+          updateFn: updateMenu as any,
           modelValue: row.disabled,
           disabled: !hasEditPermission
         })
