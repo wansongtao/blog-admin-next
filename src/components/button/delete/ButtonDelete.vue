@@ -1,9 +1,14 @@
 <script
   lang="ts"
-  generic="T extends number | string | number[] | string[], U extends number | string = number"
+  generic="T extends number | string | number[] | string[], U extends number | string"
   setup
 >
 import type { AxiosError } from 'axios'
+
+export type ButtonDeleteProps = {
+  deleteItem: (id: number | string) => Promise<[err?: AxiosError, data?: any]>
+  deleteItems: (ids: (number | string)[]) => Promise<[err?: AxiosError, data?: any]>
+}
 
 const { id, deleteItem, deleteItems } = defineProps<{
   id: T

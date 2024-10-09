@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import SearchForm from './components/SearchForm.vue'
 import ButtonAdd from './components/ButtonAdd.vue'
-import ButtonDelete from '@/components/button/delete/ButtonDelete.vue'
-import ButtonState from '@/components/button/state/ButtonState.vue'
+import ButtonDelete, { type ButtonDeleteProps } from '@/components/button/delete/ButtonDelete.vue'
+import ButtonState, { type ButtonStateProps } from '@/components/button/state/ButtonState.vue'
 import useRequest from '@/hooks/useRequest'
 import useTableSort from '@/hooks/useTableSort'
 import { getRoleList, deleteRole, deleteRoles, updateRole } from '@/api/role'
@@ -80,7 +80,7 @@ const columns = computed(() => {
       render: (row) => {
         return h(ButtonState, {
           id: row.id,
-          updateFn: updateRole as any,
+          updateFn: updateRole as ButtonStateProps['updateFn'],
           modelValue: row.disabled,
           disabled: !hasEditPermission
         })
@@ -115,8 +115,8 @@ const columns = computed(() => {
       render: (row) => {
         return h(ButtonDelete, {
           id: row.id,
-          deleteItem: deleteRole as any,
-          deleteItems: deleteRoles as any,
+          deleteItem: deleteRole as ButtonDeleteProps['deleteItem'],
+          deleteItems: deleteRoles as ButtonDeleteProps['deleteItems'],
           onSuccess: onDeleteSuccess
         })
       }

@@ -2,13 +2,15 @@
 import type { AxiosError } from 'axios'
 import type { CSSProperties } from 'vue'
 
-const { id, updateFn } = defineProps<{
+export type ButtonStateProps = {
   id: number | string
   updateFn: (
     id: number | string,
     data: { disabled?: boolean }
   ) => Promise<[err?: AxiosError, data?: any]>
-}>()
+}
+
+const { id, updateFn } = defineProps<ButtonStateProps>()
 const $emits = defineEmits<{
   success: []
 }>()

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import SearchForm from './components/SearchForm.vue'
 import TagMenu from './components/TagMenu.vue'
-import ButtonDelete from '@/components/button/delete/ButtonDelete.vue'
+import ButtonDelete, { type ButtonDeleteProps } from '@/components/button/delete/ButtonDelete.vue'
 import ButtonAdd from './components/ButtonAdd.vue'
-import ButtonState from '@/components/button/state/ButtonState.vue'
+import ButtonState, { type ButtonStateProps } from '@/components/button/state/ButtonState.vue'
 import ButtonEdit from './components/ButtonEdit.vue'
 
 import useRequest from '@/hooks/useRequest'
@@ -116,7 +116,7 @@ const columns = computed(() => {
       render(row) {
         return h(ButtonState, {
           id: row.id,
-          updateFn: updateMenu as any,
+          updateFn: updateMenu as ButtonStateProps['updateFn'],
           modelValue: row.disabled,
           disabled: !hasEditPermission
         })
@@ -147,8 +147,8 @@ const columns = computed(() => {
       render(row) {
         const deleteButton = h(ButtonDelete, {
           id: row.id,
-          deleteItem: deleteMenu as any,
-          deleteItems: deleteMenuList as any,
+          deleteItem: deleteMenu as ButtonDeleteProps['deleteItem'],
+          deleteItems: deleteMenuList as ButtonDeleteProps['deleteItems'],
           onSuccess: onDeleteSuccess
         })
         const editButton = h(ButtonEdit, { id: row.id, onSuccess: updateTableData })
