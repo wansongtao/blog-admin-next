@@ -6,3 +6,10 @@ export interface IRoleListItem {
   createdAt: string
   updatedAt: string
 }
+
+export interface IRoleParam {
+  description?: string
+  disabled?: boolean
+  permissions?: number[]
+  name?: string
+}
