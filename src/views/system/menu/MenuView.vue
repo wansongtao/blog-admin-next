@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import SearchForm from './components/SearchForm.vue'
 import TagMenu from './components/TagMenu.vue'
-import ButtonDelete from './components/ButtonDelete.vue'
+import ButtonDelete from '@/components/button/delete/ButtonDelete.vue'
 import ButtonAdd from './components/ButtonAdd.vue'
 import ButtonState from './components/ButtonState.vue'
 import ButtonEdit from './components/ButtonEdit.vue'
 
 import useRequest from '@/hooks/useRequest'
-import { getMenuList } from '@/api/menu'
+import { getMenuList, deleteMenu, deleteMenuList } from '@/api/menu'
 import MENU_ICON_MAP from '@/plugins/menuIcons'
 import useTableSort from '@/hooks/useTableSort'
 import usePermission from '@/hooks/usePermission'
@@ -144,21 +144,26 @@ const columns = computed(() => {
       key: 'action',
       title: '操作',
       render(row) {
+        const deleteButton = h(ButtonDelete, {
+          id: row.id,
+          deleteItem: deleteMenu as any,
+          deleteItems: deleteMenuList as any,
+          onSuccess: onDeleteSuccess
+        })
+        const editButton = h(ButtonEdit, { id: row.id, onSuccess: updateTableData })
+
         if (hasDeletePermission && hasEditPermission) {
           return h(NSpace, undefined, {
-            default: () => [
-              h(ButtonEdit, { id: row.id, onSuccess: updateTableData }),
-              h(ButtonDelete, { id: row.id, onSuccess: onDeleteSuccess })
-            ]
+            default: () => [editButton, deleteButton]
           })
         }
 
         if (hasDeletePermission) {
-          return h(ButtonDelete, { id: row.id, onSuccess: onDeleteSuccess })
+          return deleteButton
         }
 
         if (hasEditPermission) {
-          return h(ButtonEdit, { id: row.id, onSuccess: updateTableData })
+          return editButton
         }
       }
     }
@@ -210,7 +215,12 @@ watch(list, (value) => {
           <button-add @success="updateTableData" />
         </check-permission>
         <check-permission permission="system:menu:del">
-          <button-delete :id="checkedKeys" @success="onDeleteSuccess(true)" />
+          <button-delete
+            :id="checkedKeys"
+            :delete-item="deleteMenu"
+            :delete-items="deleteMenuList"
+            @success="onDeleteSuccess(true)"
+          />
         </check-permission>
       </n-space>
     </check-permission>
