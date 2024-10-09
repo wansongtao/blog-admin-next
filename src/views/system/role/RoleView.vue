@@ -45,43 +45,49 @@ watch(
 )
 
 type IColumn = DataTableColumn<IRoleListItem> & { key?: keyof IRoleListItem | 'action' }
-const columns: IColumn[] = [
-  {
-    align: 'center',
-    key: 'id',
-    title: '角色ID'
-  },
-  {
-    align: 'center',
-    key: 'name',
-    title: '角色名称'
-  },
-  {
-    align: 'center',
-    key: 'description',
-    title: '角色描述'
-  },
-  {
-    align: 'center',
-    key: 'disabled',
-    title: '状态',
-    render: ({ disabled }) => {
-      return disabled ? '禁用' : '启用'
+const columns = computed(() => {
+  const columnList: IColumn[] = [
+    {
+      align: 'center',
+      key: 'id',
+      title: '角色ID'
+    },
+    {
+      align: 'center',
+      key: 'name',
+      title: '角色名称'
+    },
+    {
+      align: 'center',
+      key: 'description',
+      title: '角色描述'
+    },
+    {
+      align: 'center',
+      key: 'disabled',
+      title: '状态',
+      render: ({ disabled }) => {
+        return disabled ? '禁用' : '启用'
+      }
+    },
+    {
+      align: 'center',
+      key: 'createdAt',
+      title: '创建时间',
+      defaultSortOrder: sort.value === 'asc' ? 'ascend' : 'descend',
+      sorter: true,
+      width: 200
+    },
+    {
+      align: 'center',
+      key: 'updatedAt',
+      title: '更新时间',
+      width: 200
     }
-  },
-  {
-    align: 'center',
-    key: 'createdAt',
-    title: '创建时间',
-    width: 200
-  },
-  {
-    align: 'center',
-    key: 'updatedAt',
-    title: '更新时间',
-    width: 200
-  }
-]
+  ]
+
+  return columnList
+})
 </script>
 
 <template>
