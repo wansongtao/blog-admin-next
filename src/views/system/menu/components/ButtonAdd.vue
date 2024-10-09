@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import MenuForm from './MenuForm.vue'
 import { addMenu } from '@/api/menu'
-import { getTrulyValue } from '@/utils'
+import { filterUndefinedValue } from '@/utils'
 
 import type { IMenuParam } from '@/types/api/menu'
 
@@ -11,7 +11,7 @@ const $emits = defineEmits<{
 
 const show = ref(false)
 const onSubmit = async (data: IMenuParam) => {
-  const [err] = await addMenu(getTrulyValue(data))
+  const [err] = await addMenu(filterUndefinedValue(data))
   if (err) {
     return
   }
