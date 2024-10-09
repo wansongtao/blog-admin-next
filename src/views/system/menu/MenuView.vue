@@ -209,7 +209,7 @@ watch(list, (value) => {
 <template>
   <base-box>
     <search-form :loading @search="onSearch" @reset="onReset" />
-    <check-permission :permission="['system:menu:del', 'system:menu:add']">
+    <check-permission or :permission="['system:menu:del', 'system:menu:add']">
       <n-space style="margin-top: 20px">
         <check-permission permission="system:menu:add">
           <button-add @success="updateTableData" />
