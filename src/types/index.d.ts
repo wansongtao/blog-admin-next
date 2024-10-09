@@ -1,4 +1,5 @@
 import type { MessageApiInjection } from 'naive-ui/es/message/src/MessageProvider'
+import type { FormItemRule } from 'naive-ui'
 
 declare global {
   interface Window {
@@ -14,3 +15,7 @@ export interface IMenubarItem {
 }
 
 export type IMenuType = 'DIRECTORY' | 'MENU' | 'BUTTON'
+
+export type IRule<T extends Record> = {
+  [key in keyof T]: FormItemRule | FormItemRule[]
+}

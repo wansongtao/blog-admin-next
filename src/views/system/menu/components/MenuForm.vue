@@ -11,7 +11,7 @@ import {
 import { debounce } from '@/utils'
 
 import type { IMenuParam } from '@/types/api/menu'
-import type { FormItemRule } from 'naive-ui'
+import type { IRule } from '@/types'
 
 const { detail } = defineProps<{ detail?: IMenuParam }>()
 const $emits = defineEmits<{
@@ -37,7 +37,7 @@ const initFormData = (): IMenuParam => {
   }
 }
 
-const formData = ref<IMenuParam>(initFormData())
+const formData = ref(initFormData())
 
 watch(
   () => detail,
@@ -52,7 +52,7 @@ watch(
 )
 
 const rules = computed(() => {
-  const rule: { [key in keyof IMenuParam]: FormItemRule | FormItemRule[] } = {
+  const rule: IRule<IMenuParam> = {
     name: { required: true, validator: validateMenuName },
     permission: {
       required: formData.value.type === 'BUTTON',
@@ -121,7 +121,7 @@ const onCancel = debounce<MouseEvent>(() => {
       </n-radio-group>
     </n-form-item>
     <n-form-item label="父菜单" path="pid">
-      <menu-tree-select v-model="formData.pid" />
+      <menu-tree-select placeholder="请选择父菜单" v-model="formData.pid" />
     </n-form-item>
     <n-form-item label="菜单名称" path="name">
       <n-input v-model:value="formData.name" placeholder="请输入菜单名称" clearable />
