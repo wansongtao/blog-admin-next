@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import SearchForm from './components/SearchForm.vue'
+import ButtonAdd from './components/ButtonAdd.vue'
 import useRequest from '@/hooks/useRequest'
 import useTableSort from '@/hooks/useTableSort'
 import { getRoleList } from '@/api/role'
@@ -86,6 +87,13 @@ const columns: IColumn[] = [
 <template>
   <base-box>
     <search-form :loading @search="onSearch" @reset="onReset" />
+    <check-permission :permission="['system:role:add']">
+      <n-space style="margin-top: 20px">
+        <check-permission permission="system:role:add">
+          <button-add @success="updateTableData" />
+        </check-permission>
+      </n-space>
+    </check-permission>
     <div class="table">
       <n-data-table
         :columns="columns"
