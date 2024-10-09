@@ -17,7 +17,9 @@ const disabled = defineModel<boolean>()
 
 const loading = ref(false)
 const onChangeState = async (value: boolean) => {
+  loading.value = true
   const [err] = await updateFn(id, { disabled: value })
+  loading.value = false
   if (err) {
     return
   }
