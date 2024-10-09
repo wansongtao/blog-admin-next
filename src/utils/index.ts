@@ -76,9 +76,15 @@ export const objectToArray = <T extends Record<any, unknown>>(
   })
 }
 
-export const getTrulyValue = <T extends Record<any, any>>(
+/**
+ * @description 过滤对象中值为 undefined 与 空字符串 的属性
+ * @param data
+ * @param filter
+ * @returns
+ */
+export const filterUndefinedValue = <T extends Record<any, any>>(
   data: T,
-  isTruly: (value: any) => boolean = (value) => {
+  filter: (value: any) => boolean = (value) => {
     if (value === '' || value === undefined) {
       return false
     }
@@ -91,7 +97,7 @@ export const getTrulyValue = <T extends Record<any, any>>(
   const keys: (keyof T)[] = Object.keys(data)
   keys.forEach((k) => {
     const value = data[k] as any
-    if (!isTruly(value)) {
+    if (!filter(value)) {
       return
     }
 
