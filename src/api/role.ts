@@ -1,7 +1,7 @@
 import request from '@/utils/axiosRequest'
 
 import type { IBaseList, IQuery } from '@/types/api'
-import type { IRoleDetail, IRoleListItem, IRoleParam } from '@/types/api/role'
+import type { IRoleDetail, IRoleListItem, IRoleParam, IRoleTreeItem } from '@/types/api/role'
 
 export const getRoleList = (params: IQuery) => {
   return request<IBaseList<IRoleListItem>>({
@@ -47,6 +47,13 @@ export const updateRole = (id: number, data: IRoleParam) => {
 export const getRoleDetail = (id: number) => {
   return request<IRoleDetail>({
     url: `/roles/${id}`,
+    method: 'get'
+  })
+}
+
+export const getRoleTree = () => {
+  return request<IRoleTreeItem[]>({
+    url: '/roles/tree',
     method: 'get'
   })
 }

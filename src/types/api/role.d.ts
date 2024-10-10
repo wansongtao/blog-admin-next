@@ -21,3 +21,8 @@ export interface IRoleDetail {
   disabled: boolean
   description?: string
 }
+
+export interface IRoleTreeItem {
+  id: number
+  name: string
+}
