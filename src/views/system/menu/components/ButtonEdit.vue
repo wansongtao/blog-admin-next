@@ -35,7 +35,9 @@ const onSubmit = async (data: IMenuParam) => {
     return
   }
 
+  loading.value = true
   const [err] = await updateMenu(id, changedData)
+  loading.value = false
   if (err) {
     return
   }
@@ -56,16 +58,10 @@ const onSubmit = async (data: IMenuParam) => {
         :header-style="{ textAlign: 'center' }"
         title="编辑菜单"
       >
-        <menu-form :detail @cancel="show = false" @submit="onSubmit" />
+        <menu-form :detail :loading @cancel="show = false" @submit="onSubmit" />
       </n-card>
     </n-modal>
   </div>
 </template>
 
-<style lang="scss" scoped>
-.button-edit {
-  .center {
-    text-align: center;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

@@ -10,8 +10,11 @@ const $emits = defineEmits<{
 }>()
 
 const show = ref(false)
+const loading = ref(false)
 const onSubmit = async (data: IMenuParam) => {
+  loading.value = true
   const [err] = await addMenu(filterUndefinedValue(data))
+  loading.value = false
   if (err) {
     return
   }
@@ -32,7 +35,7 @@ const onSubmit = async (data: IMenuParam) => {
         :header-style="{ textAlign: 'center' }"
         title="添加菜单"
       >
-        <menu-form @cancel="show = false" @submit="onSubmit" />
+        <menu-form :loading @cancel="show = false" @submit="onSubmit" />
       </n-card>
     </n-modal>
   </div>

@@ -8,12 +8,11 @@ import {
   validateMenuComponent,
   validateMenuRedirect
 } from '@/utils/validate'
-import { debounce } from '@/utils'
 
 import type { IMenuParam } from '@/types/api/menu'
 import type { IRule } from '@/types'
 
-const { detail } = defineProps<{ detail?: IMenuParam }>()
+const { detail, loading } = defineProps<{ detail?: IMenuParam; loading?: boolean }>()
 const $emits = defineEmits<{
   submit: [data: IMenuParam]
   cancel: []
@@ -70,43 +69,39 @@ const rules = computed(() => {
 })
 
 const { formRef, validateForm } = useFormValidate()
-const onSubmit = debounce<MouseEvent>(
-  async () => {
-    if (!(await validateForm())) {
-      return
-    }
+const onSubmit = async () => {
+  if (!(await validateForm())) {
+    return
+  }
 
-    let data: IMenuParam = {}
-    switch (formData.value.type) {
-      case 'BUTTON':
-        data = {
-          pid: formData.value.pid,
-          type: formData.value.type,
-          name: formData.value.name,
-          disabled: formData.value.disabled,
-          permission: formData.value.permission
-        }
-        break
-      case 'DIRECTORY':
-        data = {
-          ...formData.value
-        }
-        delete data.props
-        delete data.cache
-        break
-      default:
-        data = { ...formData.value }
-    }
+  let data: IMenuParam = {}
+  switch (formData.value.type) {
+    case 'BUTTON':
+      data = {
+        pid: formData.value.pid,
+        type: formData.value.type,
+        name: formData.value.name,
+        disabled: formData.value.disabled,
+        permission: formData.value.permission
+      }
+      break
+    case 'DIRECTORY':
+      data = {
+        ...formData.value
+      }
+      delete data.props
+      delete data.cache
+      break
+    default:
+      data = { ...formData.value }
+  }
 
-    $emits('submit', data)
-  },
-  400,
-  true
-)
+  $emits('submit', data)
+}
 
-const onCancel = debounce<MouseEvent>(() => {
+const onCancel = () => {
   $emits('cancel')
-})
+}
 </script>
 
 <template>
@@ -174,8 +169,8 @@ const onCancel = debounce<MouseEvent>(() => {
     </n-row>
     <n-form-item>
       <n-space style="width: 100%; justify-content: center">
-        <n-button type="primary" @click="onSubmit">提交</n-button>
-        <n-button @click="onCancel">取消</n-button>
+        <n-button type="primary" loading @click="onSubmit">提交</n-button>
+        <n-button :disabled="loading" @click="onCancel">取消</n-button>
       </n-space>
     </n-form-item>
   </n-form>
