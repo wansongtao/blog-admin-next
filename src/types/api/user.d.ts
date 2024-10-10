@@ -1,0 +1,10 @@
+export interface IUserListItem {
+  avatar?: string
+  disabled: boolean
+  id: string
+  nickName?: string
+  userName: string
+  createdAt: string
+  updatedAt: string
+  roleNames?: string[]
+}
