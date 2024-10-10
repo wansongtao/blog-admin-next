@@ -13,3 +13,11 @@ export interface IRoleParam {
   permissions?: number[]
   name?: string
 }
+
+export interface IRoleDetail {
+  id: number
+  name: string
+  permissions: number[]
+  disabled: boolean
+  description?: string
+}

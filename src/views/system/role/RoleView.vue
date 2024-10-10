@@ -3,13 +3,14 @@ import SearchForm from './components/SearchForm.vue'
 import ButtonAdd from './components/ButtonAdd.vue'
 import ButtonDelete, { type ButtonDeleteProps } from '@/components/button/delete/ButtonDelete.vue'
 import ButtonState, { type ButtonStateProps } from '@/components/button/state/ButtonState.vue'
+import ButtonEdit from './components/ButtonEdit.vue'
 import useRequest from '@/hooks/useRequest'
 import useTableSort from '@/hooks/useTableSort'
 import { getRoleList, deleteRole, deleteRoles, updateRole } from '@/api/role'
 import usePermission from '@/hooks/usePermission'
 
+import { NSpace, type DataTableColumn } from 'naive-ui'
 import type { IQuery } from '@/types/api'
-import type { DataTableColumn } from 'naive-ui'
 import type { IRoleListItem } from '@/types/api/role'
 
 const { sort, onSorterChange } = useTableSort()
@@ -107,20 +108,39 @@ const columns = computed(() => {
     list.unshift({
       type: 'selection'
     })
+  }
 
-    list.push({
+  if (hasDeletePermission || hasEditPermission) {
+    const action: IColumn = {
       align: 'center',
       key: 'action',
       title: '操作',
-      render: (row) => {
-        return h(ButtonDelete, {
+      render(row) {
+        const deleteButton = h(ButtonDelete, {
           id: row.id,
           deleteItem: deleteRole as ButtonDeleteProps['deleteItem'],
           deleteItems: deleteRoles as ButtonDeleteProps['deleteItems'],
           onSuccess: onDeleteSuccess
         })
+        const editButton = h(ButtonEdit, { id: row.id, onSuccess: updateTableData })
+
+        if (hasDeletePermission && hasEditPermission) {
+          return h(NSpace, undefined, {
+            default: () => [editButton, deleteButton]
+          })
+        }
+
+        if (hasDeletePermission) {
+          return deleteButton
+        }
+
+        if (hasEditPermission) {
+          return editButton
+        }
       }
-    })
+    }
+
+    list.push(action)
   }
 
   return list
