@@ -120,3 +120,16 @@ export const validateEmoji = (_rule: any, value: string) => {
 
   return true
 }
+
+export const validateNickName = (rule: FormItemRule, value: string) => {
+  if (!rule.required && !value) {
+    return true
+  }
+
+  const regexp = /^[a-zA-Z\u4e00-\u9fa5']{1,50}$/
+  if (!regexp.test(value)) {
+    return new Error('请输入1至50位由中英文组成的昵称')
+  }
+
+  return true
+}

@@ -8,3 +8,10 @@ export interface IUserListItem {
   updatedAt: string
   roleNames?: string[]
 }
+
+export interface IUserParam {
+  userName?: string
+  disabled?: boolean
+  nickName?: string
+  roles?: number[]
+}

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import SearchForm from './components/SearchForm.vue'
+import ButtonAdd from './components/ButtonAdd.vue'
 import useRequest from '@/hooks/useRequest'
 import useTableSort from '@/hooks/useTableSort'
 import { getUserList } from '@/api/user'
@@ -125,6 +126,13 @@ const columns = computed(() => {
 <template>
   <base-box>
     <search-form :loading @search="onSearch" @reset="onReset" />
+    <check-permission or :permission="['system:user:add']">
+      <n-space style="margin-top: 20px">
+        <check-permission permission="system:user:add">
+          <button-add @success="updateTableData" />
+        </check-permission>
+      </n-space>
+    </check-permission>
     <div class="table">
       <n-data-table
         :columns="columns"
