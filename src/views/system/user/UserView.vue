@@ -2,13 +2,14 @@
 import { NSpace, NTag } from 'naive-ui'
 import SearchForm from './components/SearchForm.vue'
 import ButtonAdd from './components/ButtonAdd.vue'
-import ButtonDelete, { type ButtonDeleteProps } from '@/components/button/delete/ButtonDelete.vue'
+import ButtonDelete from './components/ButtonDelete.vue'
+import ButtonDeleteBatch from './components/ButtonDeleteBatch.vue'
 import ButtonState, { type ButtonStateProps } from '@/components/button/state/ButtonState.vue'
 import ButtonEdit from './components/ButtonEdit.vue'
 import ButtonResetPassword from './components/ButtonResetPassword.vue'
 import useRequest from '@/hooks/useRequest'
 import useTableSort from '@/hooks/useTableSort'
-import { getUserList, deleteUser, deleteUsers, updateUser } from '@/api/user'
+import { getUserList, updateUser } from '@/api/user'
 import usePermission from '@/hooks/usePermission'
 
 import type { IQuery } from '@/types/api'
@@ -162,8 +163,6 @@ const columns = computed(() => {
           actionList.push(
             h(ButtonDelete, {
               id: row.id,
-              deleteItem: deleteUser as ButtonDeleteProps['deleteItem'],
-              deleteItems: deleteUsers as ButtonDeleteProps['deleteItems'],
               onSuccess: onDeleteSuccess
             })
           )
@@ -221,12 +220,7 @@ function onDeleteSuccess(isBatch = false) {
           <button-add @success="updateTableData" />
         </check-permission>
         <check-permission permission="system:user:del">
-          <button-delete
-            :id="checkedKeys"
-            :delete-item="deleteUser"
-            :delete-items="deleteUsers"
-            @success="onDeleteSuccess(true)"
-          />
+          <button-delete-batch :id="checkedKeys" @success="onDeleteSuccess(true)" />
         </check-permission>
       </n-space>
     </check-permission>
