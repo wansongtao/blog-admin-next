@@ -93,8 +93,8 @@ const onCancel = () => {
     <n-form-item label="用户昵称" path="nickName">
       <n-input v-model:value="formData.nickName" placeholder="请输入用户昵称" clearable />
     </n-form-item>
-    <n-form-item label="是否禁用" path="disabled">
-      <n-switch v-model:value="formData.disabled" />
+    <n-form-item label="用户状态" path="disabled">
+      <switch-state v-model:value="formData.disabled" round size="large" />
     </n-form-item>
     <n-form-item>
       <n-space style="width: 100%; justify-content: center">
