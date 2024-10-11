@@ -61,6 +61,7 @@ declare module 'vue' {
     SelectIcon: typeof import('./src/components/select/icon/SelectIcon.vue')['default']
     SelectIconItem: typeof import('./src/components/select/icon/SelectIconItem.vue')['default']
     SelectState: typeof import('./src/components/select/state/SelectState.vue')['default']
+    SwitchState: typeof import('./src/components/switch-state/SwitchState.vue')['default']
     TheAppProvider: typeof import('./src/components/the-app-provider/TheAppProvider.vue')['default']
     TheParentView: typeof import('./src/components/the-parent-view/TheParentView.vue')['default']
   }
