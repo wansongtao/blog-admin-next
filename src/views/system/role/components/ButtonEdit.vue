@@ -15,6 +15,7 @@ const loading = ref(false)
 const detail = ref<IRoleDetail>()
 
 const onOpen = async () => {
+  show.value = true
   loading.value = true
   const [, res] = await getRoleDetail(id)
   loading.value = false
@@ -24,7 +25,6 @@ const onOpen = async () => {
     return
   }
 
-  show.value = true
   detail.value = res.data
 }
 
@@ -50,7 +50,7 @@ const onSubmit = async (data: IRoleParam) => {
 
 <template>
   <div class="button-edit">
-    <n-button type="warning" ghost size="small" :loading @click="onOpen">编辑</n-button>
+    <n-button type="warning" ghost size="small" @click="onOpen">编辑</n-button>
 
     <n-modal v-model:show="show">
       <n-card
