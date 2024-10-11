@@ -2,11 +2,11 @@
 import SearchForm from './components/SearchForm.vue'
 import ButtonAdd from './components/ButtonAdd.vue'
 import ButtonDelete, { type ButtonDeleteProps } from '@/components/button/delete/ButtonDelete.vue'
-import ButtonState, { type ButtonStateProps } from '@/components/button/state/ButtonState.vue'
+import ButtonState from './components/ButtonState.vue'
 import ButtonEdit from './components/ButtonEdit.vue'
 import useRequest from '@/hooks/useRequest'
 import useTableSort from '@/hooks/useTableSort'
-import { getRoleList, deleteRole, deleteRoles, updateRole } from '@/api/role'
+import { getRoleList, deleteRole, deleteRoles } from '@/api/role'
 import usePermission from '@/hooks/usePermission'
 
 import { NSpace, type DataTableColumn } from 'naive-ui'
@@ -81,7 +81,6 @@ const columns = computed(() => {
       render: (row) => {
         return h(ButtonState, {
           id: row.id,
-          updateFn: updateRole as ButtonStateProps['updateFn'],
           modelValue: row.disabled,
           disabled: !hasEditPermission
         })
