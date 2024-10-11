@@ -50,3 +50,13 @@ export const getUserDetail = (id: string) => {
     method: 'get'
   })
 }
+
+export const resetUserPassword = (id: string) => {
+  return request({
+    url: `/users/reset-password`,
+    method: 'post',
+    data: {
+      id
+    }
+  })
+}

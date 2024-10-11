@@ -5,6 +5,7 @@ import ButtonAdd from './components/ButtonAdd.vue'
 import ButtonDelete, { type ButtonDeleteProps } from '@/components/button/delete/ButtonDelete.vue'
 import ButtonState, { type ButtonStateProps } from '@/components/button/state/ButtonState.vue'
 import ButtonEdit from './components/ButtonEdit.vue'
+import ButtonResetPassword from './components/ButtonResetPassword.vue'
 import useRequest from '@/hooks/useRequest'
 import useTableSort from '@/hooks/useTableSort'
 import { getUserList, deleteUser, deleteUsers, updateUser } from '@/api/user'
@@ -13,6 +14,7 @@ import usePermission from '@/hooks/usePermission'
 import type { IQuery } from '@/types/api'
 import type { IUserListItem } from '@/types/api/user'
 import type { IColumn } from '@/types'
+import type { VNode } from 'vue'
 
 const { page, pageSize, list, total, loading, fetchList } = useRequest(async (params: IQuery) => {
   const [, result] = await getUserList(params)
@@ -72,6 +74,7 @@ const columns = computed(() => {
       align: 'center',
       key: 'avatar',
       title: '头像',
+      width: 60,
       render: (row) => {
         return row.avatar
           ? h('img', {
@@ -91,7 +94,7 @@ const columns = computed(() => {
       align: 'center',
       key: 'roleNames',
       title: '角色',
-      width: 200,
+      width: 160,
       render: (row) => {
         if (!row.roleNames?.length) {
           return '--'
@@ -143,39 +146,43 @@ const columns = computed(() => {
     })
   }
 
-  if (hasDeletePermission || hasEditPermission) {
+  const hasResetPasswordPermission = hasPermission('system:user:reset')
+  if (hasDeletePermission || hasEditPermission || hasResetPasswordPermission) {
     const action: IColumn<IUserListItem> = {
       align: 'center',
       key: 'action',
       title: '操作',
-      width: 200,
+      width: 220,
       render(row) {
-        const deleteButton = h(ButtonDelete, {
-          id: row.id,
-          deleteItem: deleteUser as ButtonDeleteProps['deleteItem'],
-          deleteItems: deleteUsers as ButtonDeleteProps['deleteItems'],
-          onSuccess: onDeleteSuccess
-        })
-
-        const editButton = h(ButtonEdit, { id: row.id, onSuccess: updateTableData })
-
-        if (hasDeletePermission && hasEditPermission) {
-          return h(
-            NSpace,
-            { justify: 'center' },
-            {
-              default: () => [editButton, deleteButton]
-            }
+        const actionList: VNode[] = []
+        if (hasEditPermission) {
+          actionList.push(h(ButtonEdit, { id: row.id, onSuccess: updateTableData }))
+        }
+        if (hasDeletePermission) {
+          actionList.push(
+            h(ButtonDelete, {
+              id: row.id,
+              deleteItem: deleteUser as ButtonDeleteProps['deleteItem'],
+              deleteItems: deleteUsers as ButtonDeleteProps['deleteItems'],
+              onSuccess: onDeleteSuccess
+            })
           )
         }
-
-        if (hasDeletePermission) {
-          return deleteButton
+        if (hasResetPasswordPermission) {
+          actionList.push(h(ButtonResetPassword, { id: row.id }))
         }
 
-        if (hasEditPermission) {
-          return editButton
+        if (actionList.length === 1) {
+          return actionList[0]
         }
+
+        return h(
+          NSpace,
+          { justify: 'center' },
+          {
+            default: () => actionList
+          }
+        )
       }
     }
 
