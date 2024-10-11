@@ -220,7 +220,11 @@ function onDeleteSuccess(isBatch = false) {
           <button-add @success="updateTableData" />
         </check-permission>
         <check-permission permission="system:user:del">
-          <button-delete-batch :id="checkedKeys" @success="onDeleteSuccess(true)" />
+          <button-delete-batch
+            :id="checkedKeys"
+            @success="onDeleteSuccess(true)"
+            @failed="checkedKeys = []"
+          />
         </check-permission>
       </n-space>
     </check-permission>

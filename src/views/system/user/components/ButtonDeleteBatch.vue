@@ -4,6 +4,7 @@ import { deleteUsers } from '@/api/user'
 const { id } = defineProps<{ id: string[] }>()
 const $emits = defineEmits<{
   success: []
+  failed: []
 }>()
 
 const disabled = ref(false)
@@ -12,6 +13,7 @@ const onConfirm = async () => {
   const [err] = await deleteUsers(id)
   disabled.value = false
   if (err) {
+    $emits('failed')
     return
   }
 

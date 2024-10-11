@@ -6,11 +6,11 @@ const $emits = defineEmits<{
   success: []
 }>()
 
-const loading = ref(false)
+const disabled = ref(false)
 const onConfirm = async () => {
-  loading.value = true
+  disabled.value = true
   const [err] = await deleteUser(id)
-  loading.value = false
+  disabled.value = false
   if (err) {
     return
   }
@@ -21,7 +21,7 @@ const onConfirm = async () => {
 </script>
 
 <template>
-  <button-confirm text="删除" ghost size="small" :disabled="loading" @confirm="onConfirm">
+  <button-confirm text="删除" ghost size="small" :disabled @confirm="onConfirm">
     您确定要删除该用户账号吗？
   </button-confirm>
 </template>
