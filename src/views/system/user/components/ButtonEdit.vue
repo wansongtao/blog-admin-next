@@ -15,6 +15,7 @@ const loading = ref(false)
 const detail = ref<IUserDetail>()
 
 const onOpen = async () => {
+  show.value = true
   loading.value = true
   const [, res] = await getUserDetail(id)
   loading.value = false
@@ -24,7 +25,6 @@ const onOpen = async () => {
     return
   }
 
-  show.value = true
   detail.value = res.data
 }
 
@@ -50,7 +50,7 @@ const onSubmit = async (data: IUserParam) => {
 
 <template>
   <div class="button-edit">
-    <n-button type="warning" ghost size="small" :loading @click="onOpen">编辑</n-button>
+    <n-button type="warning" ghost size="small" @click="onOpen">编辑</n-button>
 
     <n-modal v-model:show="show" :auto-focus="false">
       <n-card
