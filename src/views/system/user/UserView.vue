@@ -4,12 +4,13 @@ import SearchForm from './components/SearchForm.vue'
 import ButtonAdd from './components/ButtonAdd.vue'
 import ButtonDelete from './components/ButtonDelete.vue'
 import ButtonDeleteBatch from './components/ButtonDeleteBatch.vue'
-import ButtonState, { type ButtonStateProps } from '@/components/button/state/ButtonState.vue'
+import ButtonState from './components/ButtonState.vue'
 import ButtonEdit from './components/ButtonEdit.vue'
 import ButtonResetPassword from './components/ButtonResetPassword.vue'
+
 import useRequest from '@/hooks/useRequest'
 import useTableSort from '@/hooks/useTableSort'
-import { getUserList, updateUser } from '@/api/user'
+import { getUserList } from '@/api/user'
 import usePermission from '@/hooks/usePermission'
 
 import type { IQuery } from '@/types/api'
@@ -118,7 +119,6 @@ const columns = computed(() => {
       render: (row) => {
         return h(ButtonState, {
           id: row.id,
-          updateFn: updateUser as ButtonStateProps['updateFn'],
           modelValue: row.disabled,
           disabled: !hasEditPermission
         })
