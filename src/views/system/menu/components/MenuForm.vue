@@ -169,7 +169,7 @@ const onCancel = () => {
     </n-row>
     <n-form-item>
       <n-space style="width: 100%; justify-content: center">
-        <n-button type="primary" loading @click="onSubmit">提交</n-button>
+        <n-button type="primary" :loading @click="onSubmit">提交</n-button>
         <n-button :disabled="loading" @click="onCancel">取消</n-button>
       </n-space>
     </n-form-item>
