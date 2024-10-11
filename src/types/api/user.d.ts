@@ -15,3 +15,11 @@ export interface IUserParam {
   nickName?: string
   roles?: number[]
 }
+
+export interface IUserDetail {
+  disabled: boolean
+  id: number
+  nickName?: string
+  roles?: number[]
+  userName: string
+}

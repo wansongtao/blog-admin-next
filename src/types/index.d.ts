@@ -1,5 +1,5 @@
 import type { MessageApiInjection } from 'naive-ui/es/message/src/MessageProvider'
-import type { FormItemRule } from 'naive-ui'
+import type { FormItemRule, DataTableColumn } from 'naive-ui'
 
 declare global {
   interface Window {
@@ -19,3 +19,5 @@ export type IMenuType = 'DIRECTORY' | 'MENU' | 'BUTTON'
 export type IRule<T extends Record> = {
   [key in keyof T]: FormItemRule | FormItemRule[]
 }
+
+type IColumn<T = {}> = DataTableColumn<T> & { key?: keyof T | 'action' }

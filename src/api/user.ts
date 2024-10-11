@@ -1,7 +1,7 @@
 import request from '@/utils/axiosRequest'
 
 import type { IBaseList, IQuery } from '@/types/api'
-import type { IUserListItem, IUserParam } from '@/types/api/user'
+import type { IUserDetail, IUserListItem, IUserParam } from '@/types/api/user'
 
 export const getUserList = (params: IQuery) => {
   return request<IBaseList<IUserListItem>>({
@@ -33,5 +33,20 @@ export const deleteUsers = (ids: string[]) => {
     data: {
       ids
     }
+  })
+}
+
+export const updateUser = (id: string, data: IUserParam) => {
+  return request({
+    url: `/users/${id}`,
+    method: 'patch',
+    data
+  })
+}
+
+export const getUserDetail = (id: string) => {
+  return request<IUserDetail>({
+    url: `/users/${id}`,
+    method: 'get'
   })
 }

@@ -83,7 +83,12 @@ const onCancel = () => {
       />
     </n-form-item>
     <n-form-item label="用户名称" path="userName">
-      <n-input v-model:value="formData.userName" placeholder="请输入用户名称" clearable />
+      <n-input
+        v-model:value="formData.userName"
+        placeholder="请输入用户名称"
+        :disabled="detail !== undefined"
+        clearable
+      />
     </n-form-item>
     <n-form-item label="用户昵称" path="nickName">
       <n-input v-model:value="formData.nickName" placeholder="请输入用户昵称" clearable />

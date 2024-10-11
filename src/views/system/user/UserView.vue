@@ -1,17 +1,18 @@
 <script lang="ts" setup>
+import { NSpace, NTag } from 'naive-ui'
 import SearchForm from './components/SearchForm.vue'
 import ButtonAdd from './components/ButtonAdd.vue'
 import ButtonDelete, { type ButtonDeleteProps } from '@/components/button/delete/ButtonDelete.vue'
+import ButtonState, { type ButtonStateProps } from '@/components/button/state/ButtonState.vue'
+import ButtonEdit from './components/ButtonEdit.vue'
 import useRequest from '@/hooks/useRequest'
 import useTableSort from '@/hooks/useTableSort'
-import { getUserList, deleteUser, deleteUsers } from '@/api/user'
+import { getUserList, deleteUser, deleteUsers, updateUser } from '@/api/user'
 import usePermission from '@/hooks/usePermission'
 
-import { NSpace, NTag, type DataTableColumn } from 'naive-ui'
 import type { IQuery } from '@/types/api'
 import type { IUserListItem } from '@/types/api/user'
-
-type IColumn = DataTableColumn<IUserListItem> & { key?: keyof IUserListItem | 'action' }
+import type { IColumn } from '@/types'
 
 const { page, pageSize, list, total, loading, fetchList } = useRequest(async (params: IQuery) => {
   const [, result] = await getUserList(params)
@@ -48,8 +49,11 @@ watch(
 )
 
 const { hasPermission } = usePermission()
+
 const columns = computed(() => {
-  const list: IColumn[] = [
+  const hasEditPermission = hasPermission('system:user:edit')
+
+  const list: IColumn<IUserListItem>[] = [
     {
       align: 'center',
       key: 'userName',
@@ -59,6 +63,9 @@ const columns = computed(() => {
       align: 'center',
       key: 'nickName',
       title: '昵称',
+      ellipsis: {
+        tooltip: true
+      },
       render: (row) => row.nickName || '--'
     },
     {
@@ -105,7 +112,12 @@ const columns = computed(() => {
       key: 'disabled',
       title: '状态',
       render: (row) => {
-        return row.disabled ? '禁用' : '启用'
+        return h(ButtonState, {
+          id: row.id,
+          updateFn: updateUser as ButtonStateProps['updateFn'],
+          modelValue: row.disabled,
+          disabled: !hasEditPermission
+        })
       }
     },
     {
@@ -131,11 +143,12 @@ const columns = computed(() => {
     })
   }
 
-  if (hasDeletePermission) {
-    const action: IColumn = {
+  if (hasDeletePermission || hasEditPermission) {
+    const action: IColumn<IUserListItem> = {
       align: 'center',
       key: 'action',
       title: '操作',
+      width: 200,
       render(row) {
         const deleteButton = h(ButtonDelete, {
           id: row.id,
@@ -144,8 +157,24 @@ const columns = computed(() => {
           onSuccess: onDeleteSuccess
         })
 
+        const editButton = h(ButtonEdit, { id: row.id, onSuccess: updateTableData })
+
+        if (hasDeletePermission && hasEditPermission) {
+          return h(
+            NSpace,
+            { justify: 'center' },
+            {
+              default: () => [editButton, deleteButton]
+            }
+          )
+        }
+
         if (hasDeletePermission) {
           return deleteButton
+        }
+
+        if (hasEditPermission) {
+          return editButton
         }
       }
     }
@@ -179,7 +208,7 @@ function onDeleteSuccess(isBatch = false) {
 <template>
   <base-box>
     <search-form :loading @search="onSearch" @reset="onReset" />
-    <check-permission or :permission="['system:user:add']">
+    <check-permission or :permission="['system:user:add', 'system:user:del']">
       <n-space style="margin-top: 20px">
         <check-permission permission="system:user:add">
           <button-add @success="updateTableData" />
