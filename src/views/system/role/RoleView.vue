@@ -1,19 +1,20 @@
 <script lang="ts" setup>
+import { NSpace } from 'naive-ui'
 import SearchForm from './components/SearchForm.vue'
 import ButtonAdd from './components/ButtonAdd.vue'
-import ButtonDelete, { type ButtonDeleteProps } from '@/components/button/delete/ButtonDelete.vue'
+import ButtonDelete from './components/ButtonDelete.vue'
+import ButtonDeleteBatch from './components/ButtonDeleteBatch.vue'
 import ButtonState from './components/ButtonState.vue'
 import ButtonEdit from './components/ButtonEdit.vue'
+
 import useRequest from '@/hooks/useRequest'
 import useTableSort from '@/hooks/useTableSort'
-import { getRoleList, deleteRole, deleteRoles } from '@/api/role'
+import { getRoleList } from '@/api/role'
 import usePermission from '@/hooks/usePermission'
 
-import { NSpace, type DataTableColumn } from 'naive-ui'
 import type { IQuery } from '@/types/api'
 import type { IRoleListItem } from '@/types/api/role'
-
-const { sort, onSorterChange } = useTableSort()
+import type { IColumn } from '@/types'
 
 const { page, pageSize, list, total, loading, fetchList } = useRequest(async (params: IQuery) => {
   const [, result] = await getRoleList(params)
@@ -27,10 +28,6 @@ const { page, pageSize, list, total, loading, fetchList } = useRequest(async (pa
 })
 
 const search = ref<IQuery>({})
-const updateTableData = () => {
-  fetchList({ ...search.value, sort: sort.value })
-}
-
 const onSearch = (data: IQuery) => {
   search.value = data
   page.value = 1
@@ -38,6 +35,11 @@ const onSearch = (data: IQuery) => {
 const onReset = () => {
   search.value = {}
   page.value = 1
+}
+
+const { sort, onSorterChange } = useTableSort()
+const updateTableData = () => {
+  fetchList({ ...search.value, sort: sort.value })
 }
 
 watch(
@@ -48,13 +50,12 @@ watch(
   { immediate: true }
 )
 
-type IColumn = DataTableColumn<IRoleListItem> & { key?: keyof IRoleListItem | 'action' }
 const { hasPermission } = usePermission()
 
 const columns = computed(() => {
   const hasEditPermission = hasPermission('system:role:edit')
 
-  const list: IColumn[] = [
+  const list: IColumn<IRoleListItem>[] = [
     {
       align: 'center',
       key: 'id',
@@ -110,15 +111,13 @@ const columns = computed(() => {
   }
 
   if (hasDeletePermission || hasEditPermission) {
-    const action: IColumn = {
+    const action: IColumn<IRoleListItem> = {
       align: 'center',
       key: 'action',
       title: '操作',
       render(row) {
         const deleteButton = h(ButtonDelete, {
           id: row.id,
-          deleteItem: deleteRole as ButtonDeleteProps['deleteItem'],
-          deleteItems: deleteRoles as ButtonDeleteProps['deleteItems'],
           onSuccess: onDeleteSuccess
         })
         const editButton = h(ButtonEdit, { id: row.id, onSuccess: updateTableData })
@@ -174,11 +173,10 @@ function onDeleteSuccess(isBatch = false) {
           <button-add @success="updateTableData" />
         </check-permission>
         <check-permission permission="system:role:del">
-          <button-delete
+          <button-delete-batch
             :id="checkedKeys"
-            :delete-item="deleteRole"
-            :delete-items="deleteRoles"
             @success="onDeleteSuccess(true)"
+            @failed="checkedKeys = []"
           />
         </check-permission>
       </n-space>
