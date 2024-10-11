@@ -83,8 +83,8 @@ const onCancel = () => {
         v-model="formData.permissions"
       />
     </n-form-item>
-    <n-form-item label="是否禁用" path="disabled">
-      <n-switch v-model:value="formData.disabled" />
+    <n-form-item label="角色状态" path="disabled">
+      <switch-state v-model:value="formData.disabled" round size="large" />
     </n-form-item>
     <n-form-item label="角色描述" path="description">
       <n-input
