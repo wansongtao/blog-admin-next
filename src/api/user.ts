@@ -18,3 +18,20 @@ export const addUser = (data: IUserParam) => {
     data
   })
 }
+
+export const deleteUser = (id: string) => {
+  return request({
+    url: `/users/${id}`,
+    method: 'delete'
+  })
+}
+
+export const deleteUsers = (ids: string[]) => {
+  return request({
+    url: '/users/batch-delete',
+    method: 'post',
+    data: {
+      ids
+    }
+  })
+}

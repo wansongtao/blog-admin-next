@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import SearchForm from './components/SearchForm.vue'
 import ButtonAdd from './components/ButtonAdd.vue'
+import ButtonDelete, { type ButtonDeleteProps } from '@/components/button/delete/ButtonDelete.vue'
 import useRequest from '@/hooks/useRequest'
 import useTableSort from '@/hooks/useTableSort'
-import { getUserList } from '@/api/user'
+import { getUserList, deleteUser, deleteUsers } from '@/api/user'
+import usePermission from '@/hooks/usePermission'
 
 import { NSpace, NTag, type DataTableColumn } from 'naive-ui'
 import type { IQuery } from '@/types/api'
@@ -45,6 +47,7 @@ watch(
   { immediate: true }
 )
 
+const { hasPermission } = usePermission()
 const columns = computed(() => {
   const list: IColumn[] = [
     {
@@ -55,7 +58,8 @@ const columns = computed(() => {
     {
       align: 'center',
       key: 'nickName',
-      title: '昵称'
+      title: '昵称',
+      render: (row) => row.nickName || '--'
     },
     {
       align: 'center',
@@ -80,6 +84,7 @@ const columns = computed(() => {
       align: 'center',
       key: 'roleNames',
       title: '角色',
+      width: 200,
       render: (row) => {
         if (!row.roleNames?.length) {
           return '--'
@@ -119,8 +124,56 @@ const columns = computed(() => {
     }
   ]
 
+  const hasDeletePermission = hasPermission('system:user:del')
+  if (hasDeletePermission) {
+    list.unshift({
+      type: 'selection'
+    })
+  }
+
+  if (hasDeletePermission) {
+    const action: IColumn = {
+      align: 'center',
+      key: 'action',
+      title: '操作',
+      render(row) {
+        const deleteButton = h(ButtonDelete, {
+          id: row.id,
+          deleteItem: deleteUser as ButtonDeleteProps['deleteItem'],
+          deleteItems: deleteUsers as ButtonDeleteProps['deleteItems'],
+          onSuccess: onDeleteSuccess
+        })
+
+        if (hasDeletePermission) {
+          return deleteButton
+        }
+      }
+    }
+
+    list.push(action)
+  }
+
   return list
 })
+
+const checkedKeys = ref<string[]>([])
+function onDeleteSuccess(isBatch = false) {
+  let deleteCount = 1
+  if (isBatch) {
+    deleteCount = checkedKeys.value.length
+    checkedKeys.value = []
+  }
+
+  const lastPageSize = total.value % pageSize.value || pageSize.value
+  if (deleteCount < lastPageSize || page.value === 1) {
+    updateTableData()
+    return
+  }
+
+  const lastPage = Math.ceil(total.value / pageSize.value)
+  const currentLastPage = Math.ceil((total.value - deleteCount) / pageSize.value)
+  page.value = Math.max(1, page.value - (lastPage - currentLastPage))
+}
 </script>
 
 <template>
@@ -131,12 +184,22 @@ const columns = computed(() => {
         <check-permission permission="system:user:add">
           <button-add @success="updateTableData" />
         </check-permission>
+        <check-permission permission="system:user:del">
+          <button-delete
+            :id="checkedKeys"
+            :delete-item="deleteUser"
+            :delete-items="deleteUsers"
+            @success="onDeleteSuccess(true)"
+          />
+        </check-permission>
       </n-space>
     </check-permission>
     <div class="table">
       <n-data-table
+        v-model:checked-row-keys="checkedKeys"
         :columns="columns"
         :data="list"
+        :row-key="(rowData: IUserListItem) => rowData.id"
         :loading
         style="height: 100%"
         flex-height
