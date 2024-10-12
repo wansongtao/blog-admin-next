@@ -1,21 +1,20 @@
 <script lang="ts" setup>
+import { NSpace } from 'naive-ui'
 import SearchForm from './components/SearchForm.vue'
 import TagMenu from './components/TagMenu.vue'
 import ButtonDelete, { type ButtonDeleteProps } from '@/components/button/delete/ButtonDelete.vue'
 import ButtonAdd from './components/ButtonAdd.vue'
-import ButtonState, { type ButtonStateProps } from '@/components/button/state/ButtonState.vue'
+import ButtonState from './components/ButtonState.vue'
 import ButtonEdit from './components/ButtonEdit.vue'
 
 import useRequest from '@/hooks/useRequest'
-import { getMenuList, deleteMenu, deleteMenuList, updateMenu } from '@/api/menu'
+import { getMenuList, deleteMenu, deleteMenuList } from '@/api/menu'
 import MENU_ICON_MAP from '@/plugins/menuIcons'
 import useTableSort from '@/hooks/useTableSort'
 import usePermission from '@/hooks/usePermission'
 
 import type { IMenuListItem, IMenuQuery } from '@/types/api/menu'
-import { NSpace, type DataTableColumn } from 'naive-ui'
-
-const { sort, onSorterChange } = useTableSort()
+import type { IColumn } from '@/types'
 
 const { page, pageSize, list, total, loading, fetchList } = useRequest(
   async (params: IMenuQuery) => {
@@ -31,10 +30,6 @@ const { page, pageSize, list, total, loading, fetchList } = useRequest(
 )
 
 const search = ref<IMenuQuery>({})
-const updateTableData = () => {
-  fetchList({ ...search.value, sort: sort.value })
-}
-
 const onSearch = (data: IMenuQuery) => {
   search.value = data
   page.value = 1
@@ -42,6 +37,11 @@ const onSearch = (data: IMenuQuery) => {
 const onReset = () => {
   search.value = {}
   page.value = 1
+}
+
+const { sort, onSorterChange } = useTableSort()
+const updateTableData = () => {
+  fetchList({ ...search.value, sort: sort.value })
 }
 
 watch(
@@ -53,12 +53,10 @@ watch(
 )
 
 const { hasPermission } = usePermission()
-
-type IColumn = DataTableColumn<IMenuListItem> & { key?: keyof IMenuListItem | 'action' }
 const columns = computed(() => {
   const hasEditPermission = hasPermission('system:menu:edit')
 
-  const list: IColumn[] = [
+  const list: IColumn<IMenuListItem>[] = [
     {
       align: 'center',
       key: 'name',
@@ -116,7 +114,6 @@ const columns = computed(() => {
       render(row) {
         return h(ButtonState, {
           id: row.id,
-          updateFn: updateMenu as ButtonStateProps['updateFn'],
           modelValue: row.disabled,
           disabled: !hasEditPermission
         })
@@ -140,7 +137,7 @@ const columns = computed(() => {
   }
 
   if (hasDeletePermission || hasEditPermission) {
-    const action: IColumn = {
+    const action: IColumn<IMenuListItem> = {
       align: 'center',
       key: 'action',
       title: '操作',
