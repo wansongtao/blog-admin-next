@@ -12,7 +12,6 @@ declare module 'vue' {
     BasePagination: typeof import('./src/components/base-pagination/BasePagination.vue')['default']
     ButtonCollapsed: typeof import('./src/components/button/collapsed/ButtonCollapsed.vue')['default']
     ButtonConfirm: typeof import('./src/components/button/confirm/ButtonConfirm.vue')['default']
-    ButtonDelete: typeof import('./src/components/button/delete/ButtonDelete.vue')['default']
     ButtonFullscreen: typeof import('./src/components/button/fullscreen/ButtonFullscreen.vue')['default']
     ButtonReset: typeof import('./src/components/button/reset/ButtonReset.vue')['default']
     ButtonSearch: typeof import('./src/components/button/search/ButtonSearch.vue')['default']
