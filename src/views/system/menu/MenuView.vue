@@ -2,13 +2,14 @@
 import { NSpace } from 'naive-ui'
 import SearchForm from './components/SearchForm.vue'
 import TagMenu from './components/TagMenu.vue'
-import ButtonDelete, { type ButtonDeleteProps } from '@/components/button/delete/ButtonDelete.vue'
 import ButtonAdd from './components/ButtonAdd.vue'
 import ButtonState from './components/ButtonState.vue'
 import ButtonEdit from './components/ButtonEdit.vue'
+import ButtonDelete from './components/ButtonDelete.vue'
+import ButtonDeleteBatch from './components/ButtonDeleteBatch.vue'
 
 import useRequest from '@/hooks/useRequest'
-import { getMenuList, deleteMenu, deleteMenuList } from '@/api/menu'
+import { getMenuList } from '@/api/menu'
 import MENU_ICON_MAP from '@/plugins/menuIcons'
 import useTableSort from '@/hooks/useTableSort'
 import usePermission from '@/hooks/usePermission'
@@ -144,8 +145,6 @@ const columns = computed(() => {
       render(row) {
         const deleteButton = h(ButtonDelete, {
           id: row.id,
-          deleteItem: deleteMenu as ButtonDeleteProps['deleteItem'],
-          deleteItems: deleteMenuList as ButtonDeleteProps['deleteItems'],
           onSuccess: onDeleteSuccess
         })
         const editButton = h(ButtonEdit, { id: row.id, onSuccess: updateTableData })
@@ -213,11 +212,10 @@ watch(list, (value) => {
           <button-add @success="updateTableData" />
         </check-permission>
         <check-permission permission="system:menu:del">
-          <button-delete
+          <button-delete-batch
             :id="checkedKeys"
-            :delete-item="deleteMenu"
-            :delete-items="deleteMenuList"
             @success="onDeleteSuccess(true)"
+            @failed="checkedKeys = []"
           />
         </check-permission>
       </n-space>
