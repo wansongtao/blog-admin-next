@@ -143,3 +143,9 @@ export const getChangedData = <T extends Record<any, any>, K extends Record<any,
 
   return changedData
 }
+
+export const getFileBase64 = (file: Blob, callback: (base64Url: string) => void) => {
+  const reader = new FileReader()
+  reader.addEventListener('load', () => callback(reader.result as string))
+  reader.readAsDataURL(file)
+}
