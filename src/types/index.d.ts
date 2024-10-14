@@ -20,4 +20,9 @@ export type IRule<T extends Record> = {
   [key in keyof T]: FormItemRule | FormItemRule[]
 }
 
-type IColumn<T = {}> = DataTableColumn<T> & { key?: keyof T | 'action' }
+export type IColumn<T = {}> = DataTableColumn<T> & { key?: keyof T | 'action' }
+
+/**
+ * 性别 MA 男，FE 女，OT 其他
+ */
+export type IGender = 'MA' | 'FE' | 'OT'

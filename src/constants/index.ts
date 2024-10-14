@@ -1,4 +1,4 @@
-import type { IMenuType } from '@/types'
+import type { IMenuType, IGender } from '@/types'
 
 export const MENU_TYPES: { readonly [key in IMenuType]: string } = {
   DIRECTORY: '目录',
@@ -21,3 +21,9 @@ export const ACTIVE_STATE: {
 ]
 
 export const ALL_PERMISSION = '*:*:*'
+
+export const GENDER_MAP: { readonly [key in IGender]: string } = {
+  MA: '男',
+  FE: '女',
+  OT: '未知'
+}

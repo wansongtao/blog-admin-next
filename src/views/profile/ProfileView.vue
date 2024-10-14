@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import UserCard from './components/UserCard.vue'
+import FormUser from './components/FormUser.vue'
 
 import { getProfile } from '@/api/common'
+import { useUserStore } from '@/stores/user'
 
-import type { IProfile } from '@/types/api/common'
+import type { IProfile, IProfileParam } from '@/types/api/common'
 
 const profile = ref<IProfile>({
   userName: '',
@@ -19,13 +21,31 @@ const fetchProfile = async () => {
 }
 
 fetchProfile()
+
+const onUpdate = (data: IProfileParam) => {
+  profile.value = { ...profile.value, ...data }
+
+  if (data.nickName || data.nickName === null) {
+    const userStore = useUserStore()
+    userStore.userInfo.name = data.nickName ?? profile.value.userName
+  }
+}
 </script>
 
 <template>
-  <n-row :gutter="20">
-    <n-col :span="8"><user-card :profile /></n-col>
-    <n-col :span="16"></n-col>
-  </n-row>
+  <n-grid x-gap="24">
+    <n-gi :span="8"><user-card :profile /></n-gi>
+    <n-gi :span="16">
+      <n-card style="border-radius: 12px">
+        <n-tabs type="line" animated>
+          <n-tab-pane name="info" tab="编辑信息">
+            <form-user :profile @success="onUpdate" />
+          </n-tab-pane>
+          <n-tab-pane name="password" tab="修改密码"></n-tab-pane>
+        </n-tabs>
+      </n-card>
+    </n-gi>
+  </n-grid>
 </template>
 
 <style lang="scss" scoped></style>

@@ -133,3 +133,29 @@ export const validateNickName = (rule: FormItemRule, value: string) => {
 
   return true
 }
+
+export const validatePhone = (rule: FormItemRule, value: string) => {
+  if (!rule.required && !value) {
+    return true
+  }
+
+  const regexp = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/
+  if (!regexp.test(value)) {
+    return new Error('手机号格式错误')
+  }
+
+  return true
+}
+
+export const validateEmail = (rule: FormItemRule, value: string) => {
+  if (!rule.required && !value) {
+    return true
+  }
+
+  const regexp = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
+  if (!regexp.test(value)) {
+    return new Error('邮箱格式错误')
+  }
+
+  return true
+}
