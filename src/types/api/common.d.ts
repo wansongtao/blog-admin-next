@@ -50,3 +50,21 @@ export interface IMenuItem {
    */
   children?: IMenuItem[]
 }
+
+export interface IProfileParam {
+  avatar?: string
+  birthday?: string
+  description?: string
+  email?: string
+  nickName?: string
+  phone?: string
+  /**
+   * 性别 MA 男，FE 女，OT 其他
+   */
+  gender?: 'MA' | 'FE' | 'OT'
+}
+
+export interface IProfile extends IProfileParam {
+  roles: string[]
+  userName: string
+}

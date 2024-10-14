@@ -1,6 +1,6 @@
 import request from '@/utils/axiosRequest'
 
-import type { ILoginParams, IUserInfo } from '@/types/api/common'
+import type { ILoginParams, IProfile, IProfileParam, IUserInfo } from '@/types/api/common'
 
 export const getCaptcha = () => {
   return request<{ captcha: string }>({
@@ -44,5 +44,20 @@ export const getUserInfo = () => {
   return request<IUserInfo>({
     url: '/auth/userinfo',
     method: 'GET'
+  })
+}
+
+export const getProfile = () => {
+  return request<IProfile>({
+    url: '/users/profile',
+    method: 'get'
+  })
+}
+
+export const updateProfile = (data: IProfileParam) => {
+  return request({
+    url: '/users/profile',
+    method: 'patch',
+    data
   })
 }
