@@ -43,7 +43,7 @@ const onSubmit = async (data: IMenuParam) => {
   }
 
   show.value = false
-  window.$message.success('编辑成功')
+  window.$message.success('成功修改菜单信息')
   $emits('success')
 }
 </script>

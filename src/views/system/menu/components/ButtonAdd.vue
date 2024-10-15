@@ -20,7 +20,7 @@ const onSubmit = async (data: IMenuParam) => {
   }
 
   show.value = false
-  window.$message.success('添加成功')
+  window.$message.success('成功添加菜单')
   $emits('success')
 }
 </script>
