@@ -9,10 +9,10 @@ import { validateUsername, validatePassword } from '@/utils/validate'
 import useFormValidate from '@/hooks/useFormValidate'
 import { useUserStore } from '@/stores/user'
 
-import type { FormItemRule } from 'naive-ui'
 import type { ILoginParams } from '@/types/api/common'
+import type { IRule } from '@/types'
 
-const rules: Record<keyof ILoginParams, FormItemRule[]> = {
+const rules: IRule<ILoginParams> = {
   userName: [
     {
       required: true,
@@ -30,7 +30,19 @@ const rules: Record<keyof ILoginParams, FormItemRule[]> = {
   captcha: [
     {
       required: true,
-      message: '请输入验证码'
+      validator: (_rule, value: string) => {
+        if (!value) {
+          return new Error('请输入验证码')
+        }
+
+        const regexp = /^[a-zA-Z0-9]{4}$/
+        if (!regexp.test(value)) {
+          return new Error('验证码格式错误')
+        }
+
+        return true
+      },
+      trigger: ['input', 'blur']
     }
   ]
 }

@@ -54,7 +54,7 @@ export interface IMenuItem {
 }
 
 export interface IProfileParam {
-  avatar?: string | null
+  avatar?: string
   birthday?: string | null
   description?: string | null
   email?: string | null
