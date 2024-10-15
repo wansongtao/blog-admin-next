@@ -67,3 +67,8 @@ export interface IProfile extends IProfileParam {
   roles: string[]
   userName: string
 }
+
+export interface IPasswordParam {
+  oldPassword: string
+  newPassword: string
+}

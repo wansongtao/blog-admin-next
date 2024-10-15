@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import UserCard from './components/UserCard.vue'
 import FormUser from './components/FormUser.vue'
+import FormPassword from './components/FormPassword.vue'
 
 import { getProfile } from '@/api/common'
 import { useUserStore } from '@/stores/user'
@@ -41,7 +42,9 @@ const onUpdate = (data: IProfileParam) => {
           <n-tab-pane name="info" tab="编辑信息">
             <form-user :profile @success="onUpdate" />
           </n-tab-pane>
-          <n-tab-pane name="password" tab="修改密码"></n-tab-pane>
+          <n-tab-pane name="password" tab="修改密码">
+            <form-password />
+          </n-tab-pane>
         </n-tabs>
       </n-card>
     </n-gi>
