@@ -4,6 +4,7 @@ import IconUser from '@/assets/svgs/icons/user.svg'
 import IconPassword from '@/assets/svgs/icons/password.svg'
 import IconCaptcha from '@/assets/svgs/icons/captcha.svg'
 import ImgCaptcha from './components/ImgCaptcha.vue'
+import { lightTheme } from 'naive-ui'
 
 import { validateUsername, validatePassword } from '@/utils/validate'
 import useFormValidate from '@/hooks/useFormValidate'
@@ -95,48 +96,50 @@ const onLogin = async () => {
     <main class="login-right">
       <div class="login-right-wrap">
         <div class="right-wrap-title">账号登录</div>
-        <n-form ref="formRef" :model="formData" :rules="rules" :show-label="false">
-          <n-form-item path="userName">
-            <n-input v-model:value="formData.userName" placeholder="请输入用户名">
-              <template #prefix>
-                <icon-user />
-              </template>
-            </n-input>
-          </n-form-item>
-          <n-form-item path="password">
-            <n-input
-              v-model:value="formData.password"
-              type="password"
-              show-password-on="click"
-              placeholder="请输入密码"
+        <n-config-provider :theme="lightTheme">
+          <n-form ref="formRef" :model="formData" :rules="rules" :show-label="false">
+            <n-form-item path="userName">
+              <n-input v-model:value="formData.userName" placeholder="请输入用户名">
+                <template #prefix>
+                  <icon-user />
+                </template>
+              </n-input>
+            </n-form-item>
+            <n-form-item path="password">
+              <n-input
+                v-model:value="formData.password"
+                type="password"
+                show-password-on="click"
+                placeholder="请输入密码"
+              >
+                <template #prefix>
+                  <icon-password />
+                </template>
+              </n-input>
+            </n-form-item>
+            <n-form-item path="captcha">
+              <n-row :gutter="20">
+                <n-col :span="16">
+                  <n-input
+                    v-model:value="formData.captcha"
+                    placeholder="请输入验证码"
+                    @keydown.enter.prevent="onLogin"
+                  >
+                    <template #prefix>
+                      <icon-captcha />
+                    </template>
+                  </n-input>
+                </n-col>
+                <n-col :span="8">
+                  <img-captcha ref="captchaRef" />
+                </n-col>
+              </n-row>
+            </n-form-item>
+            <n-button style="margin-top: 20px" type="info" block :loading :disabled @click="onLogin"
+              >登录</n-button
             >
-              <template #prefix>
-                <icon-password />
-              </template>
-            </n-input>
-          </n-form-item>
-          <n-form-item path="captcha">
-            <n-row :gutter="20">
-              <n-col :span="16">
-                <n-input
-                  v-model:value="formData.captcha"
-                  placeholder="请输入验证码"
-                  @keydown.enter.prevent="onLogin"
-                >
-                  <template #prefix>
-                    <icon-captcha />
-                  </template>
-                </n-input>
-              </n-col>
-              <n-col :span="8">
-                <img-captcha ref="captchaRef" />
-              </n-col>
-            </n-row>
-          </n-form-item>
-          <n-button style="margin-top: 20px" type="info" block :loading :disabled @click="onLogin"
-            >登录</n-button
-          >
-        </n-form>
+          </n-form>
+        </n-config-provider>
       </div>
     </main>
   </div>
