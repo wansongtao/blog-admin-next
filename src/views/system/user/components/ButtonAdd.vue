@@ -21,7 +21,7 @@ const onSubmit = async (data: IUserParam) => {
   }
 
   show.value = false
-  window.$message.success('添加成功')
+  window.$message.success('成功添加用户')
   $emits('success')
 }
 </script>

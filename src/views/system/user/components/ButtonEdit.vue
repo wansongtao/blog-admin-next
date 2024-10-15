@@ -21,7 +21,7 @@ const onOpen = async () => {
   loading.value = false
 
   if (!res) {
-    window.$message.error('获取角色详情失败')
+    window.$message.error('获取用户详情失败')
     return
   }
 
@@ -43,7 +43,7 @@ const onSubmit = async (data: IUserParam) => {
   }
 
   show.value = false
-  window.$message.success('编辑成功')
+  window.$message.success('成功修改用户信息')
   $emits('success')
 }
 </script>

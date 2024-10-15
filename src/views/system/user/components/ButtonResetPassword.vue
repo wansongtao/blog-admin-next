@@ -9,13 +9,13 @@ const onConfirm = async () => {
     return
   }
 
-  window.$message.success('重置密码成功，新密码为d.123456')
+  window.$message.success('成功重置密码，默认密码为d.123456')
 }
 </script>
 
 <template>
   <button-confirm text="重置密码" ghost size="small" type="primary" @confirm="onConfirm">
-    您确定要重置密码吗？重置后，新密码为d.123456
+    您确定要重置密码吗？重置后，默认密码为d.123456
   </button-confirm>
 </template>
 

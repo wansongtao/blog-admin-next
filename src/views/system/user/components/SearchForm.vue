@@ -60,7 +60,7 @@ const onReset = () => {
         <n-form-item>
           <n-input
             v-model:value="keyword"
-            placeholder="用户名称、昵称关键字"
+            placeholder="名称、昵称关键字"
             clearable
             @keyup.enter="onSearch"
           />
