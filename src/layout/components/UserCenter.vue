@@ -2,9 +2,9 @@
 import IconUser from '@/assets/svgs/icons/user.svg?component'
 import IconGithub from '@/assets/svgs/icons/github.svg?component'
 import IconLogout from '@/assets/svgs/icons/logout.svg?component'
-import { RouterLink, useRouter } from 'vue-router'
+
+import { RouterLink } from 'vue-router'
 import { useUserStore } from '@/stores/user'
-import { storeToRefs } from 'pinia'
 
 const options = [
   {
@@ -44,7 +44,7 @@ const onSelect = async (key: string) => {
   }
 
   await userStore.logout()
-  router.push('/login')
+  router.replace('/login')
 }
 </script>
 
