@@ -92,6 +92,7 @@ const onCancel = () => {
         placeholder="请输入角色描述"
         clearable
         maxlength="150"
+        :rows="4"
         show-count
         v-model:value="formData.description"
       />

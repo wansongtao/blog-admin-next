@@ -21,7 +21,7 @@ const onSubmit = async (data: IRoleParam) => {
   }
 
   show.value = false
-  window.$message.success('添加成功')
+  window.$message.success('成功添加角色')
   $emits('success')
 }
 </script>
