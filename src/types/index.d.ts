@@ -1,9 +1,11 @@
 import type { MessageApiInjection } from 'naive-ui/es/message/src/MessageProvider'
 import type { FormItemRule, DataTableColumn } from 'naive-ui'
+import type { DialogApiInjection } from 'naive-ui/es/dialog/src/DialogProvider'
 
 declare global {
   interface Window {
     $message: MessageApiInjection
+    $dialog: DialogApiInjection
   }
 }
 

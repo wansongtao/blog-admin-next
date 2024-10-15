@@ -6,6 +6,7 @@ const ContextHolder = defineComponent({
   setup() {
     function register() {
       window.$message = useMessage()
+      window.$dialog = useDialog()
     }
 
     register()
@@ -17,12 +18,14 @@ const ContextHolder = defineComponent({
 
 <template>
   <n-message-provider>
-    <n-notification-provider>
-      <n-modal-provider>
-        <context-holder />
-        <slot></slot>
-      </n-modal-provider>
-    </n-notification-provider>
+    <n-dialog-provider>
+      <n-notification-provider>
+        <n-modal-provider>
+          <context-holder />
+          <slot></slot>
+        </n-modal-provider>
+      </n-notification-provider>
+    </n-dialog-provider>
   </n-message-provider>
 </template>
 
