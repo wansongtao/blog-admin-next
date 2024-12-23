@@ -52,7 +52,7 @@ const uploadAvatar = async (file: File) => {
     return
   }
 
-  const url = result.data
+  const url = result.data.presignedUrl
   const uploadRes = await uploadFile(url, file).catch((err) => {
     return new Error(err)
   })
