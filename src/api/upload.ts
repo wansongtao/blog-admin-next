@@ -12,9 +12,9 @@ export const uploadFile = (url: string, file: File) => {
 export const getPresignedUrl = (filename: string) => {
   return request<string>({
     url: '/upload/presigned',
-    method: 'get',
-    params: {
-      filename: filename
+    method: 'post',
+    data: {
+      filename
     }
   })
 }
