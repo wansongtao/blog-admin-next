@@ -3,11 +3,11 @@ import UserCard from './components/UserCard.vue'
 import FormUser from './components/FormUser.vue'
 import FormPassword from './components/FormPassword.vue'
 
-import { getProfile } from '@/api/common'
+import { getProfile } from '@/api/user'
 import { useUserStore } from '@/stores/user'
 import { useRouteQuery } from '@vueuse/router'
 
-import type { IProfile, IProfileParam } from '@/types/api/common'
+import type { IProfile, IProfileParam } from '@/types/api/user'
 
 const profile = ref<IProfile>({
   userName: '',

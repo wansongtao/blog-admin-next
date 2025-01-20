@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import useFormValidate from '@/hooks/useFormValidate'
 import { validatePassword } from '@/utils/validate'
-import { updatePassword } from '@/api/common'
+import { updatePassword } from '@/api/user'
 import { useUserStore } from '@/stores/user'
 
 import type { IRule } from '@/types'
-import type { IPasswordParam } from '@/types/api/common'
+import type { IPasswordParam } from '@/types/api/user'
 
 interface IFormData extends IPasswordParam {
   confirmPassword: string

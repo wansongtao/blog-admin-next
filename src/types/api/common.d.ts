@@ -1,5 +1,3 @@
-import { IGender } from '@/types'
-
 export interface ILoginParams {
   userName: string
   password: string
@@ -56,24 +54,4 @@ export interface IMenuItem {
    * 子菜单
    */
   children?: IMenuItem[]
-}
-
-export interface IProfileParam {
-  avatar?: string
-  birthday?: string | null
-  description?: string | null
-  email?: string | null
-  nickName?: string | null
-  phone?: string | null
-  gender?: IGender
-}
-
-export interface IProfile extends IProfileParam {
-  roles: string[]
-  userName: string
-}
-
-export interface IPasswordParam {
-  oldPassword: string
-  newPassword: string
 }

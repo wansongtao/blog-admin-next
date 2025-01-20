@@ -2,10 +2,10 @@
 import { validateNickName, validatePhone, validateEmail } from '@/utils/validate'
 import { GENDER_MAP } from '@/constants'
 import useFormValidate from '@/hooks/useFormValidate'
-import { updateProfile } from '@/api/common'
+import { updateProfile } from '@/api/user'
 import { getChangedData } from '@/utils'
 
-import type { IProfile, IProfileParam } from '@/types/api/common'
+import type { IProfile, IProfileParam } from '@/types/api/user'
 import type { IRule } from '@/types'
 
 const { profile } = defineProps<{
@@ -38,7 +38,7 @@ watch(
   () => profile,
   () => {
     formData.value = { ...formData.value, ...profile }
-    formData.value.birthday = profile.birthday || null
+    formData.value.birthday = profile.birthday?.slice(0, 10) || null
   },
   { immediate: true }
 )

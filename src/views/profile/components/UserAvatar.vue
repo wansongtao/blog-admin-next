@@ -4,7 +4,7 @@ import UploadIcon from '@/assets/svgs/icons/upload.svg'
 
 import { getFileBase64 } from '@/utils'
 import { uploadFile, getPresignedUrl } from '@/api/upload'
-import { updateProfile } from '@/api/common'
+import { updateProfile } from '@/api/user'
 import { useUserStore } from '@/stores/user'
 
 import type { UploadFileInfo } from 'naive-ui'

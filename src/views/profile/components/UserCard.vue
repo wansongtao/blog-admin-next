@@ -9,7 +9,7 @@ import BirthdayIcon from '@/assets/svgs/icons/birthday.svg'
 import PhoneIcon from '@/assets/svgs/icons/phone.svg'
 import EmailIcon from '@/assets/svgs/icons/email.svg'
 
-import type { IProfile } from '@/types/api/common'
+import type { IProfile } from '@/types/api/user'
 
 const { profile } = defineProps<{
   profile: IProfile
@@ -45,7 +45,7 @@ const { profile } = defineProps<{
         </div>
         <div class="user-info-item">
           <div class="icon"><birthday-icon /></div>
-          <div>{{ profile.birthday ?? '--' }}</div>
+          <div>{{ profile.birthday?.slice(0, 10) ?? '--' }}</div>
         </div>
         <div class="user-info-item">
           <div class="icon"><phone-icon /></div>

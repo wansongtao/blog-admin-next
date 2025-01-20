@@ -1,3 +1,25 @@
+import { IGender } from '@/types'
+
+export interface IProfileParam {
+  avatar?: string
+  birthday?: string | null
+  description?: string | null
+  email?: string | null
+  nickName?: string | null
+  phone?: string | null
+  gender?: IGender
+}
+
+export interface IProfile extends IProfileParam {
+  roles: string[]
+  userName: string
+}
+
+export interface IPasswordParam {
+  oldPassword: string
+  newPassword: string
+}
+
 export interface IUserListItem {
   avatar?: string
   disabled: boolean

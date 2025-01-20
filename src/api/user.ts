@@ -1,7 +1,37 @@
 import request from '@/utils/axiosRequest'
 
 import type { IBaseList, IQuery } from '@/types/api'
-import type { IUserDetail, IUserListItem, IUserParam } from '@/types/api/user'
+import type {
+  IPasswordParam,
+  IProfile,
+  IProfileParam,
+  IUserDetail,
+  IUserListItem,
+  IUserParam
+} from '@/types/api/user'
+
+export const getProfile = () => {
+  return request<IProfile>({
+    url: '/user/profile',
+    method: 'get'
+  })
+}
+
+export const updateProfile = (data: IProfileParam) => {
+  return request({
+    url: '/user/profile',
+    method: 'patch',
+    data
+  })
+}
+
+export const updatePassword = (data: IPasswordParam) => {
+  return request({
+    url: '/user/password',
+    method: 'patch',
+    data
+  })
+}
 
 export const getUserList = (params: IQuery) => {
   return request<IBaseList<IUserListItem>>({
