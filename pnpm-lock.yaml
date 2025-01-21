@@ -18,8 +18,8 @@ importers:
         specifier: ^1.7.3
         version: 1.7.3
       axios-deduplicator:
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^1.0.1
+        version: 1.0.1
       dayjs:
         specifier: ^1.11.12
         version: 1.11.12
@@ -959,8 +959,8 @@ packages:
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
-  axios-deduplicator@1.0.0:
-    resolution: {integrity: sha512-oZDBQIpWbOxWuelcqYHv6pWJqphEPtDlpOnKbdlwLzhQ7TPdllKr2fGQudy4af4VNH1jnsc3Yck+OZz8yIjljQ==, tarball: https://registry.npmjs.org/axios-deduplicator/-/axios-deduplicator-1.0.0.tgz}
+  axios-deduplicator@1.0.1:
+    resolution: {integrity: sha512-9HdIsdRgc5SCW34xmHvy7nM1sq4v5V7VkoriPQzfDbkQ4KMsMGT9U25hMBdYFmQKkjFRd5v7x/xPkR/pILvshA==}
 
   axios@1.7.3:
     resolution: {integrity: sha512-Ar7ND9pU99eJ9GpoGQKhKf58GpUOgnzuaB7ueNQ5BMi0p+LZ5oaEnfF999fAArcTIBwXTCHAmGcHOZJaWPq9Nw==}
@@ -3538,7 +3538,7 @@ snapshots:
 
   asynckit@0.4.0: {}
 
-  axios-deduplicator@1.0.0: {}
+  axios-deduplicator@1.0.1: {}
 
   axios@1.7.3:
     dependencies:
