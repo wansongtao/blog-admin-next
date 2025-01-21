@@ -38,6 +38,14 @@ export default defineConfig({
   },
   base: '/admin/',
   server: {
-    open: true
+    open: true,
+    port: 4000,
+    proxy: {
+      '/dev': {
+        target: 'http://localhost:3000/api/v1/',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/dev/, '')
+      }
+    }
   }
 })

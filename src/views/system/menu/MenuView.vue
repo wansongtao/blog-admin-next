@@ -16,6 +16,7 @@ import usePermission from '@/hooks/usePermission'
 
 import type { IMenuListItem, IMenuQuery } from '@/types/api/menu'
 import type { IColumn } from '@/types'
+import dayjs from 'dayjs'
 
 const { page, pageSize, list, total, loading, fetchList } = useRequest(
   async (params: IMenuQuery) => {
@@ -126,7 +127,10 @@ const columns = computed(() => {
       title: '创建时间',
       defaultSortOrder: sort.value === 'asc' ? 'ascend' : 'descend',
       sorter: true,
-      width: 200
+      width: 200,
+      render(row) {
+        return dayjs(row.createdAt).format('YYYY-MM-DD HH:mm:ss')
+      }
     }
   ]
 

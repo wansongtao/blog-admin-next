@@ -2,6 +2,7 @@
 import { useRouteQuery } from '@vueuse/router'
 import useBaseQuery from '@/hooks/useBaseQuery'
 import SelectMenuType from './SelectMenuType.vue'
+import dayjs from 'dayjs'
 
 import type { IMenuQuery } from '@/types/api/menu'
 
@@ -42,9 +43,12 @@ const onSearch = () => {
   const data: IMenuQuery = {
     keyword: keyword.value ?? undefined,
     disabled: disabled.value ?? undefined,
-    type: type.value ?? undefined,
-    beginTime: dateRange.value?.[0] ?? undefined,
-    endTime: dateRange.value?.[1] ?? undefined
+    type: type.value ?? undefined
+  }
+
+  if (dateRange.value) {
+    data.beginTime = dayjs(dateRange.value[0]).toISOString()
+    data.endTime = dayjs(dateRange.value[1]).toISOString()
   }
 
   $emits('search', data)

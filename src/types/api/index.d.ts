@@ -18,8 +18,8 @@ export interface IConfigHeader {
 
 export interface IQuery {
   keyword?: string
-  beginTime?: string | number
-  endTime?: string | number
+  beginTime?: string
+  endTime?: string
   disabled?: 0 | 1
   page?: number
   pageSize?: number
