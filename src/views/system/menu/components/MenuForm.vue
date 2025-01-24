@@ -116,13 +116,22 @@ const onCancel = () => {
       </n-radio-group>
     </n-form-item>
     <n-form-item label="父菜单" path="pid">
-      <menu-tree-select placeholder="请选择父菜单" v-model="formData.pid" />
+      <menu-tree-select
+        placeholder="请选择父菜单"
+        v-model="formData.pid"
+        :disabled="detail !== undefined"
+      />
     </n-form-item>
     <n-form-item label="菜单名称" path="name">
       <n-input v-model:value="formData.name" placeholder="请输入菜单名称" clearable />
     </n-form-item>
     <n-form-item label="权限标识" path="permission">
-      <n-input v-model:value="formData.permission" placeholder="请输入权限标识" clearable />
+      <n-input
+        v-model:value="formData.permission"
+        placeholder="请输入权限标识"
+        :disabled="detail !== undefined"
+        clearable
+      />
     </n-form-item>
 
     <template v-if="formData.type !== 'BUTTON'">
