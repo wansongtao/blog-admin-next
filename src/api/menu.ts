@@ -13,7 +13,7 @@ export const getMenuList = (params: IMenuQuery) => {
 
 export const getMenuTree = (containButton: boolean = false) => {
   return request<IMenuTree[]>({
-    url: '/permissions/tree',
+    url: '/permission/tree',
     method: 'GET',
     params: {
       containButton
@@ -23,22 +23,22 @@ export const getMenuTree = (containButton: boolean = false) => {
 
 export const getMenuDetail = (id: number) => {
   return request<IMenuParam>({
-    url: `/permissions/${id}`,
+    url: `/permission/${id}`,
     method: 'get'
   })
 }
 
 export const deleteMenu = (id: number) => {
   return request({
-    url: `/permissions/${id}`,
-    method: 'delete'
+    url: `/permission/${id}/delete`,
+    method: 'patch'
   })
 }
 
 export const deleteMenuList = (ids: number[]) => {
   return request({
-    url: '/permissions/batch-delete',
-    method: 'post',
+    url: '/permission/batch/delete',
+    method: 'patch',
     data: {
       ids
     }
@@ -47,7 +47,7 @@ export const deleteMenuList = (ids: number[]) => {
 
 export const addMenu = (data: IMenuParam) => {
   return request({
-    url: '/permissions',
+    url: '/permission',
     method: 'post',
     data
   })
@@ -55,7 +55,7 @@ export const addMenu = (data: IMenuParam) => {
 
 export const updateMenu = (id: number, data: IMenuParam) => {
   return request({
-    url: `/permissions/${id}`,
+    url: `/permission/${id}`,
     method: 'patch',
     data
   })

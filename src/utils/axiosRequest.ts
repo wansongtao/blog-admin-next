@@ -44,7 +44,7 @@ export const instance = axios.create({
 const deduplicator = createAxiosDeduplicatorInstance({
   repeatWindowMs: 1000,
   isDeleteCached(error) {
-    return error?.response?.status === 401
+    return error?.response?.status! >= 400
   }
 })
 instance.interceptors.request.use(deduplicator.requestInterceptor)
