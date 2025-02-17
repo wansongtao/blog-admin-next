@@ -3,7 +3,6 @@ import { NSpace } from 'naive-ui'
 import SearchForm from './components/SearchForm.vue'
 import ButtonAdd from './components/ButtonAdd.vue'
 import ButtonDelete from './components/ButtonDelete.vue'
-import ButtonDeleteBatch from './components/ButtonDeleteBatch.vue'
 import ButtonState from './components/ButtonState.vue'
 import ButtonEdit from './components/ButtonEdit.vue'
 
@@ -15,6 +14,7 @@ import usePermission from '@/hooks/usePermission'
 import type { IQuery } from '@/types/api'
 import type { IRoleListItem } from '@/types/api/role'
 import type { IColumn } from '@/types'
+import dayjs from 'dayjs'
 
 const { page, pageSize, list, total, loading, fetchList } = useRequest(async (params: IQuery) => {
   const [, result] = await getRoleList(params)
@@ -93,13 +93,19 @@ const columns = computed(() => {
       title: '创建时间',
       defaultSortOrder: sort.value === 'asc' ? 'ascend' : 'descend',
       sorter: true,
-      width: 200
+      width: 200,
+      render(row) {
+        return dayjs(row.createdAt).format('YYYY-MM-DD HH:mm:ss')
+      }
     },
     {
       align: 'center',
       key: 'updatedAt',
       title: '更新时间',
-      width: 200
+      width: 200,
+      render(row) {
+        return dayjs(row.updatedAt).format('YYYY-MM-DD HH:mm:ss')
+      }
     }
   ]
 
@@ -167,18 +173,9 @@ function onDeleteSuccess(isBatch = false) {
 <template>
   <base-box>
     <search-form :loading @search="onSearch" @reset="onReset" />
-    <check-permission or :permission="['system:role:add', 'system:role:del']">
+    <check-permission permission="system:role:add">
       <n-space style="margin-top: 20px">
-        <check-permission permission="system:role:add">
-          <button-add @success="updateTableData" />
-        </check-permission>
-        <check-permission permission="system:role:del">
-          <button-delete-batch
-            :id="checkedKeys"
-            @success="onDeleteSuccess(true)"
-            @failed="checkedKeys = []"
-          />
-        </check-permission>
+        <button-add @success="updateTableData" />
       </n-space>
     </check-permission>
     <div class="table">

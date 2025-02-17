@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import useBaseQuery from '@/hooks/useBaseQuery'
+import dayjs from 'dayjs'
 
 import type { IQuery } from '@/types/api/index'
 
@@ -37,9 +38,12 @@ const onSearch = () => {
 
   const data: IQuery = {
     keyword: keyword.value ?? undefined,
-    disabled: disabled.value ?? undefined,
-    beginTime: dateRange.value?.[0] ?? undefined,
-    endTime: dateRange.value?.[1] ?? undefined
+    disabled: disabled.value ?? undefined
+  }
+
+  if (dateRange.value) {
+    data.beginTime = dayjs(dateRange.value[0]).toISOString()
+    data.endTime = dayjs(dateRange.value[1]).toISOString()
   }
 
   $emits('search', data)
