@@ -17,6 +17,7 @@ import type { IQuery } from '@/types/api'
 import type { IUserListItem } from '@/types/api/user'
 import type { IColumn } from '@/types'
 import type { VNode } from 'vue'
+import dayjs from 'dayjs'
 
 const { page, pageSize, list, total, loading, fetchList } = useRequest(async (params: IQuery) => {
   const [, result] = await getUserList(params)
@@ -130,13 +131,19 @@ const columns = computed(() => {
       title: '创建时间',
       defaultSortOrder: sort.value === 'asc' ? 'ascend' : 'descend',
       sorter: true,
-      width: 200
+      width: 200,
+      render(row) {
+        return dayjs(row.createdAt).format('YYYY-MM-DD HH:mm:ss')
+      }
     },
     {
       align: 'center',
       key: 'updatedAt',
       title: '更新时间',
-      width: 200
+      width: 200,
+      render(row) {
+        return dayjs(row.updatedAt).format('YYYY-MM-DD HH:mm:ss')
+      }
     }
   ]
 

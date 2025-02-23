@@ -35,7 +35,7 @@ export const updatePassword = (data: IPasswordParam) => {
 
 export const getUserList = (params: IQuery) => {
   return request<IBaseList<IUserListItem>>({
-    url: '/users',
+    url: '/user',
     method: 'get',
     params
   })
@@ -43,7 +43,7 @@ export const getUserList = (params: IQuery) => {
 
 export const addUser = (data: IUserParam) => {
   return request({
-    url: '/users',
+    url: '/user',
     method: 'post',
     data
   })
@@ -51,7 +51,7 @@ export const addUser = (data: IUserParam) => {
 
 export const deleteUser = (id: string) => {
   return request({
-    url: `/users/${id}`,
+    url: `/user/${id}`,
     method: 'delete'
   })
 }
