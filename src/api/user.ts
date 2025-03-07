@@ -51,24 +51,14 @@ export const addUser = (data: IUserParam) => {
 
 export const deleteUser = (id: string) => {
   return request({
-    url: `/user/${id}`,
-    method: 'delete'
-  })
-}
-
-export const deleteUsers = (ids: string[]) => {
-  return request({
-    url: '/users/batch-delete',
-    method: 'post',
-    data: {
-      ids
-    }
+    url: `/user/${id}/delete`,
+    method: 'patch'
   })
 }
 
 export const updateUser = (id: string, data: IUserParam) => {
   return request({
-    url: `/users/${id}`,
+    url: `/user/${id}`,
     method: 'patch',
     data
   })
@@ -76,17 +66,14 @@ export const updateUser = (id: string, data: IUserParam) => {
 
 export const getUserDetail = (id: string) => {
   return request<IUserDetail>({
-    url: `/users/${id}`,
+    url: `/user/${id}`,
     method: 'get'
   })
 }
 
 export const resetUserPassword = (id: string) => {
   return request({
-    url: `/users/reset-password`,
-    method: 'post',
-    data: {
-      id
-    }
+    url: `/user/${id}/reset`,
+    method: 'patch'
   })
 }

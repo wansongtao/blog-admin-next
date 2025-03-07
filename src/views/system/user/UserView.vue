@@ -3,7 +3,6 @@ import { NSpace, NTag } from 'naive-ui'
 import SearchForm from './components/SearchForm.vue'
 import ButtonAdd from './components/ButtonAdd.vue'
 import ButtonDelete from './components/ButtonDelete.vue'
-import ButtonDeleteBatch from './components/ButtonDeleteBatch.vue'
 import ButtonState from './components/ButtonState.vue'
 import ButtonEdit from './components/ButtonEdit.vue'
 import ButtonResetPassword from './components/ButtonResetPassword.vue'
@@ -221,18 +220,9 @@ function onDeleteSuccess(isBatch = false) {
 <template>
   <base-box>
     <search-form :loading @search="onSearch" @reset="onReset" />
-    <check-permission or :permission="['system:user:add', 'system:user:del']">
+    <check-permission :permission="['system:user:add']">
       <n-space style="margin-top: 20px">
-        <check-permission permission="system:user:add">
-          <button-add @success="updateTableData" />
-        </check-permission>
-        <check-permission permission="system:user:del">
-          <button-delete-batch
-            :id="checkedKeys"
-            @success="onDeleteSuccess(true)"
-            @failed="checkedKeys = []"
-          />
-        </check-permission>
+        <button-add @success="updateTableData" />
       </n-space>
     </check-permission>
     <div class="table">
