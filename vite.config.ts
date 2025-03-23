@@ -37,6 +37,9 @@ export default defineConfig({
     __APP_VERSION__: version
   },
   base: '/admin/',
+  build: {
+    outDir: './docker/dist'
+  },
   server: {
     open: true,
     port: 4000,
