@@ -3,7 +3,8 @@ import DeleteIcon from '@/assets/svgs/icons/delete.svg'
 import UploadIcon from '@/assets/svgs/icons/upload.svg'
 
 import { getFileBase64 } from '@/utils'
-import { uploadFile, getPresignedUrl } from '@/api/upload'
+import { getPresignedUrl } from '@/api/common'
+import { uploadFile } from '@/api/upload'
 import { updateProfile } from '@/api/user'
 import { useUserStore } from '@/stores/user'
 
@@ -52,18 +53,22 @@ const uploadAvatar = async (file: File) => {
     return
   }
 
-  const url = result.data.presignedUrl
-  const uploadRes = await uploadFile(url, file).catch((err) => {
-    return new Error(err)
-  })
+  // 改为相对路径，通过代理转发后上传
+  let url = result.data.presignedUrl
+  const origin = new URL(url).origin
+  if (origin !== window.location.origin) {
+    url = url.replace(origin, '')
+  }
 
-  if (uploadRes instanceof Error) {
+  const [error] = await uploadFile(url, file)
+  if (error) {
     avatar.value = $props.url
     window.$message.error('上传头像失败')
     return
   }
 
-  const avatarUrl = url.replace(/\?.*/, '')
+  const avatarUrl =
+    window.location.origin + import.meta.env.VITE_UPLOAD_API + url.replace(/\?.*/, '')
   const [err] = await updateProfile({ avatar: avatarUrl })
   if (err) {
     avatar.value = $props.url

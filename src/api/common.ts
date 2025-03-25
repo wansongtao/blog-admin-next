@@ -46,3 +46,13 @@ export const getUserInfo = () => {
     method: 'GET'
   })
 }
+
+export const getPresignedUrl = (filename: string) => {
+  return request<{ presignedUrl: string }>({
+    url: '/upload/presigned',
+    method: 'post',
+    data: {
+      filename
+    }
+  })
+}
