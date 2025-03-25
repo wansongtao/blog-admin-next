@@ -68,7 +68,7 @@ const uploadAvatar = async (file: File) => {
   }
 
   const avatarUrl =
-    window.location.origin + import.meta.env.VITE_UPLOAD_API + url.replace(/\?.*/, '')
+    window.location.origin + import.meta.env.VITE_MINIO_API + url.replace(/\?.*/, '')
   const [err] = await updateProfile({ avatar: avatarUrl })
   if (err) {
     avatar.value = $props.url

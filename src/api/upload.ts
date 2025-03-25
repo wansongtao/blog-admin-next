@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios'
 
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_UPLOAD_API,
+  baseURL: import.meta.env.VITE_MINIO_API,
   timeout: 10000,
   withCredentials: true
 })
