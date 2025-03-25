@@ -3,6 +3,7 @@
 
 interface ImportMetaEnv {
   readonly VITE_BASE_API: string
+  readonly VITE_MINIO_API: string
   readonly VITE_TITLE: string
 }
 
