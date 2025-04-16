@@ -79,13 +79,15 @@ const onLogin = async () => {
 
   router.push('/')
 }
+
+const title = import.meta.env.VITE_TITLE
 </script>
 
 <template>
   <div class="login">
     <div class="login-left">
       <div class="login-left-head">
-        <div class="login-left-title">博客后台系统</div>
+        <div class="login-left-title">{{ title }}</div>
         <div class="login-left-desc">
           时间吞噬一切，记忆将之重组还原。那些旧日的好时光，让一切往事都值得回忆，也让未来的一切都值得期待。
         </div>
