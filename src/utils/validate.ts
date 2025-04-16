@@ -159,3 +159,25 @@ export const validateEmail = (rule: FormItemRule, value: string) => {
 
   return true
 }
+
+export const validateCategoryName = (_rule: any, value: string) => {
+  const regexp = /^[\u4e00-\u9fa5a-zA-Z0-9_&+]{1,50}$/
+  if (!regexp.test(value)) {
+    return new Error('分类名称只能包含中文、字母、数字等字符')
+  }
+
+  return true
+}
+
+export const validateCategoryDescription = (rule: FormItemRule, value: string) => {
+  if (!rule.required && !value) {
+    return true
+  }
+
+  const regexp = /^[\u4e00-\u9fa5a-zA-Z0-9_&+,.，。'"‘“]{1,150}$/
+  if (!regexp.test(value)) {
+    return new Error('分类描述只能包含中文、字母、数字等字符')
+  }
+
+  return true
+}
