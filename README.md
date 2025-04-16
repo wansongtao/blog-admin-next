@@ -1,45 +1,54 @@
+English | [简体中文](/README.zh-CN.md)
+
 # blog-admin-next
 
-This template should help get you started developing with Vue 3 in Vite.
+A blog management system developed using Vue 3, Vite, TS, Pinia, Axios, naive-ui, ECharts, md-editor-v3 and other technologies.
 
-## Recommended IDE Setup
+## Features
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- Implements permission control using dynamic routing, supporting button-level permissions for users.
+- Built-in light and dark themes, supporting binding and switching.
+- Articles can be written using a Markdown editor.
+- Unit testing is performed using Vitest.
+- Package management is handled using pnpm.
+- Deployment is done using Docker.
 
-## Type Support for `.vue` Imports in TS
+## Preview
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+### Login Page
 
-## Customize configuration
+![Login Page](./docs/login.png)
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+### Permission Management Page
 
-## Project Setup
+![Permission Management Page](./docs/permission.png)
 
-```sh
+## Quick Start
+
+### Clone the Project
+
+```bash
+git clone https://github.com/wansongtao/blog-admin-next.git
+```
+
+### Install Dependencies
+
+```bash
 pnpm install
 ```
 
-### Compile and Hot-Reload for Development
+### Start the Project
 
-```sh
+```bash
 pnpm dev
 ```
 
-### Type-Check, Compile and Minify for Production
+### Build the Project
 
-```sh
+```bash
 pnpm build
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+## License
 
-```sh
-pnpm test:unit
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-pnpm lint
-```
+[MIT](/LICENSE)
