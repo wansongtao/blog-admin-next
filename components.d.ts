@@ -17,6 +17,7 @@ declare module 'vue' {
     ButtonReset: typeof import('./src/components/button/reset/ButtonReset.vue')['default']
     ButtonSearch: typeof import('./src/components/button/search/ButtonSearch.vue')['default']
     ButtonTheme: typeof import('./src/components/button/theme/ButtonTheme.vue')['default']
+    CategoryTree: typeof import('./src/components/category-tree/CategoryTree.vue')['default']
     CheckPermission: typeof import('./src/components/check-permission/CheckPermission.vue')['default']
     CheckRole: typeof import('./src/components/check-role/CheckRole.vue')['default']
     MenuTreeSelect: typeof import('./src/components/menu-tree-select/MenuTreeSelect.vue')['default']
