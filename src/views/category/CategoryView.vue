@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import FormSearch from './components/FormSearch.vue'
+import ButtonAdd from './components/ButtonAdd.vue'
 
 import { getCategoryList } from '@/api/category'
 import useRequest from '@/hooks/useRequest'
@@ -113,6 +114,11 @@ watch(list, (value) => {
 <template>
   <base-box>
     <form-search :loading @search="onSearch" @reset="onReset" />
+    <check-permission permission="system:category:add">
+      <n-space style="margin-top: 20px">
+        <button-add @success="updateTableData" />
+      </n-space>
+    </check-permission>
     <div class="main">
       <n-data-table
         :columns="columns"
