@@ -149,3 +149,46 @@ export const getFileBase64 = (file: Blob, callback: (base64Url: string) => void)
   reader.addEventListener('load', () => callback(reader.result as string))
   reader.readAsDataURL(file)
 }
+
+export const deepFindItem = <T extends Record<string, any>>(
+  data: T[],
+  compare: (value: T) => boolean,
+  childrenKey = 'children'
+): T | undefined => {
+  let item: T | undefined = undefined
+  for (let i = 0; i < data.length; i++) {
+    const value = data[i]
+    if (compare(value)) {
+      item = value
+      break
+    }
+
+    if (!value[childrenKey]) {
+      continue
+    }
+
+    item = deepFindItem(value[childrenKey], compare, childrenKey)
+    if (item !== undefined) {
+      break
+    }
+  }
+
+  return item
+}
+
+export const deepMap = <T extends Record<any, any>>(
+  data: T[],
+  callback: (value: T) => T,
+  childrenKey = 'children'
+) => {
+  return data.map((v) => {
+    const newValue = callback(v)
+    if (newValue[childrenKey]?.length) {
+      ;(newValue[childrenKey] as T[]) = deepMap(newValue[childrenKey], callback, childrenKey)
+    }
+
+    return {
+      ...newValue
+    }
+  })
+}
