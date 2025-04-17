@@ -37,3 +37,11 @@ export const getCategoryDetail = (id: number) => {
     method: 'get'
   })
 }
+
+export const updateCategory = (id: number, data: ICategoryParams) => {
+  return request({
+    url: `/category/${id}`,
+    method: 'patch',
+    data
+  })
+}

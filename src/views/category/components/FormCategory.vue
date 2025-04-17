@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import useFormValidate from '@/hooks/useFormValidate'
 import { validateCategoryName, validateCategoryDescription } from '@/utils/validate'
+import { getChangedData } from '@/utils'
 
 import type { IRule } from '@/types'
 import type { ICategoryParams } from '@/types/api/category'
@@ -39,13 +40,31 @@ watch(
   { immediate: true }
 )
 
+const disabled = computed(() => {
+  if (!detail) {
+    if (!formData.value.name) {
+      return true
+    }
+
+    return false
+  }
+
+  const changedData = getChangedData(formData.value, detail)
+  if (Object.keys(changedData).length === 0) {
+    return true
+  }
+
+  return false
+})
+
 const { formRef, validateForm } = useFormValidate()
 const onSubmit = async () => {
   if (!(await validateForm())) {
     return
   }
 
-  $emits('submit', { ...formData.value })
+  const data = detail ? getChangedData(formData.value, detail) : { ...formData.value }
+  $emits('submit', data)
 }
 
 const onCancel = () => {
@@ -58,8 +77,8 @@ const onCancel = () => {
     <n-form-item label="父分类" path="pid">
       <category-tree
         v-model="formData.pid"
-        :disabled="detail !== undefined"
         placeholder="请选择父分类"
+        :disabled-name="detail?.name"
       />
     </n-form-item>
     <n-form-item label="名称" path="name">
@@ -85,7 +104,7 @@ const onCancel = () => {
     </n-form-item>
     <n-form-item>
       <n-space style="width: 100%; justify-content: center">
-        <n-button type="primary" :loading @click="onSubmit">提交</n-button>
+        <n-button type="primary" :loading :disabled @click="onSubmit">提交</n-button>
         <n-button :disabled="loading" @click="onCancel">取消</n-button>
       </n-space>
     </n-form-item>

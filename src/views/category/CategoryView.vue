@@ -1,11 +1,13 @@
 <script lang="ts" setup>
 import FormSearch from './components/FormSearch.vue'
 import ButtonAdd from './components/ButtonAdd.vue'
+import ButtonEdit from './components/ButtonEdit.vue'
 
 import { getCategoryList } from '@/api/category'
 import useRequest from '@/hooks/useRequest'
 import useTableSort from '@/hooks/useTableSort'
 import dayjs from 'dayjs'
+import usePermission from '@/hooks/usePermission'
 
 import type { IQuery } from '@/types/api'
 import type { ICategoryEntity } from '@/types/api/category'
@@ -45,7 +47,10 @@ watch(
   { immediate: true }
 )
 
+const { hasPermission } = usePermission()
 const columns = computed(() => {
+  const hasEditPermission = hasPermission('system:category:edit')
+
   const list: IColumn<ICategoryEntity>[] = [
     {
       align: 'center',
@@ -94,6 +99,21 @@ const columns = computed(() => {
       }
     }
   ]
+
+  if (hasEditPermission) {
+    const action: IColumn<ICategoryEntity> = {
+      align: 'center',
+      key: 'action',
+      title: '操作',
+      render(row) {
+        const editButton = h(ButtonEdit, { id: row.id, onSuccess: updateTableData })
+
+        return editButton
+      }
+    }
+
+    list.push(action)
+  }
 
   return list
 })
