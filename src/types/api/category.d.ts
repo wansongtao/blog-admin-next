@@ -30,3 +30,11 @@ export interface ICategoryTreeEntity {
   name: string
   children?: ICategoryTreeEntity[]
 }
+
+export interface ICategoryDetailEntity {
+  pid?: number
+  name: string
+  description?: string
+  sort: number
+  hidden: boolean
+}

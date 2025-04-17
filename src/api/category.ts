@@ -1,7 +1,12 @@
 import request from '@/utils/axiosRequest'
 
 import type { IBaseList, IBaseResponse, IQuery } from '@/types/api'
-import type { ICategoryEntity, ICategoryTreeEntity, ICategoryParams } from '@/types/api/category'
+import type {
+  ICategoryEntity,
+  ICategoryTreeEntity,
+  ICategoryParams,
+  ICategoryDetailEntity
+} from '@/types/api/category'
 
 export const getCategoryList = (params: IQuery) => {
   return request<IBaseList<ICategoryEntity>>({
@@ -23,5 +28,12 @@ export const addCategory = (data: ICategoryParams) => {
     url: '/category',
     method: 'post',
     data
+  })
+}
+
+export const getCategoryDetail = (id: number) => {
+  return request<ICategoryDetailEntity>({
+    url: `/category/${id}`,
+    method: 'get'
   })
 }
