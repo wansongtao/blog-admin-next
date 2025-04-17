@@ -1,5 +1,6 @@
 <script lang="ts" generic="T extends number | null" setup>
 import useCategoryTree from '@/hooks/useCategoryTree'
+import { deepFindItem, deepMap } from '@/utils'
 
 import type { ICategoryTreeEntity } from '@/types/api/category'
 
@@ -14,41 +15,22 @@ const { categoryTree } = useCategoryTree(true)
 
 const options = computed(() => {
   if (disabledName) {
-    const deepDisabled = (data: ICategoryTreeEntity & { disabled?: boolean }) => {
-      if (data.name === disabledName) {
-        data.disabled = true
-
-        if (data.children?.length) {
-          const children = data.children as (ICategoryTreeEntity & { disabled?: boolean })[]
-          children.forEach((v) => {
-            v.disabled = true
-
-            if (v.children?.length) {
-              v.children.map((val) => deepDisabled(val))
-            }
-          })
-
-          data.children = children
-        }
-
-        return data
-      }
-
-      if (data.children?.length) {
-        const children = data.children as (ICategoryTreeEntity & { disabled?: boolean })[]
-        children.map((v) => {
-          return deepDisabled(v)
-        })
-
-        data.children = children
-      }
-
-      return data
+    const list: (ICategoryTreeEntity & { disabled?: boolean })[] = [...categoryTree.value]
+    const item = deepFindItem(list, (v) => v.name === disabledName)
+    if (!item) {
+      return categoryTree.value
     }
 
-    return categoryTree.value.map((v) => {
-      return deepDisabled(v)
-    })
+    item.disabled = true
+    if (item.children?.length) {
+      item.children = deepMap(item.children, (v) => {
+        return {
+          ...v,
+          disabled: true
+        }
+      })
+    }
+    return list
   }
 
   return categoryTree.value
