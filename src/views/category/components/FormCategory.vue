@@ -23,7 +23,7 @@ const initFormData = (): ICategoryParams => {
 
 const rules: IRule<ICategoryParams> = {
   name: { required: true, validator: validateCategoryName },
-  description: { required: true, validator: validateCategoryDescription }
+  description: { required: false, validator: validateCategoryDescription }
 }
 
 const formData = ref(initFormData())
