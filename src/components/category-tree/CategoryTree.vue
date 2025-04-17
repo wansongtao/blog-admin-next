@@ -14,28 +14,40 @@ const { categoryTree } = useCategoryTree(true)
 
 const options = computed(() => {
   if (disabledName) {
-    const deepDisabled = (list: (ICategoryTreeEntity & { disabled?: boolean })[]) => {
-      list.forEach((v) => {
-        v.disabled = true
+    const deepDisabled = (data: ICategoryTreeEntity & { disabled?: boolean }) => {
+      if (data.name === disabledName) {
+        data.disabled = true
 
-        if (v.children?.length) {
-          v.children = deepDisabled(v.children)
+        if (data.children?.length) {
+          const children = data.children as (ICategoryTreeEntity & { disabled?: boolean })[]
+          children.forEach((v) => {
+            v.disabled = true
+
+            if (v.children?.length) {
+              v.children.map((val) => deepDisabled(val))
+            }
+          })
+
+          data.children = children
         }
-      })
 
-      return list
+        return data
+      }
+
+      if (data.children?.length) {
+        const children = data.children as (ICategoryTreeEntity & { disabled?: boolean })[]
+        children.map((v) => {
+          return deepDisabled(v)
+        })
+
+        data.children = children
+      }
+
+      return data
     }
 
     return categoryTree.value.map((v) => {
-      const disabled = v.name === disabledName
-      if (disabled && v.children?.length) {
-        v.children = deepDisabled(v.children)
-      }
-
-      return {
-        ...v,
-        disabled
-      }
+      return deepDisabled(v)
     })
   }
 
