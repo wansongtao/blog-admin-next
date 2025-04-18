@@ -13,6 +13,7 @@ import { getMenuList } from '@/api/menu'
 import MENU_ICON_MAP from '@/plugins/menuIcons'
 import useTableSort from '@/hooks/useTableSort'
 import usePermission from '@/hooks/usePermission'
+import useTableExpandRow from '@/hooks/useTableExpandRow'
 
 import type { IMenuListItem, IMenuQuery } from '@/types/api/menu'
 import type { IColumn } from '@/types'
@@ -30,6 +31,8 @@ const { page, pageSize, list, total, loading, fetchList } = useRequest(
     }
   }
 )
+
+const { expandedRowKeys } = useTableExpandRow(list)
 
 const search = ref<IMenuQuery>({})
 const onSearch = (data: IMenuQuery) => {
@@ -154,9 +157,13 @@ const columns = computed(() => {
         const editButton = h(ButtonEdit, { id: row.id, onSuccess: updateTableData })
 
         if (hasDeletePermission && hasEditPermission) {
-          return h(NSpace, undefined, {
-            default: () => [editButton, deleteButton]
-          })
+          return h(
+            NSpace,
+            { justify: 'center' },
+            {
+              default: () => [editButton, deleteButton]
+            }
+          )
         }
 
         if (hasDeletePermission) {
@@ -193,18 +200,6 @@ function onDeleteSuccess(isBatch = false) {
   const currentLastPage = Math.ceil((total.value - deleteCount) / pageSize.value)
   page.value = Math.max(1, page.value - (lastPage - currentLastPage))
 }
-
-const expandedRowKeys = ref<number[]>([])
-watch(list, (value) => {
-  if (value.length === 0) return
-  const item = value.find((v) => {
-    if (v.children?.length) {
-      return true
-    }
-  })
-
-  expandedRowKeys.value = item !== undefined ? [item.id] : []
-})
 </script>
 
 <template>
