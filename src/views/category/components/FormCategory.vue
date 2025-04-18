@@ -41,20 +41,15 @@ watch(
 )
 
 const disabled = computed(() => {
+  if (!formData.value.name) {
+    return true
+  }
   if (!detail) {
-    if (!formData.value.name) {
-      return true
-    }
-
     return false
   }
 
   const changedData = getChangedData(formData.value, detail)
-  if (Object.keys(changedData).length === 0) {
-    return true
-  }
-
-  return false
+  return Object.keys(changedData).length === 0
 })
 
 const { formRef, validateForm } = useFormValidate()
