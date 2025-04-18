@@ -192,3 +192,34 @@ export const deepMap = <T extends Record<any, any>>(
     }
   })
 }
+
+/**
+ * 广度优先的深度遍历方法
+ * @param data
+ * @param callback
+ * @param childrenKey
+ */
+export const deepForeach = <T extends Record<string, any>>(
+  data: T[],
+  callback: (value: T) => void,
+  childrenKey = 'children'
+) => {
+  const stack: T[][] = []
+
+  let children: T[] = data
+  let i = 0
+  do {
+    const v = children[i]
+    callback(v)
+    i++
+
+    if (v[childrenKey]) {
+      stack.push(v[childrenKey])
+    }
+
+    if (i >= children.length && stack.length) {
+      children = stack.pop()!
+      i = 0
+    }
+  } while (i < children.length)
+}
