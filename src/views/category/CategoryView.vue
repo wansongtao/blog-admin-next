@@ -9,6 +9,7 @@ import useRequest from '@/hooks/useRequest'
 import useTableSort from '@/hooks/useTableSort'
 import dayjs from 'dayjs'
 import usePermission from '@/hooks/usePermission'
+import useTableExpandRow from '@/hooks/useTableExpandRow'
 
 import type { IQuery } from '@/types/api'
 import type { ICategoryEntity } from '@/types/api/category'
@@ -24,6 +25,8 @@ const { page, pageSize, list, total, loading, fetchList } = useRequest(async (pa
     total
   }
 })
+
+const { expandedRowKeys } = useTableExpandRow(list, true)
 
 const search = ref<IQuery>({})
 const onSearch = (data: IQuery) => {
@@ -123,18 +126,6 @@ const columns = computed(() => {
   }
 
   return list
-})
-
-const expandedRowKeys = ref<number[]>([])
-watch(list, (value) => {
-  if (value.length === 0) return
-  const item = value.find((v) => {
-    if (v.children?.length) {
-      return true
-    }
-  })
-
-  expandedRowKeys.value = item !== undefined ? [item.id] : []
 })
 </script>
 
