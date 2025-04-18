@@ -155,25 +155,21 @@ export const deepFindItem = <T extends Record<string, any>>(
   compare: (value: T) => boolean,
   childrenKey = 'children'
 ): T | undefined => {
-  let item: T | undefined = undefined
-  for (let i = 0; i < data.length; i++) {
-    const value = data[i]
-    if (compare(value)) {
-      item = value
-      break
+  const queue: T[] = [...data]
+
+  while (queue.length > 0) {
+    const item = queue.shift()!
+
+    if (compare(item)) {
+      return item
     }
 
-    if (!value[childrenKey]) {
-      continue
-    }
-
-    item = deepFindItem(value[childrenKey], compare, childrenKey)
-    if (item !== undefined) {
-      break
+    if (item[childrenKey]?.length) {
+      queue.push(...item[childrenKey])
     }
   }
 
-  return item
+  return undefined
 }
 
 export const deepMap = <T extends Record<any, any>>(
