@@ -2,6 +2,7 @@
 import FormSearch from './components/FormSearch.vue'
 import ButtonAdd from './components/ButtonAdd.vue'
 import ButtonEdit from './components/ButtonEdit.vue'
+import SwitchStateHidden from './components/SwitchStateHidden.vue'
 
 import { getCategoryList } from '@/api/category'
 import useRequest from '@/hooks/useRequest'
@@ -70,7 +71,13 @@ const columns = computed(() => {
       align: 'center',
       key: 'hidden',
       title: '隐藏分类',
-      render: (row) => (row.hidden ? '是' : '否')
+      render: (row) => {
+        return h(SwitchStateHidden, {
+          id: row.id,
+          modelValue: row.hidden,
+          disabled: !hasEditPermission
+        })
+      }
     },
     {
       align: 'center',
