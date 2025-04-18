@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import RoleForm from './RoleForm.vue'
 import { getRoleDetail, updateRole } from '@/api/role'
-import { getChangedData } from '@/utils'
 
 import type { IRoleDetail, IRoleParam } from '@/types/api/role'
 
@@ -29,14 +28,8 @@ const onOpen = async () => {
 }
 
 const onSubmit = async (data: IRoleParam) => {
-  const changedData = getChangedData(data, detail.value!)
-  if (Object.keys(changedData).length === 0) {
-    window.$message.warning('未修改任何数据')
-    return
-  }
-
   loading.value = true
-  const [err] = await updateRole(id, changedData)
+  const [err] = await updateRole(id, data)
   loading.value = false
   if (err) {
     return

@@ -129,9 +129,13 @@ const columns = computed(() => {
         const editButton = h(ButtonEdit, { id: row.id, onSuccess: updateTableData })
 
         if (hasDeletePermission && hasEditPermission) {
-          return h(NSpace, undefined, {
-            default: () => [editButton, deleteButton]
-          })
+          return h(
+            NSpace,
+            { justify: 'center' },
+            {
+              default: () => [editButton, deleteButton]
+            }
+          )
         }
 
         if (hasDeletePermission) {
