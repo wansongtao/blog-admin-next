@@ -11,6 +11,7 @@ import {
 
 import type { IMenuParam } from '@/types/api/menu'
 import type { IRule } from '@/types'
+import { getChangedData } from '@/utils'
 
 const { detail, loading } = defineProps<{ detail?: IMenuParam; loading?: boolean }>()
 const $emits = defineEmits<{
@@ -49,6 +50,28 @@ watch(
   },
   { immediate: true }
 )
+
+const disabled = computed(() => {
+  if (!formData.value.name) {
+    return true
+  }
+  if (formData.value.type === 'BUTTON' && !formData.value.permission) {
+    return true
+  }
+  if (formData.value.type !== 'BUTTON' && !formData.value.path) {
+    return true
+  }
+  if (formData.value.type === 'MENU' && !formData.value.component) {
+    return true
+  }
+
+  if (!detail) {
+    return false
+  }
+
+  const changedData = getChangedData(formData.value, detail)
+  return Object.keys(changedData).length === 0
+})
 
 const rules = computed(() => {
   const rule: IRule<IMenuParam> = {
@@ -96,6 +119,7 @@ const onSubmit = async () => {
       data = { ...formData.value }
   }
 
+  data = detail ? getChangedData(data, detail) : { ...data }
   $emits('submit', data)
 }
 
@@ -178,7 +202,7 @@ const onCancel = () => {
     </n-row>
     <n-form-item>
       <n-space style="width: 100%; justify-content: center">
-        <n-button type="primary" :loading @click="onSubmit">提交</n-button>
+        <n-button type="primary" :loading :disabled @click="onSubmit">提交</n-button>
         <n-button :disabled="loading" @click="onCancel">取消</n-button>
       </n-space>
     </n-form-item>

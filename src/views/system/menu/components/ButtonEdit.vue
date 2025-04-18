@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import MenuForm from './MenuForm.vue'
 import { updateMenu, getMenuDetail } from '@/api/menu'
-import { getChangedData } from '@/utils'
 
 import type { IMenuParam } from '@/types/api/menu'
 
@@ -29,14 +28,8 @@ const onOpen = async () => {
 }
 
 const onSubmit = async (data: IMenuParam) => {
-  const changedData = getChangedData(data, detail.value!)
-  if (Object.keys(changedData).length === 0) {
-    window.$message.warning('未修改任何数据')
-    return
-  }
-
   loading.value = true
-  const [err] = await updateMenu(id, changedData)
+  const [err] = await updateMenu(id, data)
   loading.value = false
   if (err) {
     return
