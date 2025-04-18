@@ -3,6 +3,8 @@ import FormSearch from './components/FormSearch.vue'
 import ButtonAdd from './components/ButtonAdd.vue'
 import ButtonEdit from './components/ButtonEdit.vue'
 import SwitchStateHidden from './components/SwitchStateHidden.vue'
+import ButtonDelete from './components/ButtonDelete.vue'
+import { NSpace } from 'naive-ui'
 
 import { getCategoryList } from '@/api/category'
 import useRequest from '@/hooks/useRequest'
@@ -52,6 +54,16 @@ watch(
 )
 
 const { hasPermission } = usePermission()
+function onDeleteSuccess() {
+  const lastPageSize = total.value % pageSize.value || pageSize.value
+  const lastPage = Math.ceil(total.value / pageSize.value)
+  if (page.value === lastPage && lastPageSize === 1) {
+    page.value = Math.max(1, page.value - 1)
+    return
+  }
+
+  updateTableData()
+}
 const columns = computed(() => {
   const hasEditPermission = hasPermission('system:category:edit')
 
@@ -110,15 +122,36 @@ const columns = computed(() => {
     }
   ]
 
-  if (hasEditPermission) {
+  const hasDelPermission = hasPermission('system:category:del')
+  if (hasEditPermission || hasDelPermission) {
     const action: IColumn<ICategoryEntity> = {
       align: 'center',
       key: 'action',
       title: '操作',
       render(row) {
         const editButton = h(ButtonEdit, { id: row.id, onSuccess: updateTableData })
+        const deleteButton = h(ButtonDelete, {
+          id: row.id,
+          onSuccess: onDeleteSuccess
+        })
 
-        return editButton
+        if (hasDelPermission && hasEditPermission) {
+          return h(
+            NSpace,
+            { justify: 'center' },
+            {
+              default: () => [editButton, deleteButton]
+            }
+          )
+        }
+
+        if (hasDelPermission) {
+          return deleteButton
+        }
+
+        if (hasEditPermission) {
+          return editButton
+        }
       }
     }
 

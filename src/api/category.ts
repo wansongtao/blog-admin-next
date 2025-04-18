@@ -45,3 +45,10 @@ export const updateCategory = (id: number, data: ICategoryParams) => {
     data
   })
 }
+
+export const removeCategory = (id: number) => {
+  return request({
+    url: `/category/${id}/delete`,
+    method: 'patch'
+  })
+}
