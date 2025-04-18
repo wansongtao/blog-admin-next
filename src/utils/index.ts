@@ -223,32 +223,25 @@ export const deepMap = <T extends Record<any, any>>(
 }
 
 /**
- * 广度优先的深度遍历方法
- * @param data
- * @param callback
- * @param childrenKey
+ * @description 树结构的广度优先遍历
+ * @param data 树形结构数据
+ * @param callback 回调函数，接收当前节点
+ * @param childrenKey 子节点的 key，默认 'children'
  */
 export const deepForeach = <T extends Record<string, any>>(
   data: T[],
   callback: (value: T) => void,
   childrenKey = 'children'
 ) => {
-  const stack: T[][] = []
+  if (!data?.length) return
 
-  let children: T[] = data
-  let i = 0
-  do {
-    const v = children[i]
-    callback(v)
-    i++
+  const queue: T[] = [...data]
+  while (queue.length > 0) {
+    const node = queue.shift()!
+    callback(node)
 
-    if (v[childrenKey]) {
-      stack.push(v[childrenKey])
+    if (Array.isArray(node[childrenKey]) && node[childrenKey].length > 0) {
+      queue.push(...node[childrenKey])
     }
-
-    if (i >= children.length && stack.length) {
-      children = stack.pop()!
-      i = 0
-    }
-  } while (i < children.length)
+  }
 }
