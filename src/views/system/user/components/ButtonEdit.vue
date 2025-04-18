@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import UserForm from './UserForm.vue'
 import { getUserDetail, updateUser } from '@/api/user'
-import { getChangedData } from '@/utils'
 
 import type { IUserDetail, IUserParam } from '@/types/api/user'
 
@@ -29,14 +28,8 @@ const onOpen = async () => {
 }
 
 const onSubmit = async (data: IUserParam) => {
-  const changedData = getChangedData(data, detail.value!)
-  if (Object.keys(changedData).length === 0) {
-    window.$message.warning('未修改任何数据')
-    return
-  }
-
   loading.value = true
-  const [err] = await updateUser(id, changedData)
+  const [err] = await updateUser(id, data)
   loading.value = false
   if (err) {
     return

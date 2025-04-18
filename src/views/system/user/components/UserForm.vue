@@ -2,6 +2,7 @@
 import useFormValidate from '@/hooks/useFormValidate'
 import useRoleTree from '@/hooks/useRoleTree'
 import { validateUsername, validateNickName } from '@/utils/validate'
+import { getChangedData } from '@/utils'
 
 import type { IRule } from '@/types'
 import type { IUserParam } from '@/types/api/user'
@@ -57,13 +58,26 @@ watch(
   { immediate: true }
 )
 
+const disabled = computed(() => {
+  if (!formData.value.userName) {
+    return true
+  }
+  if (!detail) {
+    return false
+  }
+
+  const changedData = getChangedData(formData.value, detail)
+  return Object.keys(changedData).length === 0
+})
+
 const { formRef, validateForm } = useFormValidate()
 const onSubmit = async () => {
   if (!(await validateForm())) {
     return
   }
 
-  $emits('submit', { ...formData.value })
+  const data = detail ? getChangedData(formData.value, detail) : { ...formData.value }
+  $emits('submit', data)
 }
 const onCancel = () => {
   $emits('cancel')
@@ -98,7 +112,7 @@ const onCancel = () => {
     </n-form-item>
     <n-form-item>
       <n-space style="width: 100%; justify-content: center">
-        <n-button type="primary" :loading @click="onSubmit">提交</n-button>
+        <n-button type="primary" :loading :disabled @click="onSubmit">提交</n-button>
         <n-button :disabled="loading" @click="onCancel">取消</n-button>
       </n-space>
     </n-form-item>
