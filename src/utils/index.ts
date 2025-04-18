@@ -150,6 +150,13 @@ export const getFileBase64 = (file: Blob, callback: (base64Url: string) => void)
   reader.readAsDataURL(file)
 }
 
+/**
+ * @description 深度查找树形结构中的某个节点
+ * @param data 树形结构数据
+ * @param compare 查找条件函数，返回 true 时表示找到
+ * @param childrenKey 子节点的 key，默认 'children'
+ * @returns
+ */
 export const deepFindItem = <T extends Record<string, any>>(
   data: T[],
   compare: (value: T) => boolean,
@@ -172,21 +179,47 @@ export const deepFindItem = <T extends Record<string, any>>(
   return undefined
 }
 
+/**
+ * @description 深度遍历树形结构
+ * @param data 树形结构数据
+ * @param callback 回调函数，接收当前节点
+ * @param childrenKey 子节点的 key，默认 'children'
+ * @returns 返回新的树形结构数据
+ */
 export const deepMap = <T extends Record<any, any>>(
   data: T[],
   callback: (value: T) => T,
   childrenKey = 'children'
-) => {
-  return data.map((v) => {
-    const newValue = callback(v)
-    if (newValue[childrenKey]?.length) {
-      ;(newValue[childrenKey] as T[]) = deepMap(newValue[childrenKey], callback, childrenKey)
+): T[] => {
+  const result: T[] = []
+  const queue: { node: T; parent: T | null; index: number }[] = data.map((node, index) => ({
+    node,
+    parent: null,
+    index
+  }))
+
+  while (queue.length > 0) {
+    const { node, parent, index } = queue.shift()!
+    const newNode = callback({ ...node })
+
+    if (parent === null) {
+      result[index] = newNode
+    } else {
+      parent[childrenKey][index] = newNode
     }
 
-    return {
-      ...newValue
+    if (Array.isArray(newNode[childrenKey]) && newNode[childrenKey].length > 0) {
+      queue.push(
+        ...newNode[childrenKey].map((child: T, idx: number) => ({
+          node: child,
+          parent: newNode,
+          index: idx
+        }))
+      )
     }
-  })
+  }
+
+  return result
 }
 
 /**
