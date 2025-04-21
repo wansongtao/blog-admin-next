@@ -7,28 +7,19 @@ import ButtonDelete from './components/ButtonDelete.vue'
 import { NSpace } from 'naive-ui'
 
 import { getCategoryList } from '@/api/category'
-import useRequest from '@/hooks/useRequest'
 import useTableSort from '@/hooks/useTableSort'
 import dayjs from 'dayjs'
 import usePermission from '@/hooks/usePermission'
 import useTableExpandRow from '@/hooks/useTableExpandRow'
+import usePagination from '@/hooks/usePagination'
+import useFetchList from '@/hooks/useFetchList'
 
 import type { IQuery } from '@/types/api'
 import type { ICategoryEntity } from '@/types/api/category'
 import type { IColumn } from '@/types'
 
-const { page, pageSize, list, total, loading, fetchList } = useRequest(async (params: IQuery) => {
-  const [, result] = await getCategoryList(params)
-  const data = result?.data.list ?? []
-  const total = result?.data.total ?? 0
-
-  return {
-    data,
-    total
-  }
-})
-
-const { expandedRowKeys } = useTableExpandRow(list, true)
+const { page, pageSize } = usePagination({ isCache: true, cacheKey: 'category' })
+const { sort, onSorterChange } = useTableSort()
 
 const search = ref<IQuery>({})
 const onSearch = (data: IQuery) => {
@@ -40,20 +31,25 @@ const onReset = () => {
   page.value = 1
 }
 
-const { sort, onSorterChange } = useTableSort()
-const updateTableData = () => {
-  fetchList({ ...search.value, sort: sort.value })
-}
+const { list, total, loading, fetchList } = useFetchList(
+  async () => {
+    const [, result] = await getCategoryList({
+      ...search.value,
+      sort: sort.value,
+      page: page.value,
+      pageSize: pageSize.value
+    })
+    const data = result?.data.list ?? []
+    const total = result?.data.total ?? 0
 
-watch(
-  [page, pageSize, search, sort],
-  () => {
-    updateTableData()
+    return {
+      data,
+      total
+    }
   },
-  { immediate: true }
+  { watchers: [page, pageSize, sort, search] }
 )
 
-const { hasPermission } = usePermission()
 function onDeleteSuccess() {
   const lastPageSize = total.value % pageSize.value || pageSize.value
   const lastPage = Math.ceil(total.value / pageSize.value)
@@ -62,8 +58,10 @@ function onDeleteSuccess() {
     return
   }
 
-  updateTableData()
+  fetchList()
 }
+
+const { hasPermission } = usePermission()
 const columns = computed(() => {
   const hasEditPermission = hasPermission('system:category:edit')
 
@@ -129,7 +127,7 @@ const columns = computed(() => {
       key: 'action',
       title: '操作',
       render(row) {
-        const editButton = h(ButtonEdit, { id: row.id, onSuccess: updateTableData })
+        const editButton = h(ButtonEdit, { id: row.id, onSuccess: fetchList })
         const deleteButton = h(ButtonDelete, {
           id: row.id,
           onSuccess: onDeleteSuccess
@@ -160,6 +158,8 @@ const columns = computed(() => {
 
   return list
 })
+
+const { expandedRowKeys } = useTableExpandRow(list, true)
 </script>
 
 <template>
@@ -167,7 +167,7 @@ const columns = computed(() => {
     <form-search :loading @search="onSearch" @reset="onReset" />
     <check-permission permission="system:category:add">
       <n-space style="margin-top: 20px">
-        <button-add @success="updateTableData" />
+        <button-add @success="fetchList" />
       </n-space>
     </check-permission>
     <div class="main">
