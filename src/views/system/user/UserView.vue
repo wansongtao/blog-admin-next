@@ -7,10 +7,11 @@ import ButtonState from './components/ButtonState.vue'
 import ButtonEdit from './components/ButtonEdit.vue'
 import ButtonResetPassword from './components/ButtonResetPassword.vue'
 
-import useRequest from '@/hooks/useRequest'
 import useTableSort from '@/hooks/useTableSort'
 import { getUserList } from '@/api/user'
 import usePermission from '@/hooks/usePermission'
+import usePagination from '@/hooks/usePagination'
+import useFetchList from '@/hooks/useFetchList'
 
 import type { IQuery } from '@/types/api'
 import type { IUserListItem } from '@/types/api/user'
@@ -18,16 +19,8 @@ import type { IColumn } from '@/types'
 import type { VNode } from 'vue'
 import dayjs from 'dayjs'
 
-const { page, pageSize, list, total, loading, fetchList } = useRequest(async (params: IQuery) => {
-  const [, result] = await getUserList(params)
-  const data = result?.data.list ?? []
-  const total = result?.data.total ?? 0
-
-  return {
-    data,
-    total
-  }
-})
+const { page, pageSize } = usePagination({ cacheKey: 'user' })
+const { sort, onSorterChange } = useTableSort()
 
 const search = ref<IQuery>({})
 const onSearch = (data: IQuery) => {
@@ -39,21 +32,45 @@ const onReset = () => {
   page.value = 1
 }
 
-const { sort, onSorterChange } = useTableSort()
-const updateTableData = () => {
-  fetchList({ ...search.value, sort: sort.value })
-}
+const { list, total, loading, fetchList } = useFetchList(
+  async () => {
+    const [, result] = await getUserList({
+      ...search.value,
+      page: page.value,
+      pageSize: pageSize.value,
+      sort: sort.value
+    })
+    const data = result?.data.list ?? []
+    const total = result?.data.total ?? 0
 
-watch(
-  [page, pageSize, search, sort],
-  () => {
-    updateTableData()
+    return {
+      data,
+      total
+    }
   },
-  { immediate: true }
+  { watchers: [page, pageSize, search, sort] }
 )
 
-const { hasPermission } = usePermission()
+const checkedKeys = ref<string[]>([])
+function onDeleteSuccess(isBatch = false) {
+  let deleteCount = 1
+  if (isBatch) {
+    deleteCount = checkedKeys.value.length
+    checkedKeys.value = []
+  }
 
+  const lastPageSize = total.value % pageSize.value || pageSize.value
+  if (deleteCount < lastPageSize || page.value === 1) {
+    fetchList()
+    return
+  }
+
+  const lastPage = Math.ceil(total.value / pageSize.value)
+  const currentLastPage = Math.ceil((total.value - deleteCount) / pageSize.value)
+  page.value = Math.max(1, page.value - (lastPage - currentLastPage))
+}
+
+const { hasPermission } = usePermission()
 const columns = computed(() => {
   const hasEditPermission = hasPermission('system:user:edit')
 
@@ -163,7 +180,7 @@ const columns = computed(() => {
       render(row) {
         const actionList: VNode[] = []
         if (hasEditPermission) {
-          actionList.push(h(ButtonEdit, { id: row.id, onSuccess: updateTableData }))
+          actionList.push(h(ButtonEdit, { id: row.id, onSuccess: fetchList }))
         }
         if (hasDeletePermission) {
           actionList.push(
@@ -196,25 +213,6 @@ const columns = computed(() => {
 
   return list
 })
-
-const checkedKeys = ref<string[]>([])
-function onDeleteSuccess(isBatch = false) {
-  let deleteCount = 1
-  if (isBatch) {
-    deleteCount = checkedKeys.value.length
-    checkedKeys.value = []
-  }
-
-  const lastPageSize = total.value % pageSize.value || pageSize.value
-  if (deleteCount < lastPageSize || page.value === 1) {
-    updateTableData()
-    return
-  }
-
-  const lastPage = Math.ceil(total.value / pageSize.value)
-  const currentLastPage = Math.ceil((total.value - deleteCount) / pageSize.value)
-  page.value = Math.max(1, page.value - (lastPage - currentLastPage))
-}
 </script>
 
 <template>
@@ -222,7 +220,7 @@ function onDeleteSuccess(isBatch = false) {
     <search-form :loading @search="onSearch" @reset="onReset" />
     <check-permission :permission="['system:user:add']">
       <n-space style="margin-top: 20px">
-        <button-add @success="updateTableData" />
+        <button-add @success="fetchList" />
       </n-space>
     </check-permission>
     <div class="table">
