@@ -1,10 +1,11 @@
 import { useRouteQuery } from '@vueuse/router'
+
 import type { DataTableSortState } from 'naive-ui'
 import type { IQuery } from '@/types/api'
 
 export default function useTableSort(tableColumnKey?: string, queryKey?: string) {
   if (!queryKey) {
-    queryKey = (useRoute().name as string) + 'Sort'
+    queryKey = (useRoute().name as string).toLowerCase() + 'sort'
   }
 
   const sort = useRouteQuery<IQuery['sort']>(queryKey)
