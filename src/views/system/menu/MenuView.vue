@@ -8,31 +8,20 @@ import ButtonEdit from './components/ButtonEdit.vue'
 import ButtonDelete from './components/ButtonDelete.vue'
 import ButtonDeleteBatch from './components/ButtonDeleteBatch.vue'
 
-import useRequest from '@/hooks/useRequest'
 import { getMenuList } from '@/api/menu'
 import MENU_ICON_MAP from '@/plugins/menuIcons'
 import useTableSort from '@/hooks/useTableSort'
 import usePermission from '@/hooks/usePermission'
 import useTableExpandRow from '@/hooks/useTableExpandRow'
+import usePagination from '@/hooks/usePagination'
+import useFetchList from '@/hooks/useFetchList'
+import dayjs from 'dayjs'
 
 import type { IMenuListItem, IMenuQuery } from '@/types/api/menu'
 import type { IColumn } from '@/types'
-import dayjs from 'dayjs'
 
-const { page, pageSize, list, total, loading, fetchList } = useRequest(
-  async (params: IMenuQuery) => {
-    const [, result] = await getMenuList(params)
-    const data = result?.data.list ?? []
-    const total = result?.data.total ?? 0
-
-    return {
-      data,
-      total
-    }
-  }
-)
-
-const { expandedRowKeys } = useTableExpandRow(list)
+const { page, pageSize } = usePagination({ cacheKey: 'menu' })
+const { sort, onSorterChange } = useTableSort()
 
 const search = ref<IMenuQuery>({})
 const onSearch = (data: IMenuQuery) => {
@@ -44,18 +33,45 @@ const onReset = () => {
   page.value = 1
 }
 
-const { sort, onSorterChange } = useTableSort()
-const updateTableData = () => {
-  fetchList({ ...search.value, sort: sort.value })
-}
+const { list, total, loading, fetchList } = useFetchList(
+  async () => {
+    const [, result] = await getMenuList({
+      ...search.value,
+      page: page.value,
+      pageSize: pageSize.value,
+      sort: sort.value
+    })
+    const data = result?.data.list ?? []
+    const total = result?.data.total ?? 0
 
-watch(
-  [page, pageSize, search, sort],
-  () => {
-    updateTableData()
+    return {
+      data,
+      total
+    }
   },
-  { immediate: true }
+  { watchers: [page, pageSize, sort, search] }
 )
+
+const { expandedRowKeys } = useTableExpandRow(list)
+
+const checkedKeys = ref<number[]>([])
+const onDeleteSuccess = (isBatch = false) => {
+  let deleteCount = 1
+  if (isBatch) {
+    deleteCount = checkedKeys.value.length
+    checkedKeys.value = []
+  }
+
+  const lastPageSize = total.value % pageSize.value || pageSize.value
+  if (deleteCount < lastPageSize || page.value === 1) {
+    fetchList()
+    return
+  }
+
+  const lastPage = Math.ceil(total.value / pageSize.value)
+  const currentLastPage = Math.ceil((total.value - deleteCount) / pageSize.value)
+  page.value = Math.max(1, page.value - (lastPage - currentLastPage))
+}
 
 const { hasPermission } = usePermission()
 const columns = computed(() => {
@@ -154,7 +170,7 @@ const columns = computed(() => {
           id: row.id,
           onSuccess: onDeleteSuccess
         })
-        const editButton = h(ButtonEdit, { id: row.id, onSuccess: updateTableData })
+        const editButton = h(ButtonEdit, { id: row.id, onSuccess: fetchList })
 
         if (hasDeletePermission && hasEditPermission) {
           return h(
@@ -181,25 +197,6 @@ const columns = computed(() => {
 
   return list
 })
-
-const checkedKeys = ref<number[]>([])
-function onDeleteSuccess(isBatch = false) {
-  let deleteCount = 1
-  if (isBatch) {
-    deleteCount = checkedKeys.value.length
-    checkedKeys.value = []
-  }
-
-  const lastPageSize = total.value % pageSize.value || pageSize.value
-  if (deleteCount < lastPageSize || page.value === 1) {
-    updateTableData()
-    return
-  }
-
-  const lastPage = Math.ceil(total.value / pageSize.value)
-  const currentLastPage = Math.ceil((total.value - deleteCount) / pageSize.value)
-  page.value = Math.max(1, page.value - (lastPage - currentLastPage))
-}
 </script>
 
 <template>
@@ -208,7 +205,7 @@ function onDeleteSuccess(isBatch = false) {
     <check-permission or :permission="['system:menu:del', 'system:menu:add']">
       <n-space style="margin-top: 20px">
         <check-permission permission="system:menu:add">
-          <button-add @success="updateTableData" />
+          <button-add @success="fetchList" />
         </check-permission>
         <check-permission permission="system:menu:del">
           <button-delete-batch
