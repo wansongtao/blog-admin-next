@@ -13,12 +13,7 @@ const $emits = defineEmits<{
   reset: []
 }>()
 
-const disablePreviousDate = (ts: number) => {
-  return ts > Date.now()
-}
-
-const { keyword, dateRange } = useBaseQuery('user')
-
+const { keyword, dateRange } = useBaseQuery('category')
 const disableSearch = computed(() => {
   if (keyword.value || dateRange.value) {
     return false
@@ -48,6 +43,10 @@ const onReset = () => {
   dateRange.value = null
 
   $emits('reset')
+}
+
+const disablePreviousDate = (ts: number) => {
+  return ts > Date.now()
 }
 </script>
 
