@@ -22,7 +22,7 @@ const { menuTree } = useMenuTree(containButton)
     :max-tag-count="maxTagCount"
     key-field="id"
     label-field="name"
-    :options="menuTree as any[]"
+    :options="menuTree"
     v-model:value="menuId"
   />
 </template>
