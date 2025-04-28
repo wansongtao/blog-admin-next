@@ -84,7 +84,14 @@ const onCancel = () => {
 
 <template>
   <n-form ref="formRef" label-placement="left" label-width="100" :rules="rules" :model="formData">
-    <n-form-item label="角色名称" path="name">
+    <n-form-item path="name">
+      <template #label>
+        <field-description
+          placement="bottom"
+          label="角色名称"
+          description="1-50位由字母、数字、‘._-‘组成的角色名称"
+        />
+      </template>
       <n-input v-model:value="formData.name" placeholder="请输入角色名称" clearable />
     </n-form-item>
     <n-form-item label="角色权限" path="permissions">

@@ -96,15 +96,21 @@ const onCancel = () => {
         clearable
       />
     </n-form-item>
-    <n-form-item label="用户名称" path="userName">
+    <n-form-item path="userName">
+      <template #label>
+        <field-description label="用户名" description="3-11位由字母、数字组成的用户名(字母开头)" />
+      </template>
       <n-input
         v-model:value="formData.userName"
-        placeholder="请输入用户名称"
+        placeholder="请输入用户名"
         :disabled="detail !== undefined"
         clearable
       />
     </n-form-item>
-    <n-form-item label="用户昵称" path="nickName">
+    <n-form-item path="nickName">
+      <template #label>
+        <field-description label="用户昵称" description="1-50位由中英文组成的昵称" />
+      </template>
       <n-input v-model:value="formData.nickName" placeholder="请输入用户昵称" clearable />
     </n-form-item>
     <n-form-item label="用户状态" path="disabled">
