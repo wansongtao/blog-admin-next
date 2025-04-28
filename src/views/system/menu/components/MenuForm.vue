@@ -149,7 +149,13 @@ const onCancel = () => {
     <n-form-item label="菜单名称" path="name">
       <n-input v-model:value="formData.name" placeholder="请输入菜单名称" clearable />
     </n-form-item>
-    <n-form-item label="权限标识" path="permission">
+    <n-form-item path="permission">
+      <template #label>
+        <field-description
+          label="权限标识"
+          description="建议输入由冒号+小写字母组成的标识，例如：a:b"
+        />
+      </template>
       <n-input
         v-model:value="formData.permission"
         placeholder="请输入权限标识"
@@ -162,16 +168,31 @@ const onCancel = () => {
       <n-form-item label="菜单图标" path="icon">
         <select-icon v-model="formData.icon" />
       </n-form-item>
-      <n-form-item label="路由地址" path="path">
+      <n-form-item path="path">
+        <template #label>
+          <field-description
+            label="路由地址"
+            description="仅需输入当前路由地址即可(例如: void)，会自动拼接父级地址"
+          />
+        </template>
         <n-input v-model:value="formData.path" placeholder="请输入路由地址" clearable />
       </n-form-item>
-      <n-form-item label="组件路径" path="component">
+      <n-form-item path="component">
+        <template #label>
+          <field-description
+            label="组件路径"
+            description="请输入相对于 views 的组件路径，例如：组件为 /views/test/test.vue 则输入 /test/test.vue 即可"
+          />
+        </template>
         <n-input v-model:value="formData.component" placeholder="请输入组件路径" clearable />
       </n-form-item>
       <n-form-item label="重定向地址" path="redirect">
         <n-input v-model:value="formData.redirect" placeholder="请输入重定向地址" clearable />
       </n-form-item>
-      <n-form-item label="排序" path="sort">
+      <n-form-item path="sort">
+        <template #label>
+          <field-description label="排序权重" description="数字越大，在菜单栏的位置越靠前" />
+        </template>
         <n-input-number v-model:value="formData.sort" :max="99" :min="0" :precision="0" />
       </n-form-item>
     </template>
@@ -183,7 +204,10 @@ const onCancel = () => {
         </n-form-item>
       </n-col>
       <n-col :span="12" v-show="formData.type !== 'BUTTON'">
-        <n-form-item label="是否隐藏" path="hidden">
+        <n-form-item path="hidden">
+          <template #label>
+            <field-description label="是否隐藏" description="隐藏后则不会在侧边菜单栏展示" />
+          </template>
           <n-switch v-model:value="formData.hidden" />
         </n-form-item>
       </n-col>
@@ -195,7 +219,13 @@ const onCancel = () => {
         </n-form-item>
       </n-col>
       <n-col :span="12">
-        <n-form-item label="是否携带参数" path="props">
+        <n-form-item path="props">
+          <template #label>
+            <field-description
+              label="携带参数"
+              description="是否将 vue-router 中的 props 设置为 true"
+            />
+          </template>
           <n-switch v-model:value="formData.props" />
         </n-form-item>
       </n-col>
