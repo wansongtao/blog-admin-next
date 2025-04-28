@@ -1,14 +1,18 @@
 <script lang="ts" setup>
-defineProps<{
+import type { Placement } from 'naive-ui/es/drawer/src/DrawerBodyWrapper'
+
+const { placement = 'top', width = 100 } = defineProps<{
   label: string
   description: string
+  placement?: Placement
+  width?: number
 }>()
 </script>
 
 <template>
   <div class="field-description">
     <div>{{ label }}</div>
-    <n-tooltip placement="top" trigger="hover" :width="100">
+    <n-tooltip :placement trigger="hover" :width>
       <template #trigger>
         <n-tag :bordered="false" size="small"> ? </n-tag>
       </template>
