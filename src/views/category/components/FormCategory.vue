@@ -80,11 +80,17 @@ const onCancel = () => {
       <n-input v-model:value="formData.name" placeholder="请输入名称" clearable />
     </n-form-item>
 
-    <n-form-item label="排序" path="sort">
+    <n-form-item path="sort">
+      <template #label>
+        <field-description label="排序权重" description="数字越大分类越靠前展示" />
+      </template>
       <n-input-number v-model:value="formData.sort" :max="99" :min="0" :precision="0" />
     </n-form-item>
 
-    <n-form-item label="隐藏分类" path="hidden">
+    <n-form-item path="hidden">
+      <template #label>
+        <field-description label="隐藏分类" description="隐藏后不会在博客前台展示这个分类" />
+      </template>
       <n-switch v-model:value="formData.hidden" />
     </n-form-item>
     <n-form-item label="描述" path="description">
