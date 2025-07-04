@@ -1,7 +1,12 @@
 import request from '@/utils/axiosRequest'
 
-import type { IArticleVisibilityListItem, ICreateArticleDto } from '@/types/api/article'
-import type { IBaseResponse } from '@/types/api'
+import type {
+  IArticleListItem,
+  IArticleQuery,
+  IArticleVisibilityListItem,
+  ICreateArticleDto
+} from '@/types/api/article'
+import type { IBaseList, IBaseResponse } from '@/types/api'
 
 export const getArticleVisibilityList = () => {
   return request<IArticleVisibilityListItem[]>({
@@ -15,5 +20,13 @@ export const addArticle = (data: ICreateArticleDto) => {
     url: '/article',
     method: 'post',
     data
+  })
+}
+
+export const getArticleList = (params: IArticleQuery) => {
+  return request<IBaseList<IArticleListItem>>({
+    url: '/article',
+    method: 'GET',
+    params
   })
 }
