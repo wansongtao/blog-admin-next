@@ -1,0 +1,188 @@
+<script lang="ts" setup>
+import FormSearch from './components/FormSearch.vue'
+
+import usePagination from '@/hooks/usePagination'
+import useTableSort from '@/hooks/useTableSort'
+import { getArticleList } from '@/api/article'
+import useFetchList from '@/hooks/useFetchList'
+
+import type { IArticleListItem, IArticleQuery } from '@/types/api/article'
+import usePermission from '@/hooks/usePermission'
+import type { IColumn } from '@/types'
+import dayjs from 'dayjs'
+
+const { page, pageSize } = usePagination({ cacheKey: 'menu' })
+const { sort, onSorterChange } = useTableSort()
+
+const search = ref<IArticleQuery>({})
+const onSearch = (data: IArticleQuery) => {
+  search.value = data
+  page.value = 1
+}
+const onReset = () => {
+  search.value = {}
+  page.value = 1
+}
+
+const { list, total, loading, fetchList } = useFetchList(
+  async () => {
+    const [, result] = await getArticleList({
+      ...search.value,
+      page: page.value,
+      pageSize: pageSize.value,
+      sort: sort.value
+    })
+    const data = result?.data.list ?? []
+    const total = result?.data.total ?? 0
+
+    return {
+      data,
+      total
+    }
+  },
+  { watchers: [page, pageSize, sort, search] }
+)
+
+const { hasPermission } = usePermission()
+const columns = computed(() => {
+  const list: IColumn<IArticleListItem>[] = [
+    {
+      align: 'center',
+      key: 'id',
+      title: 'ID'
+    },
+    {
+      align: 'center',
+      key: 'author',
+      title: '作者'
+    },
+    {
+      align: 'center',
+      key: 'categoryName',
+      title: '分类'
+    },
+    {
+      align: 'center',
+      key: 'title',
+      title: '标题',
+      ellipsis: {
+        tooltip: true
+      }
+    },
+    {
+      align: 'center',
+      key: 'coverImage',
+      title: '封面',
+      render: ({ coverImage }) => {
+        if (!coverImage) {
+          return '--'
+        }
+
+        return h('img', {
+          src: coverImage,
+          style: { width: '60px', height: '30px', objectFit: 'cover' },
+          alt: '封面图片'
+        })
+      }
+    },
+    {
+      align: 'center',
+      key: 'visibility',
+      title: '可见性',
+      render: ({ visibility }) => {
+        switch (visibility) {
+          case 'PRIVATE':
+            return '私密'
+          case 'INTERNAL':
+            return '管理员可见'
+          case 'PUBLIC':
+            return '公开'
+          default:
+            return '--'
+        }
+      }
+    },
+    {
+      align: 'center',
+      key: 'summary',
+      title: '摘要',
+      ellipsis: {
+        tooltip: true
+      },
+      render: ({ summary }) => summary || '--'
+    },
+    {
+      align: 'center',
+      key: 'published',
+      title: '发布状态'
+    },
+    {
+      align: 'center',
+      key: 'featured',
+      title: '置顶'
+    },
+    {
+      align: 'center',
+      key: 'updatedAt',
+      title: '更新时间',
+      defaultSortOrder: sort.value === 'asc' ? 'ascend' : 'descend',
+      sorter: true,
+      width: 200,
+      render(row) {
+        return dayjs(row.updatedAt).format('YYYY-MM-DD HH:mm:ss')
+      }
+    },
+    {
+      align: 'center',
+      key: 'publishedAt',
+      title: '发布时间',
+      width: 200,
+      render(row) {
+        return row.publishedAt ? dayjs(row.publishedAt).format('YYYY-MM-DD HH:mm:ss') : '--'
+      }
+    }
+  ]
+
+  const hasDeletePermission = hasPermission('system:article:del')
+  if (hasDeletePermission) {
+    list.unshift({
+      type: 'selection'
+    })
+  }
+
+  return list
+})
+</script>
+
+<template>
+  <base-box>
+    <form-search @search="onSearch" @reset="onReset" />
+
+    <check-permission permission="system:article:add">
+      <n-space style="margin-top: 20px">
+        <n-button type="primary" @click="$router.push('/article/draft')">创作中心</n-button>
+      </n-space>
+    </check-permission>
+
+    <div class="table">
+      <n-data-table
+        :columns="columns"
+        :data="list"
+        :loading
+        style="height: 100%"
+        flex-height
+        striped
+        :row-key="(rowData: IArticleListItem) => rowData.id"
+        @update:sorter="onSorterChange"
+      />
+    </div>
+    <base-pagination v-model:page="page" v-model:page-size="pageSize" :total :disabled="loading" />
+  </base-box>
+</template>
+
+<style lang="scss" scoped>
+.table {
+  flex: 1;
+  margin: 20px 0;
+}
+</style>
