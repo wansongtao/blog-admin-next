@@ -21,7 +21,7 @@
     "axios": "^1.8.4",
     "axios-deduplicator": "^1.0.1",
     "dayjs": "^1.11.12",
-    "md-editor-v3": "^5.5.0",
+    "md-editor-v3": "^5.7.1",
     "nprogress": "^0.2.0",
     "pinia": "^3.0.2",
     "pinia-plugin-persistedstate": "^4.2.0",
