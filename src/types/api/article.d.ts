@@ -46,3 +46,28 @@ export interface IArticleListItem {
    */
   publishedAt?: string
 }
+
+export interface IArticleDetail {
+  id: number
+  title: string
+  content: string
+  visibility: IArticleVisibility
+  coverImage?: string
+  summary?: string
+  theme?: string
+  published: boolean
+  featured: boolean
+  categoryName: string
+  author: string
+  viewCount: number
+  commentCount: number
+  likeCount: number
+  /**
+   * 更新时间
+   */
+  updatedAt: string
+  /**
+   * 发布时间
+   */
+  publishedAt?: string
+}

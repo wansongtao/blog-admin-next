@@ -1,6 +1,7 @@
 import request from '@/utils/axiosRequest'
 
 import type {
+  IArticleDetail,
   IArticleListItem,
   IArticleQuery,
   IArticleVisibilityListItem,
@@ -26,7 +27,14 @@ export const addArticle = (data: ICreateArticleDto) => {
 export const getArticleList = (params: IArticleQuery) => {
   return request<IBaseList<IArticleListItem>>({
     url: '/article',
-    method: 'GET',
+    method: 'get',
     params
+  })
+}
+
+export const getArticleDetail = (id: number) => {
+  return request<IArticleDetail>({
+    url: `/article/${id}`,
+    method: 'get'
   })
 }
