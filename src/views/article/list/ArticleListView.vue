@@ -1,15 +1,16 @@
 <script lang="ts" setup>
 import FormSearch from './components/FormSearch.vue'
+import { NTag } from 'naive-ui'
 
 import usePagination from '@/hooks/usePagination'
 import useTableSort from '@/hooks/useTableSort'
 import { getArticleList } from '@/api/article'
 import useFetchList from '@/hooks/useFetchList'
+import dayjs from 'dayjs'
+import usePermission from '@/hooks/usePermission'
 
 import type { IArticleListItem, IArticleQuery } from '@/types/api/article'
-import usePermission from '@/hooks/usePermission'
 import type { IColumn } from '@/types'
-import dayjs from 'dayjs'
 
 const { page, pageSize } = usePagination({ cacheKey: 'menu' })
 const { sort, onSorterChange } = useTableSort()
@@ -92,11 +93,11 @@ const columns = computed(() => {
       render: ({ visibility }) => {
         switch (visibility) {
           case 'PRIVATE':
-            return '私密'
+            return h(NTag, { type: 'error' }, '私密')
           case 'INTERNAL':
-            return '管理员可见'
+            return h(NTag, { type: 'warning' }, '内部')
           case 'PUBLIC':
-            return '公开'
+            return h(NTag, { type: 'success' }, '公开')
           default:
             return '--'
         }
@@ -114,12 +115,18 @@ const columns = computed(() => {
     {
       align: 'center',
       key: 'published',
-      title: '发布状态'
+      title: '发布状态',
+      render: ({ published }) => {
+        return h(NTag, { type: published ? 'success' : 'info' }, published ? '已发布' : '草稿')
+      }
     },
     {
       align: 'center',
       key: 'featured',
-      title: '置顶'
+      title: '置顶',
+      render: ({ featured }) => {
+        return h(NTag, { type: featured ? 'success' : 'info' }, featured ? '是' : '否')
+      }
     },
     {
       align: 'center',
