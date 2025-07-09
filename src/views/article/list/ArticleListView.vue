@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import FormSearch from './components/FormSearch.vue'
 import { NTag } from 'naive-ui'
+import ButtonDetail from './components/ButtonDetail.vue'
 
 import usePagination from '@/hooks/usePagination'
 import useTableSort from '@/hooks/useTableSort'
@@ -68,7 +69,8 @@ const columns = computed(() => {
       title: '标题',
       ellipsis: {
         tooltip: true
-      }
+      },
+      width: 100
     },
     {
       align: 'center',
@@ -93,11 +95,11 @@ const columns = computed(() => {
       render: ({ visibility }) => {
         switch (visibility) {
           case 'PRIVATE':
-            return h(NTag, { type: 'error' }, '私密')
+            return h(NTag, { type: 'error' }, () => '私密')
           case 'INTERNAL':
-            return h(NTag, { type: 'warning' }, '内部')
+            return h(NTag, { type: 'warning' }, () => '内部')
           case 'PUBLIC':
-            return h(NTag, { type: 'success' }, '公开')
+            return h(NTag, { type: 'success' }, () => '公开')
           default:
             return '--'
         }
@@ -116,8 +118,11 @@ const columns = computed(() => {
       align: 'center',
       key: 'published',
       title: '发布状态',
+      width: 100,
       render: ({ published }) => {
-        return h(NTag, { type: published ? 'success' : 'info' }, published ? '已发布' : '草稿')
+        return h(NTag, { type: published ? 'success' : 'info' }, () =>
+          published ? '已发布' : '草稿'
+        )
       }
     },
     {
@@ -125,7 +130,7 @@ const columns = computed(() => {
       key: 'featured',
       title: '置顶',
       render: ({ featured }) => {
-        return h(NTag, { type: featured ? 'success' : 'info' }, featured ? '是' : '否')
+        return h(NTag, { type: featured ? 'success' : 'info' }, () => (featured ? '是' : '否'))
       }
     },
     {
@@ -146,6 +151,14 @@ const columns = computed(() => {
       width: 200,
       render(row) {
         return row.publishedAt ? dayjs(row.publishedAt).format('YYYY-MM-DD HH:mm:ss') : '--'
+      }
+    },
+    {
+      align: 'center',
+      key: 'action',
+      title: '操作',
+      render(row) {
+        return h(ButtonDetail, { id: row.id })
       }
     }
   ]
