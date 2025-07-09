@@ -6,12 +6,12 @@ import { useAppSetStore } from '@/stores/appSet'
 
 import type { IArticleDetail } from '@/types/api/article'
 
-const appSetStore = useAppSetStore()
-const { theme } = storeToRefs(appSetStore)
-
 defineProps<{
   article: IArticleDetail
 }>()
+
+const appSetStore = useAppSetStore()
+const { theme } = storeToRefs(appSetStore)
 </script>
 
 <template>
