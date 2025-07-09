@@ -3,12 +3,17 @@ import IconExpand from '@/assets/svgs/icons/expand.svg?component'
 import IconShrink from '@/assets/svgs/icons/shrink.svg?component'
 import { useFullscreen } from '@vueuse/core'
 
-const { isFullscreen, toggle } = useFullscreen()
+const { size = 16, target } = defineProps<{
+  size?: number
+  target?: HTMLElement | null
+}>()
+
+const { isFullscreen, toggle } = useFullscreen(target)
 </script>
 
 <template>
   <div class="button-fullscreen">
-    <n-icon size="16" :component="isFullscreen ? IconShrink : IconExpand" @click="toggle"></n-icon>
+    <n-icon :size :component="isFullscreen ? IconShrink : IconExpand" @click="toggle"></n-icon>
   </div>
 </template>
 
