@@ -27,6 +27,7 @@ const detailForm = computed(() => {
     visibility: detail.value.visibility,
     coverImage: detail.value.coverImage,
     featured: detail.value.featured,
+    published: detail.value.published,
     summary: detail.value.summary
   }
 

@@ -9,7 +9,7 @@ import type { ICreateArticleDto } from '@/types/api/article'
 
 export type IForm = Pick<
   ICreateArticleDto,
-  'categoryId' | 'visibility' | 'coverImage' | 'featured' | 'summary'
+  'categoryId' | 'visibility' | 'coverImage' | 'featured' | 'summary' | 'published'
 >
 
 const { detail, loading } = defineProps<{
@@ -30,6 +30,7 @@ const initFormData = (): IForm => {
     visibility: 'PRIVATE',
     coverImage: undefined,
     featured: false,
+    published: false,
     summary: undefined
   }
 }
@@ -88,6 +89,10 @@ const onCancel = () => {
 
         <n-form-item label="精选文章" path="featured">
           <n-switch v-model:value="formData.featured" />
+        </n-form-item>
+
+        <n-form-item label="发布状态" path="published">
+          <n-switch v-model:value="formData.published" />
         </n-form-item>
 
         <n-form-item label="封面" path="coverImage">
