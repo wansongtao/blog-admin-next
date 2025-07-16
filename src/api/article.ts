@@ -38,3 +38,11 @@ export const getArticleDetail = (id: number) => {
     method: 'get'
   })
 }
+
+export const updateArticle = (id: number, data: Partial<ICreateArticleDto>) => {
+  return request<IBaseResponse>({
+    url: `/article/${id}`,
+    method: 'patch',
+    data
+  })
+}

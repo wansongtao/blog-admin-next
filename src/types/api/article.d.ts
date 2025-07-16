@@ -57,6 +57,7 @@ export interface IArticleDetail {
   theme?: string
   published: boolean
   featured: boolean
+  categoryId: number
   categoryName: string
   author: string
   viewCount: number
