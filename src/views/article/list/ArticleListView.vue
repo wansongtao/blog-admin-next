@@ -3,6 +3,8 @@ import FormSearch from './components/FormSearch.vue'
 import { NSpace, NTag } from 'naive-ui'
 import ButtonDetail from './components/ButtonDetail.vue'
 import ButtonEdit from './components/ButtonEdit.vue'
+import ButtonPublish from './components/ButtonPublish.vue'
+import ButtonFeature from './components/ButtonFeature.vue'
 
 import usePagination from '@/hooks/usePagination'
 import useTableSort from '@/hooks/useTableSort'
@@ -52,11 +54,6 @@ const columns = computed(() => {
   const hasDeletePermission = hasPermission('system:article:del')
 
   const list: IColumn<IArticleListItem>[] = [
-    {
-      align: 'center',
-      key: 'id',
-      title: 'ID'
-    },
     {
       align: 'center',
       key: 'author',
@@ -122,6 +119,7 @@ const columns = computed(() => {
       align: 'center',
       key: 'summary',
       title: '摘要',
+      width: 100,
       ellipsis: {
         tooltip: true
       },
@@ -132,18 +130,24 @@ const columns = computed(() => {
       key: 'published',
       title: '发布状态',
       width: 100,
-      render: ({ published }) => {
-        return h(NTag, { type: published ? 'success' : 'info' }, () =>
-          published ? '已发布' : '草稿'
-        )
+      render: (row) => {
+        return h(ButtonPublish, {
+          id: row.id,
+          modelValue: row.published,
+          disabled: !hasEditPermission
+        })
       }
     },
     {
       align: 'center',
       key: 'featured',
       title: '置顶',
-      render: ({ featured }) => {
-        return h(NTag, { type: featured ? 'success' : 'info' }, () => (featured ? '是' : '否'))
+      render: (row) => {
+        return h(ButtonFeature, {
+          id: row.id,
+          modelValue: row.featured,
+          disabled: !hasEditPermission
+        })
       }
     },
     {
