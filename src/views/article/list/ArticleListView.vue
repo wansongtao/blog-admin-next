@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import FormSearch from './components/FormSearch.vue'
-import { NTag } from 'naive-ui'
+import { NSpace, NTag } from 'naive-ui'
 import ButtonDetail from './components/ButtonDetail.vue'
+import ButtonEdit from './components/ButtonEdit.vue'
 
 import usePagination from '@/hooks/usePagination'
 import useTableSort from '@/hooks/useTableSort'
@@ -47,6 +48,9 @@ const { list, total, loading, fetchList } = useFetchList(
 
 const { hasPermission } = usePermission()
 const columns = computed(() => {
+  const hasEditPermission = hasPermission('system:role:edit')
+  const hasDeletePermission = hasPermission('system:article:del')
+
   const list: IColumn<IArticleListItem>[] = [
     {
       align: 'center',
@@ -56,12 +60,20 @@ const columns = computed(() => {
     {
       align: 'center',
       key: 'author',
-      title: '作者'
+      title: '作者',
+      ellipsis: {
+        tooltip: true
+      },
+      width: 100
     },
     {
       align: 'center',
       key: 'categoryName',
-      title: '分类'
+      title: '分类',
+      ellipsis: {
+        tooltip: true
+      },
+      width: 80
     },
     {
       align: 'center',
@@ -76,6 +88,7 @@ const columns = computed(() => {
       align: 'center',
       key: 'coverImage',
       title: '封面',
+      width: 70,
       render: ({ coverImage }) => {
         if (!coverImage) {
           return '--'
@@ -139,7 +152,7 @@ const columns = computed(() => {
       title: '更新时间',
       defaultSortOrder: sort.value === 'asc' ? 'ascend' : 'descend',
       sorter: true,
-      width: 200,
+      width: 120,
       render(row) {
         return dayjs(row.updatedAt).format('YYYY-MM-DD HH:mm:ss')
       }
@@ -148,7 +161,7 @@ const columns = computed(() => {
       align: 'center',
       key: 'publishedAt',
       title: '发布时间',
-      width: 200,
+      width: 120,
       render(row) {
         return row.publishedAt ? dayjs(row.publishedAt).format('YYYY-MM-DD HH:mm:ss') : '--'
       }
@@ -158,12 +171,24 @@ const columns = computed(() => {
       key: 'action',
       title: '操作',
       render(row) {
-        return h(ButtonDetail, { id: row.id })
+        const detailButton = h(ButtonDetail, { id: row.id })
+        const components = [detailButton]
+        if (hasEditPermission) {
+          const editButton = h(ButtonEdit, { id: row.id })
+          components.unshift(editButton)
+        }
+
+        return h(
+          NSpace,
+          { justify: 'center', wrap: false },
+          {
+            default: () => components
+          }
+        )
       }
     }
   ]
 
-  const hasDeletePermission = hasPermission('system:article:del')
   if (hasDeletePermission) {
     list.unshift({
       type: 'selection'

@@ -34,14 +34,18 @@ const initFormData = (): IForm => {
   }
 }
 
-watch(
-  () => show,
-  (val) => {
-    if (!val) {
-      formData.value = initFormData()
+watch([() => show, () => detail], ([val, detailData]) => {
+  if (!val) {
+    formData.value = initFormData()
+  }
+
+  if (val && detailData) {
+    formData.value = {
+      ...initFormData(),
+      ...detailData
     }
   }
-)
+})
 
 const formData = ref(initFormData())
 
@@ -62,7 +66,7 @@ const onCancel = () => {
 </script>
 
 <template>
-  <n-drawer v-model:show="show" :width="502" placement="right">
+  <n-drawer v-model:show="show" :width="502" placement="right" :z-index="10001">
     <n-drawer-content title="发布文章">
       <n-form ref="formRef" label-placement="left" label-width="100" :model="formData">
         <n-form-item

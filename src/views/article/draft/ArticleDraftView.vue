@@ -2,7 +2,8 @@
 import BaseEditor from './components/BaseEditor.vue'
 import PopSelectTheme, { type IPreviewTheme } from './components/PopSelectTheme.vue'
 import DrawerPublish, { type IForm } from './components/DrawerPublish.vue'
-import { addArticle } from '@/api/article'
+import { addArticle, updateArticle } from '@/api/article'
+import { useArticleDetail } from './hooks/useArticleDetail'
 
 import type { ICreateArticleDto } from '@/types/api/article'
 
@@ -15,10 +16,73 @@ const disabledPublish = computed(() => {
   return !title.value || !content.value
 })
 
+const { detail } = useArticleDetail()
+const detailForm = computed(() => {
+  if (!detail.value) {
+    return undefined
+  }
+
+  const obj: IForm = {
+    categoryId: detail.value.categoryId,
+    visibility: detail.value.visibility,
+    coverImage: detail.value.coverImage,
+    featured: detail.value.featured,
+    summary: detail.value.summary
+  }
+
+  return obj
+})
+watch(
+  detail,
+  (data) => {
+    if (!data) {
+      return
+    }
+
+    title.value = data.title
+    content.value = data.content
+    previewTheme.value = data.theme as IPreviewTheme
+  },
+  { immediate: true }
+)
+
+const router = useRouter()
+
 const loading = ref(false)
 const onSubmit = async (data: IForm) => {
   if (loading.value) return
   loading.value = true
+
+  if (detail.value) {
+    // 编辑文章
+    const params: Partial<ICreateArticleDto> = {
+      ...data
+    }
+    if (previewTheme.value && previewTheme.value !== detail.value.theme) {
+      params.theme = previewTheme.value
+    }
+    if (title.value && title.value !== detail.value.title) {
+      params.title = title.value
+    }
+    if (content.value && content.value !== detail.value.content) {
+      params.content = content.value
+    }
+    if (Object.keys(params).length === 0) {
+      window.$message.warning('没有修改内容')
+      loading.value = false
+      return
+    }
+
+    const [, res] = await updateArticle(detail.value.id, params)
+    loading.value = false
+    if (!res) {
+      return
+    }
+    window.$message.success('文章更新成功')
+    show.value = false
+    router.replace('/article/list')
+    return
+  }
 
   const params: ICreateArticleDto = {
     ...data,
@@ -63,7 +127,7 @@ const onSubmit = async (data: IForm) => {
       <base-editor v-model="content" :preview-theme />
     </div>
 
-    <drawer-publish v-model:show="show" @submit="onSubmit" />
+    <drawer-publish v-model:show="show" :detail="detailForm" @submit="onSubmit" />
   </base-box>
 </template>
 
