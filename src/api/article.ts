@@ -46,3 +46,10 @@ export const updateArticle = (id: number, data: Partial<ICreateArticleDto>) => {
     data
   })
 }
+
+export const deleteArticle = (id: number) => {
+  return request<IBaseResponse>({
+    url: `/article/${id}/delete`,
+    method: 'patch'
+  })
+}
