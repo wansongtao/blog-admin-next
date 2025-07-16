@@ -5,6 +5,7 @@ import ButtonDetail from './components/ButtonDetail.vue'
 import ButtonEdit from './components/ButtonEdit.vue'
 import ButtonPublish from './components/ButtonPublish.vue'
 import ButtonFeature from './components/ButtonFeature.vue'
+import ButtonDelete from './components/ButtonDelete.vue'
 
 import usePagination from '@/hooks/usePagination'
 import useTableSort from '@/hooks/useTableSort'
@@ -174,12 +175,20 @@ const columns = computed(() => {
       align: 'center',
       key: 'action',
       title: '操作',
+      width: 200,
       render(row) {
         const detailButton = h(ButtonDetail, { id: row.id })
         const components = [detailButton]
         if (hasEditPermission) {
           const editButton = h(ButtonEdit, { id: row.id })
           components.unshift(editButton)
+        }
+        if (hasDeletePermission) {
+          const deleteButton = h(ButtonDelete, {
+            id: row.id,
+            onSuccess: () => fetchList()
+          })
+          components.push(deleteButton)
         }
 
         return h(
@@ -192,12 +201,6 @@ const columns = computed(() => {
       }
     }
   ]
-
-  if (hasDeletePermission) {
-    list.unshift({
-      type: 'selection'
-    })
-  }
 
   return list
 })
