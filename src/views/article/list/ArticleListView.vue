@@ -51,7 +51,7 @@ const { list, total, loading, fetchList } = useFetchList(
 
 const { hasPermission } = usePermission()
 const columns = computed(() => {
-  const hasEditPermission = hasPermission('system:role:edit')
+  const hasEditPermission = hasPermission('system:article:edit')
   const hasDeletePermission = hasPermission('system:article:del')
 
   const list: IColumn<IArticleListItem>[] = [
