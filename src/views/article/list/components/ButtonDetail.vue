@@ -3,6 +3,7 @@ import ArticlePreview from './ArticlePreview.vue'
 import IconClose from '@/assets/svgs/icons/close.svg'
 
 import { getArticleDetail } from '@/api/article'
+import { decryptArticle } from '@/plugins/encrypt'
 
 import type { IArticleDetail } from '@/types/api/article'
 
@@ -12,8 +13,23 @@ const show = ref(false)
 const loading = ref(false)
 const detail = ref<IArticleDetail>()
 
-const onOpen = async () => {
+const showPasswordDialog = ref(false)
+const decryptContent = (password: string) => {
+  if (!detail.value) {
+    return
+  }
+  const decryptedContent = decryptArticle(detail.value.content, password)
+  if (!decryptedContent) {
+    window.$message.error('解密失败，请检查密码提示')
+    return
+  }
+
+  detail.value.content = decryptedContent
+  showPasswordDialog.value = false
   show.value = true
+}
+
+const onOpen = async () => {
   loading.value = true
   const [, res] = await getArticleDetail(id)
   loading.value = false
@@ -24,6 +40,11 @@ const onOpen = async () => {
   }
 
   detail.value = res.data
+  if (detail.value.encrypted) {
+    showPasswordDialog.value = true
+  } else {
+    show.value = true
+  }
 }
 </script>
 
@@ -39,6 +60,12 @@ const onOpen = async () => {
         <article-preview v-if="detail" :article="detail" />
       </div>
     </n-modal>
+
+    <article-password-dialog
+      v-model:show="showPasswordDialog"
+      :hint="detail?.passwordHint"
+      @success="decryptContent"
+    />
   </div>
 </template>
 

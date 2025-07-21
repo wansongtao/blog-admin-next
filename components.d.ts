@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ArticlePasswordDialog: typeof import('./src/components/article-password-dialog/ArticlePasswordDialog.vue')['default']
     BaseBox: typeof import('./src/components/base-box/BaseBox.vue')['default']
     BaseBreadcrumb: typeof import('./src/components/base-breadcrumb/BaseBreadcrumb.vue')['default']
     BasePagination: typeof import('./src/components/base-pagination/BasePagination.vue')['default']
