@@ -17,6 +17,8 @@ export interface ICreateArticleDto {
   theme?: string
   published?: boolean
   featured?: boolean
+  encrypted?: boolean
+  passwordHint?: string
 }
 
 export interface IArticleQuery extends IQuery {
@@ -63,6 +65,8 @@ export interface IArticleDetail {
   viewCount: number
   commentCount: number
   likeCount: number
+  encrypted?: boolean
+  passwordHint?: string
   /**
    * 更新时间
    */

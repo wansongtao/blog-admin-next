@@ -4,6 +4,7 @@ import PopSelectTheme, { type IPreviewTheme } from './components/PopSelectTheme.
 import DrawerPublish, { type IForm } from './components/DrawerPublish.vue'
 import { addArticle, updateArticle } from '@/api/article'
 import { useArticleDetail } from './hooks/useArticleDetail'
+import { encryptArticle, decryptArticle } from '@/plugins/encrypt'
 
 import type { ICreateArticleDto } from '@/types/api/article'
 
@@ -28,16 +29,37 @@ const detailForm = computed(() => {
     coverImage: detail.value.coverImage,
     featured: detail.value.featured,
     published: detail.value.published,
-    summary: detail.value.summary
+    summary: detail.value.summary,
+    encrypted: detail.value.encrypted,
+    passwordHint: detail.value.passwordHint
   }
 
   return obj
 })
+const showPasswordDialog = ref(false)
+const decryptContent = (password: string) => {
+  if (!detail.value) {
+    return
+  }
+
+  const decryptedContent = decryptArticle(detail.value.content, password)
+  if (!decryptedContent) {
+    window.$message.error('解密失败，请检查密码提示')
+    return
+  }
+
+  content.value = decryptedContent
+  showPasswordDialog.value = false
+}
+
 watch(
   detail,
   (data) => {
     if (!data) {
       return
+    }
+    if (data.encrypted) {
+      showPasswordDialog.value = true
     }
 
     title.value = data.title
@@ -48,48 +70,65 @@ watch(
 )
 
 const router = useRouter()
-
 const loading = ref(false)
-const onSubmit = async (data: IForm) => {
-  if (loading.value) return
-  loading.value = true
 
-  if (detail.value) {
-    // 编辑文章
-    const params: Partial<ICreateArticleDto> = {
-      ...data
-    }
-    if (previewTheme.value && previewTheme.value !== detail.value.theme) {
-      params.theme = previewTheme.value
-    }
-    if (title.value && title.value !== detail.value.title) {
-      params.title = title.value
-    }
-    if (content.value && content.value !== detail.value.content) {
-      params.content = content.value
-    }
-    if (Object.keys(params).length === 0) {
-      window.$message.warning('没有修改内容')
-      loading.value = false
-      return
-    }
-
-    const [, res] = await updateArticle(detail.value.id, params)
-    loading.value = false
-    if (!res) {
-      return
-    }
-    window.$message.success('文章更新成功')
-    show.value = false
-    router.replace('/article/list')
+const editArticle = async (data: IForm, password?: string) => {
+  if (!detail.value) {
     return
   }
 
+  const params: Partial<ICreateArticleDto> = {
+    ...data
+  }
+  if (previewTheme.value && previewTheme.value !== detail.value.theme) {
+    params.theme = previewTheme.value
+  }
+  if (title.value && title.value !== detail.value.title) {
+    params.title = title.value
+  }
+  if (content.value && content.value !== detail.value.content) {
+    params.content = content.value
+  }
+  if (Object.keys(params).length === 0) {
+    window.$message.warning('没有修改内容')
+    loading.value = false
+    return
+  }
+
+  if (data.encrypted && password) {
+    params.content = encryptArticle(content.value, password)
+    if (!params.content) {
+      window.$message.error('加密失败，请检查密码提示')
+      loading.value = false
+      return
+    }
+  }
+
+  const [, res] = await updateArticle(detail.value.id, params)
+  loading.value = false
+  if (!res) {
+    return
+  }
+  window.$message.success('文章更新成功')
+  show.value = false
+  router.replace('/article/list')
+}
+
+const createArticle = async (data: IForm, password?: string) => {
   const params: ICreateArticleDto = {
     ...data,
     title: title.value,
     content: content.value,
     theme: previewTheme.value
+  }
+
+  if (data.encrypted && password) {
+    params.content = encryptArticle(content.value, password)
+    if (!params.content) {
+      window.$message.error('加密失败，请检查密码提示')
+      loading.value = false
+      return
+    }
   }
 
   const [, res] = await addArticle(params)
@@ -103,6 +142,18 @@ const onSubmit = async (data: IForm) => {
   content.value = ''
   previewTheme.value = undefined
   window.$message?.success('文章发布成功')
+}
+
+const onSubmit = async (data: IForm, password?: string) => {
+  if (loading.value) return
+  loading.value = true
+
+  if (detail.value) {
+    await editArticle(data, password)
+    return
+  }
+
+  await createArticle(data, password)
 }
 </script>
 
@@ -129,6 +180,11 @@ const onSubmit = async (data: IForm) => {
     </div>
 
     <drawer-publish v-model:show="show" :detail="detailForm" @submit="onSubmit" />
+    <article-password-dialog
+      v-model:show="showPasswordDialog"
+      :hint="detailForm?.passwordHint"
+      @success="decryptContent"
+    />
   </base-box>
 </template>
 

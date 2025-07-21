@@ -9,7 +9,14 @@ import type { ICreateArticleDto } from '@/types/api/article'
 
 export type IForm = Pick<
   ICreateArticleDto,
-  'categoryId' | 'visibility' | 'coverImage' | 'featured' | 'summary' | 'published'
+  | 'categoryId'
+  | 'visibility'
+  | 'coverImage'
+  | 'featured'
+  | 'summary'
+  | 'published'
+  | 'encrypted'
+  | 'passwordHint'
 >
 
 const { detail, loading } = defineProps<{
@@ -17,21 +24,24 @@ const { detail, loading } = defineProps<{
   loading?: boolean
 }>()
 const $emits = defineEmits<{
-  submit: [data: IForm]
+  submit: [data: IForm, password?: string]
   cancel: []
 }>()
 const show = defineModel<boolean>('show')
 
 const { visibilityList } = useArticleVisibility()
 
-const initFormData = (): IForm => {
+const initFormData = (): IForm & { password?: string } => {
   return {
     categoryId: 0,
     visibility: 'PRIVATE',
     coverImage: undefined,
     featured: false,
     published: false,
-    summary: undefined
+    summary: undefined,
+    passwordHint: undefined,
+    encrypted: false,
+    password: undefined
   }
 }
 
@@ -55,9 +65,11 @@ const onSubmit = async () => {
   if (!(await validateForm())) {
     return
   }
+  const password = formData.value.password || ''
+  formData.value.password = undefined // 清除密码字段，避免提交时包含
 
   const data = detail ? getChangedData(formData.value, detail) : { ...formData.value }
-  $emits('submit', data)
+  $emits('submit', data, password.trim() || undefined)
 }
 
 const onCancel = () => {
@@ -87,13 +99,44 @@ const onCancel = () => {
           </n-radio-group>
         </n-form-item>
 
-        <n-form-item label="精选文章" path="featured">
-          <n-switch v-model:value="formData.featured" />
-        </n-form-item>
+        <n-flex>
+          <n-form-item label="精选文章" path="featured">
+            <n-switch v-model:value="formData.featured" />
+          </n-form-item>
 
-        <n-form-item label="发布状态" path="published">
-          <n-switch v-model:value="formData.published" />
-        </n-form-item>
+          <n-form-item label="发布状态" path="published">
+            <n-switch v-model:value="formData.published" />
+          </n-form-item>
+
+          <n-form-item label="文章加密" path="encrypted">
+            <n-switch v-model:value="formData.encrypted" />
+          </n-form-item>
+        </n-flex>
+
+        <template v-if="formData.encrypted">
+          <n-form-item
+            label="文章密码"
+            path="password"
+            :rule="{ required: true, message: '请设置文章密码' }"
+          >
+            <n-input
+              v-model:value="formData.password"
+              type="password"
+              placeholder="请输入4-20位密码"
+              minlength="4"
+              maxlength="20"
+              show-password-on="click"
+            />
+          </n-form-item>
+
+          <n-form-item label="密码提示" path="passwordHint">
+            <n-input
+              v-model:value="formData.passwordHint"
+              placeholder="密码提示（可选）"
+              maxlength="50"
+            />
+          </n-form-item>
+        </template>
 
         <n-form-item label="封面" path="coverImage">
           <upload-cover v-model:value="formData.coverImage" />
