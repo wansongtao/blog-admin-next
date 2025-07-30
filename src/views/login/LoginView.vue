@@ -77,7 +77,9 @@ const onLogin = async () => {
     return
   }
 
-  router.push('/')
+  const redirect = router.currentRoute.value.query.redirect as string
+  // 如果有重定向地址，则跳转到该地址，否则跳转到首页
+  router.push(redirect ? decodeURIComponent(redirect) : '/')
 }
 
 const title = import.meta.env.VITE_TITLE

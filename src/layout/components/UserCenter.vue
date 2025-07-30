@@ -44,7 +44,7 @@ const onSelect = async (key: string) => {
   }
 
   await userStore.logout()
-  router.replace('/login')
+  router.replace(`/login?redirect=${encodeURIComponent(router.currentRoute.value.fullPath)}`)
 }
 </script>
 
