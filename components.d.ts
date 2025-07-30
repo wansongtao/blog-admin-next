@@ -24,7 +24,6 @@ declare module 'vue' {
     FieldDescription: typeof import('./src/components/field-description/FieldDescription.vue')['default']
     MenuTreeSelect: typeof import('./src/components/menu-tree-select/MenuTreeSelect.vue')['default']
     NAvatar: typeof import('naive-ui')['NAvatar']
-    NBadge: typeof import('naive-ui')['NBadge']
     NBreadcrumb: typeof import('naive-ui')['NBreadcrumb']
     NBreadcrumbItem: typeof import('naive-ui')['NBreadcrumbItem']
     NButton: typeof import('naive-ui')['NButton']

@@ -56,6 +56,9 @@ watch(
   detail,
   (data) => {
     if (!data) {
+      title.value = ''
+      content.value = ''
+      previewTheme.value = undefined
       return
     }
     if (data.encrypted) {
