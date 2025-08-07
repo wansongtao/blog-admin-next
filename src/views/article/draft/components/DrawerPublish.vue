@@ -69,6 +69,9 @@ const onSubmit = async () => {
   formData.value.password = undefined // 清除密码字段，避免提交时包含
 
   const data = detail ? getChangedData(formData.value, detail) : { ...formData.value }
+  if (formData.value.encrypted) {
+    data.encrypted = true
+  }
   $emits('submit', data, password.trim() || undefined)
 }
 
