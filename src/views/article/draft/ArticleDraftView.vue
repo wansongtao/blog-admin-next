@@ -13,11 +13,33 @@ const show = ref(false)
 const title = ref('')
 const previewTheme = ref<IPreviewTheme>()
 const content = ref('')
+const showPasswordDialog = ref(false)
 const disabledPublish = computed(() => {
   return !title.value || !content.value
 })
 
 const { detail } = useArticleDetail()
+watch(
+  detail,
+  (data) => {
+    if (!data) {
+      title.value = ''
+      content.value = ''
+      previewTheme.value = undefined
+      return
+    }
+
+    if (data.encrypted) {
+      showPasswordDialog.value = true
+    }
+
+    title.value = data.title
+    content.value = data.content
+    previewTheme.value = data.theme as IPreviewTheme
+  },
+  { immediate: true }
+)
+
 const detailForm = computed(() => {
   if (!detail.value) {
     return undefined
@@ -36,7 +58,7 @@ const detailForm = computed(() => {
 
   return obj
 })
-const showPasswordDialog = ref(false)
+
 const decryptContent = (password: string) => {
   if (!detail.value) {
     return
@@ -51,26 +73,6 @@ const decryptContent = (password: string) => {
   content.value = decryptedContent
   showPasswordDialog.value = false
 }
-
-watch(
-  detail,
-  (data) => {
-    if (!data) {
-      title.value = ''
-      content.value = ''
-      previewTheme.value = undefined
-      return
-    }
-    if (data.encrypted) {
-      showPasswordDialog.value = true
-    }
-
-    title.value = data.title
-    content.value = data.content
-    previewTheme.value = data.theme as IPreviewTheme
-  },
-  { immediate: true }
-)
 
 const router = useRouter()
 const loading = ref(false)
@@ -93,7 +95,7 @@ const editArticle = async (data: IForm, password?: string) => {
     params.content = content.value
   }
   if (Object.keys(params).length === 0) {
-    window.$message.warning('没有修改内容')
+    window.$message.warning('没有修改任何内容')
     loading.value = false
     return
   }
@@ -150,7 +152,6 @@ const createArticle = async (data: IForm, password?: string) => {
 const onSubmit = async (data: IForm, password?: string) => {
   if (loading.value) return
   loading.value = true
-
   if (detail.value) {
     await editArticle(data, password)
     return
